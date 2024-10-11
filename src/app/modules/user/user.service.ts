@@ -256,8 +256,8 @@ const makeUserPremiumAccessIntoDB = async (
   return result;
 };
 
-// ------------------ follow unfollow into DB ----------------
 /**
+ *------------------ follow unfollow into DB ----------------
  *
  * @param currentUser current logged in user
  * @param targetUserId target user id to follow or unfollow
