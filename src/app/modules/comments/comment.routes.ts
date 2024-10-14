@@ -16,6 +16,9 @@ router.post(
 // get all comments
 router.get("/", CommentControllers.getAllComments);
 
+// get all comments counts for all posts
+router.get("/counts", CommentControllers.getAllCommentsForPosts);
+
 // get all comments of a post
 router.get("/:postId", CommentControllers.getAllCommentsOfPost);
 

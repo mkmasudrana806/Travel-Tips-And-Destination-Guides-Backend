@@ -11,21 +11,22 @@ const router = express.Router();
 // create an user
 router.post(
   "/create-user",
-  upload.single("file"), // file uploading
-  (req: Request, res: Response, next: NextFunction) => {
-    if (req.body?.data) {
-      req.body = JSON.parse(req.body?.data);
-      next();
-    } else {
-      throw new AppError(httpStatus.BAD_REQUEST, "Please provide user data");
-    }
-  },
+  // TODO: add file upload in client while register new user
+  // upload.single("file"), // file uploading
+  // (req: Request, res: Response, next: NextFunction) => {
+  //   if (req.body?.data) {
+  //     req.body = JSON.parse(req.body?.data);
+  //     next();
+  //   } else {
+  //     throw new AppError(httpStatus.BAD_REQUEST, "Please provide user data");
+  //   }
+  // },
   validateRequestData(UserValidations.createUserValidationsSchema),
   UserControllers.createAnUser
 );
 
 // get all users
-router.get("/", auth("admin"), UserControllers.getAllUsers);
+router.get("/", UserControllers.getAllUsers);
 
 // get me route
 router.get("/getMe", auth("user", "admin"), UserControllers.getMe);

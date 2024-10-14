@@ -2,11 +2,13 @@ import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import { PostServices } from "./post.service";
+import { TfileUpload } from "../../interface/fileUploadType";
 
 // --------------- create a post --------------
 const createPost = asyncHanlder(async (req, res) => {
   const result = await PostServices.createPostIntoDB(
     req.user?.userId,
+    req?.file as TfileUpload,
     req.body
   );
 
@@ -107,7 +109,7 @@ const upvotePost = asyncHanlder(async (req, res) => {
 const downvotePost = asyncHanlder(async (req, res) => {
   const result = await PostServices.downvotePostIntoDB(
     req.user,
-    req.params.targetUserId
+    req.params?.postId
   );
 
   sendResponse(res, {

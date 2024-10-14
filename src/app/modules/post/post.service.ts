@@ -7,6 +7,8 @@ import { JwtPayload } from "jsonwebtoken";
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
 import { allowedFieldsToUpdate, searchableFields } from "./post.constant";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { TfileUpload } from "../../interface/fileUploadType";
+import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
 
 /**
  * ------------- Create a new post ----------------
@@ -14,8 +16,24 @@ import QueryBuilder from "../../queryBuilder/queryBuilder";
  * @param payload new post data
  * @returns newly created post
  */
-const createPostIntoDB = async (userId: Types.ObjectId, payload: TPost) => {
+const createPostIntoDB = async (
+  userId: Types.ObjectId,
+  file: TfileUpload,
+  payload: TPost
+) => {
+  if (!file) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Image is not attached!");
+  }
+
+  const imageName = `${userId}-${payload.category}`;
+  const path = file.path;
+  const uploadedImage: any = await sendImageToCloudinary(path, imageName);
+  if (!uploadedImage?.secure_url) {
+    throw new AppError(httpStatus.FORBIDDEN, "Image is not uploaded");
+  }
+  payload.image = uploadedImage.secure_url;
   payload.author = userId;
+  
   const newPost = await Post.create(payload);
   return newPost;
 };
@@ -29,7 +47,7 @@ const getAllPostsFromDB = async (query: Record<string, unknown>) => {
   const postQuery = new QueryBuilder(
     Post.find({}).populate({
       path: "author",
-      select: "_id name email isVerified",
+      select: "_id name email isVerified profilePicture premiumAccess",
     }),
     query
   )
@@ -55,7 +73,7 @@ const getUserPostsFromDB = async (
   const postQuery = new QueryBuilder(
     Post.find({ author: userId }).populate({
       path: "author",
-      select: "_id name email isVerified",
+      select: "_id name email isVerified profilePicture premiumAccess",
     }),
     query
   )
@@ -75,9 +93,9 @@ const getUserPostsFromDB = async (
  * @returns return single post
  */
 const getSinglePostFromDB = async (postId: string) => {
-  const post = await Post.findById(postId).populate({
+  const post = await Post.findOne({ _id: postId, isDeleted: false }).populate({
     path: "author",
-    select: "_id name email isVerified profilePicture",
+    select: "_id name email isVerified profilePicture premiumAccess",
   });
   if (!post) throw new Error("Post not found");
   return post;
@@ -101,7 +119,7 @@ const updateAPostIntoDB = async (
   );
 
   const result = await Post.findOneAndUpdate(
-    { _id: postId, author: user?.userId },
+    { _id: postId, author: user?.userId, isDeleted: false },
     updatedPost,
     {
       new: true,
@@ -117,7 +135,8 @@ const deleteAPostFromDB = async (userId: string, postId: string) => {
   const deletedPost = await Post.findOneAndUpdate(
     {
       author: userId,
-      postId: postId,
+      _id: postId,
+      isDeleted: false,
     },
     { isDeleted: true },
     { new: true }
@@ -146,14 +165,14 @@ const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
   if (isAlreadyUpvote) {
     // Remove the upvote: Remove user from the post's upvotes list
     await Post.updateOne(
-      { _id: postId },
+      { _id: postId, isDeleted: false },
       { $pull: { upvotes: currentUser.userId } }
     );
     return { message: "Upvote removed", upvoted: false };
   } else {
     // Add upvote and remove from downvotes in a single query
     await Post.updateOne(
-      { _id: postId },
+      { _id: postId, isDeleted: false },
       {
         $addToSet: { upvotes: currentUser.userId },
         $pull: { downvotes: currentUser.userId },
@@ -173,7 +192,7 @@ const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
  */
 const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
   // Check if the post exists
-  const targetPost = await Post.findById(postId);
+  const targetPost = await Post.findOne({ _id: postId, isDeleted: false });
   if (!targetPost) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
   }
@@ -184,14 +203,14 @@ const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
   if (isAlreadyDownvoted) {
     // Remove the downvote: Remove user from the post's downvotes list
     await Post.updateOne(
-      { _id: postId },
+      { _id: postId, isDeleted: false },
       { $pull: { downvotes: currentUser.userId } }
     );
     return { message: "Downvote removed", downvoted: false };
   } else {
     // Add downvote and remove from upvotes in a single query
     await Post.updateOne(
-      { _id: postId },
+      { _id: postId, isDeleted: false },
       {
         $addToSet: { downvotes: currentUser.userId },
         $pull: { upvotes: currentUser.userId },

@@ -5,6 +5,11 @@ import cors from "cors";
 import { ApiRoutes } from "./app/routes";
 import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
+import { upload } from "./app/utils/upload";
+import AppError from "./app/utils/AppError";
+import httpStatus from "http-status";
+import sendImageToCloudinary from "./app/utils/sendImageToCloudinary";
+import sendResponse from "./app/utils/sendResponse";
 
 const app = express();
 
@@ -12,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:3000",
     credentials: true,
   })
 ); // your client url
@@ -26,6 +31,7 @@ app.use("/api", ApiRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running...");
 });
+
 
 // not found route
 app.use("*", notFoundRoute);

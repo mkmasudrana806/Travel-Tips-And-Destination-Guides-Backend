@@ -27,6 +27,20 @@ const getAllComments = asyncHanlder(async (req, res) => {
   });
 });
 
+// --------------- get all comments counts for all posts -------------------
+const getAllCommentsForPosts = asyncHanlder(async (req, res) => {
+  const result = await CommentServices.getAllCommentsForPostsFromDB(
+    req.body.postIds
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Comments counts for posts retrieved successfull",
+    data: result,
+  });
+});
+
 // --------------- get all comments of a post -------------------
 const getAllCommentsOfPost = asyncHanlder(async (req, res) => {
   const result = await CommentServices.getAllCommentsOfPostFromDB(
@@ -76,6 +90,7 @@ const updateAComment = asyncHanlder(async (req, res) => {
 export const CommentControllers = {
   createAComment,
   getAllComments,
+  getAllCommentsForPosts,
   getAllCommentsOfPost,
   deleteAComment,
   updateAComment,

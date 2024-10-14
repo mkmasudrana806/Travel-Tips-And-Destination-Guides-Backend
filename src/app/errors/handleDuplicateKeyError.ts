@@ -2,7 +2,7 @@ import { TErrorSources, TGenericErrorResponse } from "../interface/error";
 
 // handle duplicate key error and return statusCode, message and errorSources
 const handleDuplicateKeyError = (err: any): TGenericErrorResponse => {
-  let statusCode = 401;
+  let statusCode = 400;
   // extract value within double quotes using regex
   const match = err.message.match(/"([^"]*)"/);
 

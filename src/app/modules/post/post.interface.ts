@@ -4,7 +4,7 @@ type TPost = {
   author: Types.ObjectId;
   title: string;
   content: string;
-  category: "Adventure" | "Business Travel" | "Exploration" | "Other";
+  category: "Adventure" | "Business Travel" | "Exploration";
   image: string;
   premium: boolean;
   upvotes: string[];

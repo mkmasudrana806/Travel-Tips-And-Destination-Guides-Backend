@@ -3,6 +3,7 @@ import AppError from "../../utils/AppError";
 import { TComment } from "./comment.interface";
 import { Comment } from "./comment.model";
 import { JwtPayload } from "jsonwebtoken";
+import mongoose from "mongoose";
 
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
 import { COMMENT_ALLOWED_FIELDS_TO_UPDATE } from "./comment.constant";
@@ -22,16 +23,34 @@ const createACommentIntoDB = async (
 const getAllCommentsFromDB = async () => {
   const result = await Comment.find({}).populate({
     path: "userId",
-    select: "_id name email isVerified profilePicture",
+    select: "_id name email isVerified profilePicture premiumAccess",
   });
   return result;
+};
+
+// -------------- get all comments for all posts  --------------
+const getAllCommentsForPostsFromDB = async (postIds: string[]) => {
+  const objectIds = postIds.map((id) => new mongoose.Types.ObjectId(id));
+  const commentsCount = await Comment.aggregate([
+    {
+      $match: { postId: { $in: objectIds } },
+    },
+    {
+      $group: {
+        _id: "$postId",
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  return commentsCount;
 };
 
 // -------------- get all comments of a post --------------
 const getAllCommentsOfPostFromDB = async (postId: string) => {
   const result = await Comment.find({ postId: postId }).populate({
     path: "userId",
-    select: "_id name email isVerified profilePicture",
+    select: "_id name email isVerified profilePicture premiumAccess",
   });
   return result;
 };
@@ -76,6 +95,7 @@ const updateACommentIntoDB = async (
 export const CommentServices = {
   createACommentIntoDB,
   getAllCommentsFromDB,
+  getAllCommentsForPostsFromDB,
   getAllCommentsOfPostFromDB,
   deleteACommentIntoDB,
   updateACommentIntoDB,

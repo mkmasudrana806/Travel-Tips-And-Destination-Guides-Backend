@@ -9,7 +9,7 @@ const postSchema = new Schema<TPost>(
     category: {
       type: String,
       required: true,
-      enum: ["Adventure", "Business Travel", "Exploration", "Other"],
+      enum: ["Adventure", "Business Travel", "Exploration"],
     },
     image: { type: String },
     premium: { type: Boolean, default: false },

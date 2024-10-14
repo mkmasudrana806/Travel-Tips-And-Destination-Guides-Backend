@@ -5,7 +5,7 @@ import { Error } from "mongoose";
 const handleValidationError = (
   err: Error.ValidationError
 ): TGenericErrorResponse => {
-  let statusCode = 401;
+  let statusCode = 400;
   let errorSources: TErrorSources = Object.values(err.errors).map(
     (error: Error.ValidatorError | Error.CastError) => ({
       path: error.path,

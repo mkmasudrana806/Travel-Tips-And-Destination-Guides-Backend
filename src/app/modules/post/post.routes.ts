@@ -1,10 +1,29 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import auth from "../../middlewares/auth";
 import { PostControllers } from "./post.controller";
+import { PostValidtions } from "./post.validation";
+import validateRequestData from "../../middlewares/validateRequest";
+import { upload } from "../../utils/upload";
+import AppError from "../../utils/AppError";
+import httpStatus from "http-status";
 
 const router = express.Router();
 // create a new post
-router.post("/", auth("user"), PostControllers.createPost);
+router.post(
+  "/create-post",
+  auth("user"),
+  upload.single("file"),  
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.body?.data) {
+      req.body = JSON.parse(req.body?.data);
+      next();
+    } else {
+      throw new AppError(httpStatus.BAD_REQUEST, "Please provide post data");
+    }
+  },
+  validateRequestData(PostValidtions.createPostValidationSchema),
+  PostControllers.createPost
+);
 
 // get all posts
 router.get("/", PostControllers.getAllPosts);
@@ -16,7 +35,12 @@ router.get("/my-posts", auth("user"), PostControllers.getUserPosts);
 router.get("/:id", PostControllers.getPost);
 
 // update a post
-router.patch("/:id", auth("user"), PostControllers.updatePost);
+router.patch(
+  "/:id",
+  auth("user"),
+  validateRequestData(PostValidtions.updatePostValidationSchema),
+  PostControllers.updatePost
+);
 
 // delete a post
 router.delete("/:id", auth("user"), PostControllers.deletePost);
