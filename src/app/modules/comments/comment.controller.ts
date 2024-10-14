@@ -30,7 +30,7 @@ const getAllComments = asyncHanlder(async (req, res) => {
 // --------------- get all comments counts for all posts -------------------
 const getAllCommentsForPosts = asyncHanlder(async (req, res) => {
   const result = await CommentServices.getAllCommentsForPostsFromDB(
-    req.body.postIds
+    req.body
   );
 
   sendResponse(res, {

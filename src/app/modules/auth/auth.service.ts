@@ -7,7 +7,6 @@ import config from "../../config";
 import { TLoginUser } from "./auth.interface";
 import sendEmail from "../../utils/sendEmail";
 
-
 /**
  * -------------------- Login user into DB ---------------------
  * @param email email address
@@ -38,6 +37,8 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
     userId: user?._id,
     email: user?.email,
     role: user?.role,
+    isVerified: user?.isVerified,
+    premiumAccess: user?.premiumAccess,
   };
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in,
@@ -131,6 +132,8 @@ const forgotPassword = async (email: string) => {
     userId: user?._id,
     email: user?.email,
     role: user?.role,
+    isVerified: user?.isVerified,
+    premiumAccess: user?.premiumAccess,
   };
   const resetToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: "10m",
@@ -251,6 +254,8 @@ const refreshTokenSetup = async (token: string) => {
     userId: user?._id,
     email: user?.email,
     role: user?.role,
+    isVerified: user?.isVerified,
+    premiumAccess: user?.premiumAccess,
   };
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in,
@@ -260,7 +265,6 @@ const refreshTokenSetup = async (token: string) => {
 };
 
 export const AuthServices = {
- 
   loginUserIntoDB,
   changeUserPassword,
   forgotPassword,
