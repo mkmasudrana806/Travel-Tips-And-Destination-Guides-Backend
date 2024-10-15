@@ -33,7 +33,7 @@ const createPostIntoDB = async (
   }
   payload.image = uploadedImage.secure_url;
   payload.author = userId;
-  
+
   const newPost = await Post.create(payload);
   return newPost;
 };
@@ -43,7 +43,9 @@ const createPostIntoDB = async (
  * @param query req.query object
  * @returns all posts
  */
-const getAllPostsFromDB = async (query: Record<string, unknown>) => {
+const getAllPostsFromDB = async (queries: Record<string, unknown>) => {
+  const { sortBy, ...query } = queries;
+  let result;
   const postQuery = new QueryBuilder(
     Post.find({}).populate({
       path: "author",
@@ -57,7 +59,23 @@ const getAllPostsFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .sort();
 
-  const result = await postQuery.modelQuery;
+  result = await postQuery.modelQuery;
+
+  if (queries?.sortBy && result?.length > 0) {
+    result = result.sort((a, b) => {
+      if (sortBy === "+upvote") {
+        return a.upvotes?.length - b.upvotes?.length;
+      } else if (sortBy === "-upvote") {
+        return b.upvotes?.length - a.upvotes?.length;
+      } else if (sortBy === "+downvote") {
+        return a.downvotes?.length - b.downvotes?.length;
+      } else if (sortBy === "-downvote") {
+        return b.downvotes?.length - a.downvotes?.length;
+      } else {
+        return 0;
+      }
+    });
+  }
   return result;
 };
 
