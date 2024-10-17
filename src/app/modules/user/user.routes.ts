@@ -31,6 +31,9 @@ router.get("/", UserControllers.getAllUsers);
 // get me route
 router.get("/getMe", auth("user", "admin"), UserControllers.getMe);
 
+// get single user
+router.get("/:id", UserControllers.getSingleUser);
+
 // delete an user
 router.delete("/", auth("user"), UserControllers.deleteUser);
 
@@ -97,4 +100,9 @@ router.get(
   UserControllers.checkFollowStatus
 );
 
+// get user followers and following lists
+router.post(
+  "/followers-followings",
+  UserControllers.getUserFlowersUnflollowers
+);
 export const UserRoutes = router;

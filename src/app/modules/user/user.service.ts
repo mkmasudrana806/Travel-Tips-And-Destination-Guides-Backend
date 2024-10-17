@@ -104,6 +104,16 @@ const getMe = async (email: string, role: string) => {
 };
 
 /**
+ * ----------------- get single user -----------------
+ * @param id mongoose id of the user
+ * return a user data
+ */
+const getSingleUserFromDB = async (id: string) => {
+  const result = await User.findById(id);
+  return result;
+};
+
+/**
  * --------------- delete an user form db ----------------
  * @param id user id
  * @returns return deleted user data
@@ -324,11 +334,40 @@ const checkFollowStatusIntoDB = async (
   return isFollowing;
 };
 
+// -------------------- get user flowers and unfollowers --------------------
+/**
+ * @param followers followers array of user IDs
+ * @param followings followings array of user IDs
+ * @returns return followerLists and followingLists
+ */
+const getUserFlowersUnflollowersFromDB = async (payload: {
+  followers: string[];
+  followings: string[];
+}) => {
+   
+  let followerLists;
+  let followingLists;
+  if (payload?.followers?.length > 0) {
+    followerLists = await User.find({
+      _id: { $in: payload?.followers },
+    }).select("_id name email profilePicture");
+  }
+
+  if (payload?.followings) {
+    followingLists = await User.find({
+      _id: { $in: payload?.followings },
+    }).select("_id name email profilePicture");
+  }
+  return { followerLists, followingLists };
+};
+
+// ----------------- get user ------------------
 export const UserServices = {
   createAnUserIntoDB,
   updateProfilePictureIntoDB,
   getAllUsersFromDB,
   getMe,
+  getSingleUserFromDB,
   deleteUserFromDB,
   updateUserIntoDB,
   changeUserStatusIntoDB,
@@ -337,4 +376,5 @@ export const UserServices = {
   makeUserPremiumAccessIntoDB,
   followUnfollowIntoDB,
   checkFollowStatusIntoDB,
+  getUserFlowersUnflollowersFromDB,
 };

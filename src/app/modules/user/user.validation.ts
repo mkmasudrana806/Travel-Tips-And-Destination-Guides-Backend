@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { string } from "zod";
 
 // create user validations schema
 const createUserValidationsSchema = z.object({
@@ -102,4 +102,5 @@ export const UserValidations = {
   changeUserRoleSchema,
   makeUserVerifiedSchema,
   makeUserPremiumAccessSchema,
+
 };

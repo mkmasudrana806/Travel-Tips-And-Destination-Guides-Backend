@@ -35,7 +35,7 @@ const getAllPosts = asyncHanlder(async (req, res) => {
 // -------------- get user posts ------------
 const getUserPosts = asyncHanlder(async (req, res) => {
   const result = await PostServices.getUserPostsFromDB(
-    req.user?.userId,
+    req.params?.userId,
     req.query
   );
 

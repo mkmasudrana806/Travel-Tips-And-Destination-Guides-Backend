@@ -12,7 +12,7 @@ const router = express.Router();
 router.post(
   "/create-post",
   auth("user"),
-  upload.single("file"),  
+  upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body?.data) {
       req.body = JSON.parse(req.body?.data);
@@ -29,7 +29,7 @@ router.post(
 router.get("/", PostControllers.getAllPosts);
 
 // get my posts
-router.get("/my-posts", auth("user"), PostControllers.getUserPosts);
+router.get("/my-posts/:userId", PostControllers.getUserPosts);
 
 // get single post
 router.get("/:id", PostControllers.getPost);

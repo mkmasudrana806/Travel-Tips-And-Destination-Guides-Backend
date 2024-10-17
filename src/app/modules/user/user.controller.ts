@@ -60,6 +60,18 @@ const getMe = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------- get me -------------------
+const getSingleUser = asyncHanlder(async (req, res) => {
+  const result = await UserServices.getSingleUserFromDB(req?.params?.id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User is retrieved successfully",
+    data: result,
+  });
+});
+
 // ------------------- delete an user -------------------
 const deleteUser = asyncHanlder(async (req, res) => {
   const result = await UserServices.deleteUserFromDB(req.user?.userId);
@@ -116,7 +128,6 @@ const changeUserRole = asyncHanlder(async (req, res) => {
 
 // ------------------- make user verified -------------------
 const makeUserVerified = asyncHanlder(async (req, res) => {
-  console.log("ocntorl");
   const result = await UserServices.makeUserVerifiedIntoDB(req.user, req.body);
 
   sendResponse(res, {
@@ -174,11 +185,24 @@ const checkFollowStatus = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------- check follow status -------------------
+const getUserFlowersUnflollowers = asyncHanlder(async (req, res) => {
+  const result = await UserServices.getUserFlowersUnflollowersFromDB(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Followers and Following Lists Retrieved Successfull",
+    data: result,
+  });
+});
+
 export const UserControllers = {
   createAnUser,
   updateProfilePicture,
   getAllUsers,
   getMe,
+  getSingleUser,
   deleteUser,
   updateUser,
   changeUserStatus,
@@ -187,4 +211,5 @@ export const UserControllers = {
   makeUserPremiumAccess,
   followUnfollow,
   checkFollowStatus,
+  getUserFlowersUnflollowers,
 };
