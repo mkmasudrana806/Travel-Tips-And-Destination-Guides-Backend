@@ -28,7 +28,7 @@ router.delete("/:id", auth("user"), CommentControllers.deleteAComment);
 // update a comment
 router.patch(
   "/:id",
-  auth("user"),
+  // auth("user"),
   validateRequestData(CommentValidations.updateACommentSchema),
   CommentControllers.updateAComment
 );

@@ -29,9 +29,7 @@ const getAllComments = asyncHanlder(async (req, res) => {
 
 // --------------- get all comments counts for all posts -------------------
 const getAllCommentsForPosts = asyncHanlder(async (req, res) => {
-  const result = await CommentServices.getAllCommentsForPostsFromDB(
-    req.body
-  );
+  const result = await CommentServices.getAllCommentsForPostsFromDB(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -71,13 +69,11 @@ const deleteAComment = asyncHanlder(async (req, res) => {
 
 // ------------------- update a comment -------------------
 const updateAComment = asyncHanlder(async (req, res) => {
-  const userId = req.user?.userId;
-  const commentId = req.params?.id;
-  const result = await CommentServices.updateACommentIntoDB(
-    userId,
-    commentId,
-    req.body
-  );
+  const _id = req.params?.id;
+  const result = await CommentServices.updateACommentIntoDB({
+    _id,
+    ...req.body,
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

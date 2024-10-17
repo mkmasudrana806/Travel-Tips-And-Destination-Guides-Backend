@@ -19,12 +19,10 @@ const createACommentSchema = z.object({
 // update a comment schema
 const updateACommentSchema = z.object({
   body: z.object({
-    comment: z
-      .string({
-        required_error: "Comment is required",
-        invalid_type_error: "Comment should be string",
-      })
-      .optional(),
+    comment: z.string({
+      required_error: "Comment is required",
+      invalid_type_error: "Comment should be string",
+    }),
   }),
 });
 

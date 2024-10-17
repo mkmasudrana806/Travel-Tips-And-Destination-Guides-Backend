@@ -59,30 +59,18 @@ const getAllCommentsOfPostFromDB = async (postId: string) => {
 const deleteACommentIntoDB = async (userId: string, commentId: string) => {
   const result = await Comment.findOneAndDelete({
     _id: commentId,
-    userId,
   });
-
   if (!result) {
     throw new AppError(httpStatus.BAD_REQUEST, "No comment to delete");
   }
-
-  return result;
+  return true;
 };
 
 // -------------- update a comment --------------
-const updateACommentIntoDB = async (
-  userId: string,
-  commentId: string,
-  payload: TComment
-) => {
-  const allowedUpdatedData = makeAllowedFieldData<TComment>(
-    COMMENT_ALLOWED_FIELDS_TO_UPDATE,
-    payload
-  );
-
+const updateACommentIntoDB = async (payload: Partial<TComment>) => {
   const result = await Comment.findOneAndUpdate(
-    { _id: commentId, userId: userId },
-    allowedUpdatedData,
+    { _id: payload?._id, postId: payload?.postId },
+    { comment: payload?.comment },
     { new: true, runValidators: true }
   );
 
