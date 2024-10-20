@@ -1,6 +1,5 @@
 import { JwtPayload } from "jsonwebtoken";
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
-import makeFlattenedObject from "../../utils/makeFlattenedObject";
 import { allowedFieldsToUpdate, searchableFields } from "./user.constant";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
@@ -10,6 +9,10 @@ import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { TfileUpload } from "../../interface/fileUploadType";
 import config from "../../config";
 import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
+import { TPayment } from "../payments/payment.interface";
+import { Payment } from "../payments/payment.model";
+import { initiatePayment } from "../payments/payment.utils";
+import { Date } from "mongoose";
 
 /**
  * ----------------------- Create an user----------------------
@@ -253,17 +256,40 @@ const makeUserVerifiedIntoDB = async (
  */
 const makeUserPremiumAccessIntoDB = async (
   user: JwtPayload,
-  payload: { premiumAccess: boolean }
+  payload: TPayment
 ) => {
-  // check if the user paid
+  // payment data
+  const tnxId = `tnx-${Date.now()}`;
+  const paymentData: Partial<TPayment> = {
+    userId: user?.userId,
+    username: user?.name,
+    email: user?.email,
+    amount: payload.amount,
+    subscriptionType: payload.subscriptionType,
+    transactionId: tnxId,
+  };
 
-  // update the user verified status
-  const result = await User.findByIdAndUpdate(user?.userId, payload, {
-    new: true,
-    runValidators: true,
-  });
+  // set subscription expires date
+  const expiredDate = new Date();
+  if (paymentData.subscriptionType === "monthly") {
+    expiredDate.setDate(expiredDate.getDate() + 30);
+  } else if (paymentData.subscriptionType === "yearly") {
+    expiredDate.setDate(expiredDate.getDate() + 365);
+  }
+  paymentData.expiresIn = expiredDate as unknown as Date;
 
-  return result;
+  //  save payment info to DB
+  const result = await Payment.create(paymentData);
+  if (!result) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Faild to create payment"
+    );
+  }
+
+  //  initiate amarPay session and return session url
+  const session = await initiatePayment(paymentData);
+  return session;
 };
 
 /**
@@ -344,7 +370,6 @@ const getUserFlowersUnflollowersFromDB = async (payload: {
   followers: string[];
   followings: string[];
 }) => {
-   
   let followerLists;
   let followingLists;
   if (payload?.followers?.length > 0) {

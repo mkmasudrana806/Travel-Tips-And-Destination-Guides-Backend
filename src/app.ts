@@ -5,11 +5,6 @@ import cors from "cors";
 import { ApiRoutes } from "./app/routes";
 import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
-import { upload } from "./app/utils/upload";
-import AppError from "./app/utils/AppError";
-import httpStatus from "http-status";
-import sendImageToCloudinary from "./app/utils/sendImageToCloudinary";
-import sendResponse from "./app/utils/sendResponse";
 
 const app = express();
 

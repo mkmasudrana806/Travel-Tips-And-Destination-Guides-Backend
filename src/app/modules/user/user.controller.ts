@@ -148,7 +148,7 @@ const makeUserPremiumAccess = asyncHanlder(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "premium access is changed successfull",
+    message: "amarPay session is initiated successfully",
     data: result,
   });
 });

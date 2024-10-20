@@ -34,11 +34,13 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
 
   // make access token and refresh token
   const jwtPayload = {
+    name: user?.name,
     userId: user?._id,
     email: user?.email,
     role: user?.role,
     isVerified: user?.isVerified,
     premiumAccess: user?.premiumAccess,
+    profilePicture: user?.profilePicture,
   };
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in,
@@ -129,11 +131,13 @@ const forgotPassword = async (email: string) => {
 
   // jwt payload and create an access token
   const jwtPayload = {
+    name: user.name,
     userId: user?._id,
     email: user?.email,
     role: user?.role,
     isVerified: user?.isVerified,
     premiumAccess: user?.premiumAccess,
+    profilePicture: user?.profilePicture,
   };
   const resetToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: "10m",
@@ -251,11 +255,13 @@ const refreshTokenSetup = async (token: string) => {
 
   // create an access token
   const jwtPayload = {
+    name: user?.name,
     userId: user?._id,
     email: user?.email,
     role: user?.role,
     isVerified: user?.isVerified,
     premiumAccess: user?.premiumAccess,
+    profilePicture: user?.profilePicture,
   };
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in,

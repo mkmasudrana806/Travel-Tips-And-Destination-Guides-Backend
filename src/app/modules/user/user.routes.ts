@@ -6,6 +6,7 @@ import auth from "../../middlewares/auth";
 import { upload } from "../../utils/upload";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
+import { PaymentValidations } from "../payments/payment.validation";
 const router = express.Router();
 
 // create an user
@@ -79,10 +80,10 @@ router.patch(
 );
 
 // give user premium access
-router.patch(
-  "/give-premium-access",
+router.post(
+  "/premium-access",
   auth("user"),
-  validateRequestData(UserValidations.makeUserPremiumAccessSchema),
+  validateRequestData(PaymentValidations.paymentValidationSchema),
   UserControllers.makeUserPremiumAccess
 );
 
