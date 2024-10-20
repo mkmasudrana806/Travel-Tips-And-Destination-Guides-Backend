@@ -72,10 +72,10 @@ router.patch(
 );
 
 // make user verified
-router.patch(
-  "/make-user-verified",
+router.post(
+  "/user-verified",
   auth("user"),
-  validateRequestData(UserValidations.makeUserVerifiedSchema),
+  validateRequestData(PaymentValidations.paymentValidationSchema),
   UserControllers.makeUserVerified
 );
 

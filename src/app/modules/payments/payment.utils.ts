@@ -5,13 +5,17 @@ import { TPayment } from "./payment.interface";
 dotenv.config();
 
 // --------------- initiate amarpay payment object
-export const initiatePayment = async (paymentData: Partial<TPayment>) => {
+export const initiatePayment = async (
+  paymentData: Partial<TPayment>,
+  success_url: string,
+  fail_url: string
+) => {
   const response = await axios.post(process.env.PAYMENT_URL as string, {
     store_id: process.env.STORE_ID,
     signature_key: process.env.SIGNATURE_KEY,
     tran_id: paymentData.transactionId,
-    success_url: `http://localhost:5000/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`,
-    fail_url: `http://localhost:5000/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`,
+    success_url: success_url,
+    fail_url: fail_url,
     cancel_url: "http://localhost:3000/",
     amount: paymentData.amount,
     currency: "BDT",

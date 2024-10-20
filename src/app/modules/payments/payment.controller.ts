@@ -18,6 +18,21 @@ const upgradeUserToPremium = asyncHanlder(async (req, res) => {
   res.send(`<h1>Payment ${status}</h1>`);
 });
 
+// -------------  upgrade user to verified
+const upgradeUserToVerified = asyncHanlder(async (req, res) => {
+  const { tnxId, userId, status } = req?.query;
+
+  // double check if payment success in amarpay then update payment status and user premiumAccess status
+
+  await PaymentServices.upgradeUserToVerifiedIntoDB(
+    tnxId as string,
+    userId as string,
+    status as string
+  );
+
+  res.send(`<h1>Payment ${status}</h1>`);
+});
+
 // get all payments history
 const allPaymentHistory = asyncHanlder(async (req, res) => {
   const result = await PaymentServices.allPaymentsHistoryFromDB();
@@ -59,6 +74,7 @@ const updatePaymentStatus = asyncHanlder(async (req, res) => {
 
 export const PaymentControllers = {
   upgradeUserToPremium,
+  upgradeUserToVerified,
   allPaymentHistory,
   userPaymentHistory,
   updatePaymentStatus,

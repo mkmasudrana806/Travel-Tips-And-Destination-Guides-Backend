@@ -78,6 +78,78 @@ const upgradeUserToPremiumIntoDB = async (
   }
 };
 
+// --------------- upgrade user to verified
+const upgradeUserToVerifiedIntoDB = async (
+  tnxId: string,
+  userId: string,
+  status: string
+) => {
+  if (status === "failed") {
+    // update payment status
+    const paymentStatus = await Payment.findOneAndUpdate(
+      { transactionId: tnxId },
+      { status: "failed" },
+      { runValidators: true }
+    );
+
+    if (!paymentStatus) {
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Faild to update payment status"
+      );
+    }
+    return;
+  }
+  // first verify payment in amarpay database
+  const isPaidtoAmarpay = await verifyPayment(tnxId);
+
+  // now update payment status and user premiumAccess
+  if (isPaidtoAmarpay && isPaidtoAmarpay.pay_status === "Successful") {
+    const session = await mongoose.startSession();
+    try {
+      // start transaction
+      session.startTransaction();
+
+      // update payment status
+      const paymentStatus = await Payment.findOneAndUpdate(
+        { transactionId: tnxId },
+        { status: "completed" },
+        { runValidators: true, session }
+      );
+
+      if (!paymentStatus) {
+        throw new AppError(
+          httpStatus.INTERNAL_SERVER_ERROR,
+          "Faild to update payment status"
+        );
+      }
+
+      // update user premiumAccess
+      const userPremiumAccess = await User.findByIdAndUpdate(
+        userId,
+        { isVerified: true },
+        { session }
+      );
+      if (!userPremiumAccess) {
+        throw new AppError(
+          httpStatus.INTERNAL_SERVER_ERROR,
+          "Failed to update user premiumAccess"
+        );
+      }
+
+      await session.commitTransaction();
+      await session.endSession();
+    } catch (error) {
+      await session.abortTransaction();
+      await session.endSession();
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Faild to upgrade payment"
+      );
+    }
+  }
+};
+
 // get all payments history
 const allPaymentsHistoryFromDB = async () => {
   const result = await Payment.find({});
@@ -105,6 +177,7 @@ const updatePaymentStatusIntoDB = async (
 
 export const PaymentServices = {
   upgradeUserToPremiumIntoDB,
+  upgradeUserToVerifiedIntoDB,
   allPaymentsHistoryFromDB,
   userPaymentsHistoryFromDB,
   updatePaymentStatusIntoDB,

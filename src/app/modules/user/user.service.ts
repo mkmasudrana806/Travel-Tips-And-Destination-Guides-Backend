@@ -13,6 +13,7 @@ import { TPayment } from "../payments/payment.interface";
 import { Payment } from "../payments/payment.model";
 import { initiatePayment } from "../payments/payment.utils";
 import { Date } from "mongoose";
+import Post from "../post/post.model";
 
 /**
  * ----------------------- Create an user----------------------
@@ -232,21 +233,59 @@ const changeUserRoleIntoDB = async (id: string, payload: { role: string }) => {
  * @param user user jwt payload
  * @param payload boolean payload
  */
-const makeUserVerifiedIntoDB = async (
-  user: JwtPayload,
-  payload: { isVerified: boolean }
-) => {
-  // check if the user's any post has one upvotes
-  const isUpvoteOk = true;
-
-  // check if the user paid
-  const isPaymentOk = true;
-
-  // update the user verified status
-  const result = await User.findByIdAndUpdate(user?.userId, payload, {
-    new: true,
-    runValidators: true,
+const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
+  // Find one post where the author is the user and upvotes array is non-empty
+  const isPostFound = await Post.findOne({
+    author: user?.userId,
+    upvotes: { $exists: true, $not: { $size: 0 } },
   });
+
+  // If a post with upvotes is found, set isUpvoteOk to true
+  const isUpvoteOk = !!isPostFound;
+
+  if (!isUpvoteOk) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "At least one upvote required to verfied profile!"
+    );
+  }
+
+  // payment data
+  const tnxId = `tnx-${Date.now()}`;
+  const paymentData: Partial<TPayment> = {
+    userId: user?.userId,
+    username: user?.name,
+    email: user?.email,
+    amount: payload.amount,
+    subscriptionType: payload.subscriptionType,
+    transactionId: tnxId,
+  };
+
+  // set subscription expires date
+  const expiredDate = new Date();
+  if (paymentData.subscriptionType === "monthly") {
+    expiredDate.setDate(expiredDate.getDate() + 30);
+  } else if (paymentData.subscriptionType === "yearly") {
+    expiredDate.setDate(expiredDate.getDate() + 365);
+  }
+  paymentData.expiresIn = expiredDate as unknown as Date;
+
+  //  save payment info to DB
+  const result = await Payment.create(paymentData);
+  if (!result) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Faild to create payment"
+    );
+  }
+
+  const successUrl = `http://localhost:5000/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
+
+  const faildUrl = `http://localhost:5000/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
+
+  //  initiate amarPay session and return session url
+  const session = await initiatePayment(paymentData, successUrl, faildUrl);
+  return session;
 };
 
 /**
@@ -287,8 +326,12 @@ const makeUserPremiumAccessIntoDB = async (
     );
   }
 
+  const successUrl = `http://localhost:5000/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
+
+  const faildUrl = `http://localhost:5000/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
+
   //  initiate amarPay session and return session url
-  const session = await initiatePayment(paymentData);
+  const session = await initiatePayment(paymentData, successUrl, faildUrl);
   return session;
 };
 

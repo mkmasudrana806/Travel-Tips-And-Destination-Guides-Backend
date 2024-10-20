@@ -6,10 +6,10 @@ import { PaymentValidations } from "./payment.validation";
 const router = express.Router();
 
 // upgrade user to premium
-router.post(
-  "/upgrade-user",
-  PaymentControllers.upgradeUserToPremium
-);
+router.post("/upgrade-user", PaymentControllers.upgradeUserToPremium);
+
+// verified
+router.post("/user-verified", PaymentControllers.upgradeUserToVerified);
 
 // get all payments history
 router.get("/", auth("admin"), PaymentControllers.allPaymentHistory);
