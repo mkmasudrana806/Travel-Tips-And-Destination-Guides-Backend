@@ -8,7 +8,7 @@ export type TPayment = {
   amount: number;
   date: Date;
   expiresIn: Date;
-  status: "pending" | "completed" | "falied";
+  status: "pending" | "completed" | "failed";
   subscriptionType: "monthly" | "yearly";
   transactionId?: string;
 };

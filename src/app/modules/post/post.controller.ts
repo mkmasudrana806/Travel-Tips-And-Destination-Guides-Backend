@@ -63,7 +63,7 @@ const getPost = asyncHanlder(async (req, res) => {
 const updatePost = asyncHanlder(async (req, res) => {
   const result = await PostServices.updateAPostIntoDB(
     req.user,
-    req.params.id,
+    req.params?.id,
     req.body
   );
 
@@ -78,7 +78,7 @@ const updatePost = asyncHanlder(async (req, res) => {
 // --------------- delete a post ----------------
 const deletePost = asyncHanlder(async (req, res) => {
   const result = await PostServices.deleteAPostFromDB(
-    req.user?.userId,
+    req.user,
     req.params.id
   );
 

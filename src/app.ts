@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["https://travel-tips-and-destination-guides-client.vercel.app"],
     credentials: true,
   })
 ); // your client url
@@ -26,7 +26,6 @@ app.use("/api", ApiRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running...");
 });
-
 
 // not found route
 app.use("*", notFoundRoute);

@@ -44,6 +44,9 @@ const forgotPasswordSchema = z.object({
 // reset password schema
 const resetPasswordSchema = z.object({
   body: z.object({
+    token: z.string({
+      required_error: "Token is required",
+    }),
     email: z
       .string({
         required_error: "Email is required",

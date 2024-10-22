@@ -5,7 +5,8 @@ import { CommentRoutes } from "../modules/comments/comment.routes";
 import { PostRoutes } from "../modules/post/post.routes";
 import { UploadFileRoutes } from "../modules/uploadFile/uploadFile.routes";
 import { PaymentRoutes } from "../modules/payments/payment.routes";
- const router = express.Router();
+import { InsightsRoutes } from "../modules/insights/insights.routes";
+const router = express.Router();
 
 // user
 router.use("/users", UserRoutes);
@@ -23,6 +24,9 @@ router.use("/comments", CommentRoutes);
 router.use("/uploads", UploadFileRoutes);
 
 // payments
-router.use("/payments",  PaymentRoutes);
+router.use("/payments", PaymentRoutes);
+
+// insights
+router.use("/insights", InsightsRoutes);
 
 export const ApiRoutes = router;

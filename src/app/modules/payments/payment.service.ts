@@ -64,7 +64,6 @@ const upgradeUserToPremiumIntoDB = async (
           "Failed to update user premiumAccess"
         );
       }
-
       await session.commitTransaction();
       await session.endSession();
     } catch (error) {

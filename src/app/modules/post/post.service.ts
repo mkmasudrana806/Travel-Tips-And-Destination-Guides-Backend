@@ -1,4 +1,4 @@
-import mongoose, { mongo, Schema, Types } from "mongoose";
+import { Types } from "mongoose";
 import TPost from "./post.interface";
 import Post from "./post.model";
 import AppError from "../../utils/AppError";
@@ -47,7 +47,7 @@ const getAllPostsFromDB = async (queries: Record<string, unknown>) => {
   const { sortBy, ...query } = queries;
   let result;
   const postQuery = new QueryBuilder(
-    Post.find({}).populate({
+    Post.find({ isDeleted: false }).populate({
       path: "author",
       select: "_id name email isVerified profilePicture premiumAccess",
     }),
@@ -89,7 +89,7 @@ const getUserPostsFromDB = async (
   query: Record<string, unknown>
 ) => {
   const postQuery = new QueryBuilder(
-    Post.find({ author: userId }).populate({
+    Post.find({ author: userId, isDeleted: false }).populate({
       path: "author",
       select: "_id name email isVerified profilePicture premiumAccess",
     }),
@@ -131,14 +131,16 @@ const updateAPostIntoDB = async (
   postId: string,
   payload: Partial<TPost>
 ) => {
-  const updatedPost = makeAllowedFieldData<TPost>(
+  // make updated post data
+  const updatedPostData = makeAllowedFieldData<TPost>(
     allowedFieldsToUpdate,
     payload
   );
 
+  // update into database
   const result = await Post.findOneAndUpdate(
     { _id: postId, author: user?.userId, isDeleted: false },
-    updatedPost,
+    updatedPostData,
     {
       new: true,
     }
@@ -149,16 +151,35 @@ const updateAPostIntoDB = async (
 };
 
 // Delete a post by its ID
-const deleteAPostFromDB = async (userId: string, postId: string) => {
-  const deletedPost = await Post.findOneAndUpdate(
-    {
-      author: userId,
-      _id: postId,
-      isDeleted: false,
-    },
-    { isDeleted: true },
-    { new: true }
-  );
+/**
+ *
+ * @param userId user id from jwt payload
+ * @param postId post id to delete
+ * @returns deleted post
+ */
+const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
+  let deletedPost;
+  if (user?.role === "user") {
+    deletedPost = await Post.findOneAndUpdate(
+      {
+        author: user?.userId,
+        _id: postId,
+        isDeleted: false,
+      },
+      { isDeleted: true },
+      { new: true }
+    );
+  } else if (user?.role === "admin") {
+    deletedPost = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        isDeleted: false,
+      },
+      { isDeleted: true },
+      { new: true }
+    );
+  }
+
   if (!deletedPost) throw new Error("Post not found or deletion failed");
   return deletedPost;
 };

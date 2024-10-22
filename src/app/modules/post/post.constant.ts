@@ -5,7 +5,6 @@ export const allowedFieldsToUpdate: (keyof TPost)[] = [
   "title",
   "content",
   "category",
-  "image",
   "premium",
 ];
 

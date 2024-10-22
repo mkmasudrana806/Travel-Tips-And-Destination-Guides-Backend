@@ -49,8 +49,7 @@ const getAllUsers = asyncHanlder(async (req, res) => {
 
 // ------------------- get me -------------------
 const getMe = asyncHanlder(async (req, res) => {
-  const { email, role } = req.user;
-  const result = await UserServices.getMe(email, role);
+  const result = await UserServices.getMe(req.user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -74,7 +73,7 @@ const getSingleUser = asyncHanlder(async (req, res) => {
 
 // ------------------- delete an user -------------------
 const deleteUser = asyncHanlder(async (req, res) => {
-  const result = await UserServices.deleteUserFromDB(req.user?.userId);
+  const result = await UserServices.deleteUserFromDB(req.params?.id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

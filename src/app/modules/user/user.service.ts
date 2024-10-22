@@ -85,7 +85,7 @@ const updateProfilePictureIntoDB = async (
  * @return return all users
  */
 const getAllUsersFromDB = async (query: Record<string, any>) => {
-  const userQuery = new QueryBuilder(User.find(), query)
+  const userQuery = new QueryBuilder(User.find({ isDeleted: false }), query)
     .search(searchableFields)
     .filter()
     .sort()
@@ -102,8 +102,12 @@ const getAllUsersFromDB = async (query: Record<string, any>) => {
  * @param role user role
  * @returns own user data based on jwt payload data
  */
-const getMe = async (email: string, role: string) => {
-  const result = await User.findOne({ email, role });
+const getMe = async (user: JwtPayload) => {
+  const result = await User.findOne({
+    _id: user?.userId,
+    role: user?.role,
+    isDeleted: false,
+  });
   return result;
 };
 
@@ -128,7 +132,7 @@ const deleteUserFromDB = async (id: string) => {
     { isDeleted: true },
     { new: true }
   );
-  return true;
+  return result ? true : false;
 };
 
 /**
@@ -237,6 +241,7 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
   // Find one post where the author is the user and upvotes array is non-empty
   const isPostFound = await Post.findOne({
     author: user?.userId,
+    isDeleted: false,
     upvotes: { $exists: true, $not: { $size: 0 } },
   });
 
@@ -279,9 +284,9 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
     );
   }
 
-  const successUrl = `http://localhost:5000/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
+  const successUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
 
-  const faildUrl = `http://localhost:5000/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
+  const faildUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
 
   //  initiate amarPay session and return session url
   const session = await initiatePayment(paymentData, successUrl, faildUrl);
@@ -326,9 +331,9 @@ const makeUserPremiumAccessIntoDB = async (
     );
   }
 
-  const successUrl = `http://localhost:5000/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
+  const successUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
 
-  const faildUrl = `http://localhost:5000/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
+  const faildUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
 
   //  initiate amarPay session and return session url
   const session = await initiatePayment(paymentData, successUrl, faildUrl);
@@ -429,7 +434,6 @@ const getUserFlowersUnflollowersFromDB = async (payload: {
   return { followerLists, followingLists };
 };
 
-// ----------------- get user ------------------
 export const UserServices = {
   createAnUserIntoDB,
   updateProfilePictureIntoDB,

@@ -49,8 +49,7 @@ const forgotPassword = asyncHanlder(async (req, res) => {
 
 // ---------------------- reset password -----------------------
 const resetPassword = asyncHanlder(async (req, res) => {
-  const { email, newPassword } = req.body;
-  const token = req.headers.authorization as string;
+  const { email, newPassword, token } = req.body;
   const result = await AuthServices.resetPasswordIntoDB(
     email,
     newPassword,

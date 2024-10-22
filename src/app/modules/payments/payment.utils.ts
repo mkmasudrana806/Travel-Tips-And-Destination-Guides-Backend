@@ -16,7 +16,7 @@ export const initiatePayment = async (
     tran_id: paymentData.transactionId,
     success_url: success_url,
     fail_url: fail_url,
-    cancel_url: "http://localhost:3000/",
+    cancel_url: "https://travel-tips-and-destination-guides-client.vercel.app/",
     amount: paymentData.amount,
     currency: "BDT",
     desc: "Merchant Registration Payment",

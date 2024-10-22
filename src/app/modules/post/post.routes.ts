@@ -43,7 +43,7 @@ router.patch(
 );
 
 // delete a post
-router.delete("/:id", auth("user"), PostControllers.deletePost);
+router.delete("/:id", auth("user", "admin"), PostControllers.deletePost);
 
 // upvote a post
 router.patch("/upvote/:postId", auth("user"), PostControllers.upvotePost);

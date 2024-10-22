@@ -1,11 +1,9 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import { UserControllers } from "./user.controller";
 import validateRequestData from "../../middlewares/validateRequest";
 import { UserValidations } from "./user.validation";
 import auth from "../../middlewares/auth";
 import { upload } from "../../utils/upload";
-import AppError from "../../utils/AppError";
-import httpStatus from "http-status";
 import { PaymentValidations } from "../payments/payment.validation";
 const router = express.Router();
 
@@ -27,7 +25,7 @@ router.post(
 );
 
 // get all users
-router.get("/", UserControllers.getAllUsers);
+router.get("/", auth("admin"), UserControllers.getAllUsers);
 
 // get me route
 router.get("/getMe", auth("user", "admin"), UserControllers.getMe);
@@ -36,12 +34,12 @@ router.get("/getMe", auth("user", "admin"), UserControllers.getMe);
 router.get("/:id", UserControllers.getSingleUser);
 
 // delete an user
-router.delete("/", auth("user"), UserControllers.deleteUser);
+router.delete("/:id", auth("admin"), UserControllers.deleteUser);
 
 // update an user
 router.patch(
   "/update-profile",
-  auth("user"),
+  auth("user", "admin"),
   validateRequestData(UserValidations.updateUserValidationsSchema),
   UserControllers.updateUser
 );
@@ -106,4 +104,5 @@ router.post(
   "/followers-followings",
   UserControllers.getUserFlowersUnflollowers
 );
+
 export const UserRoutes = router;
