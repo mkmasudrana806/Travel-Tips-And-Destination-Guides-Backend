@@ -6,13 +6,15 @@ import validateRequestData from "../../middlewares/validateRequest";
 import { upload } from "../../utils/upload";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
+import { multerUpload } from "../../config/multer.config";
 
 const router = express.Router();
 // create a new post
 router.post(
   "/create-post",
   auth("user"),
-  upload.single("file"),
+  // upload.single("file"),
+  multerUpload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.body?.data) {
       req.body = JSON.parse(req.body?.data);

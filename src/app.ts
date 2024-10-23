@@ -6,6 +6,7 @@ import { ApiRoutes } from "./app/routes";
 import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
 
+
 const app = express();
 
 // parsers (middleware)

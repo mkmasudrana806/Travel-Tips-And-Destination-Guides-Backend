@@ -14,10 +14,6 @@ const createPostValidationSchema = z.object({
       })
       .min(100),
     category: z.enum(["Adventure", "Business Travel", "Exploration"]),
-    premium: z.boolean({
-      required_error: "premium is required",
-      invalid_type_error: "premium value should be boolean",
-    }),
   }),
 });
 
