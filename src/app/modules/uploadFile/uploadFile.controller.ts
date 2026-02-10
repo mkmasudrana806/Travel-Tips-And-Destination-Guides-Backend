@@ -5,10 +5,10 @@ import asyncHanlder from "../../utils/asyncHandler";
 import { uploadFilesServices } from "./uploadFile.service";
 
 // ------------------- create an user -------------------
-const uploadImage = asyncHanlder(async (req, res) => {
-  const result = await uploadFilesServices.uploadImageIntoCloudinary(
-    req.file as TfileUpload
-  );
+const uploadImageCloudinary = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const file = req.body;
+  const result = await uploadFilesServices.saveImageInfoInDB(file, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -19,5 +19,5 @@ const uploadImage = asyncHanlder(async (req, res) => {
 });
 
 export const uploadFiles = {
-  uploadImage,
+  uploadImageCloudinary,
 };

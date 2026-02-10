@@ -6,14 +6,14 @@ import { ApiRoutes } from "./app/routes";
 import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
 
-
 const app = express();
 
 // parsers (middleware)
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://travel-tips-and-destination-guides-client.vercel.app"],
+    // origin: ["https://travel-tips-and-destination-guides-client.vercel.app"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 ); // your client url
@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static("./uploads"));
 
 // api routes (middleware)
-app.use("/api", ApiRoutes);
+app.use("/api/v1", ApiRoutes);
 
 // base api route
 app.get("/", (req: Request, res: Response) => {

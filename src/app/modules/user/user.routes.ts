@@ -5,7 +5,7 @@ import { UserValidations } from "./user.validation";
 import auth from "../../middlewares/auth";
 import { upload } from "../../utils/upload";
 import { PaymentValidations } from "../payments/payment.validation";
-import { multerUpload } from "../../config/multer.config";
+import { CloudinaryMulterUpload } from "../../config/multer.config";
 const router = express.Router();
 
 // create an user
@@ -49,7 +49,7 @@ router.patch(
 router.patch(
   "/update-profile-picture",
   // upload.single("file"),
-  multerUpload.single("file"),
+  CloudinaryMulterUpload.single("file"),
   auth("user"),
   validateRequestData(UserValidations.updateUserValidationsSchema),
   UserControllers.updateProfilePicture

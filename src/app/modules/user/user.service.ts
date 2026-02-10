@@ -58,7 +58,7 @@ const createAnUserIntoDB = async (file: TfileUpload, payload: TUser) => {
  */
 const updateProfilePictureIntoDB = async (
   currentUser: JwtPayload,
-  file: TfileUpload
+  file: TfileUpload,
 ) => {
   if (!file) {
     throw new AppError(httpStatus.BAD_REQUEST, "No file attachement");
@@ -108,6 +108,8 @@ const getMe = async (user: JwtPayload) => {
     role: user?.role,
     isDeleted: false,
   });
+
+  console.log("user : ", result);
   return result;
 };
 
@@ -130,7 +132,7 @@ const deleteUserFromDB = async (id: string) => {
   const result = await User.findByIdAndUpdate(
     id,
     { isDeleted: true },
-    { new: true }
+    { new: true },
   );
   return result ? true : false;
 };
@@ -144,12 +146,12 @@ const deleteUserFromDB = async (id: string) => {
  */
 const updateUserIntoDB = async (
   currentUser: JwtPayload,
-  payload: Partial<TUser>
+  payload: Partial<TUser>,
 ) => {
   // filter allowed fileds only
   const allowedFieldData = makeAllowedFieldData<TUser>(
     allowedFieldsToUpdate,
-    payload
+    payload,
   );
 
   const result = await User.findByIdAndUpdate(
@@ -158,7 +160,7 @@ const updateUserIntoDB = async (
     {
       new: true,
       runValidators: true,
-    }
+    },
   );
   return result;
 };
@@ -173,7 +175,7 @@ const updateUserIntoDB = async (
  */
 const changeUserStatusIntoDB = async (
   id: string,
-  payload: { status: string }
+  payload: { status: string },
 ) => {
   // check if user exists, not deleted
   const user = await User.findOne({ _id: id });
@@ -187,7 +189,7 @@ const changeUserStatusIntoDB = async (
   if (user.email === "admin@gmail.com") {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "You are main admin, can't change your status"
+      "You are main admin, can't change your status",
     );
   }
 
@@ -221,7 +223,7 @@ const changeUserRoleIntoDB = async (id: string, payload: { role: string }) => {
   if (user.email === "admin@gmail.com") {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "You are main admin, can't change role!"
+      "You are main admin, can't change role!",
     );
   }
 
@@ -251,7 +253,7 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
   if (!isUpvoteOk) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "At least one upvote required to verfied profile!"
+      "At least one upvote required to verfied profile!",
     );
   }
 
@@ -280,7 +282,7 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
   if (!result) {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Faild to create payment"
+      "Faild to create payment",
     );
   }
 
@@ -300,7 +302,7 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
  */
 const makeUserPremiumAccessIntoDB = async (
   user: JwtPayload,
-  payload: TPayment
+  payload: TPayment,
 ) => {
   // payment data
   const tnxId = `tnx-${Date.now()}`;
@@ -327,7 +329,7 @@ const makeUserPremiumAccessIntoDB = async (
   if (!result) {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Faild to create payment"
+      "Faild to create payment",
     );
   }
 
@@ -349,7 +351,7 @@ const makeUserPremiumAccessIntoDB = async (
  */
 const followUnfollowIntoDB = async (
   currentUser: JwtPayload,
-  targetUserId: string
+  targetUserId: string,
 ) => {
   // Check if the target user exists in the database
   const targetUser = await User.findById(targetUserId);
@@ -365,11 +367,11 @@ const followUnfollowIntoDB = async (
     // remove target user from current user's following list
     await User.updateOne(
       { _id: targetUserId },
-      { $pull: { followers: currentUser.userId } }
+      { $pull: { followers: currentUser.userId } },
     );
     await User.updateOne(
       { _id: currentUser.userId },
-      { $pull: { following: targetUserId } }
+      { $pull: { following: targetUserId } },
     );
 
     return false;
@@ -378,11 +380,11 @@ const followUnfollowIntoDB = async (
     // add target user to current user's following list
     await User.updateOne(
       { _id: targetUserId },
-      { $addToSet: { followers: currentUser.userId } }
+      { $addToSet: { followers: currentUser.userId } },
     );
     await User.updateOne(
       { _id: currentUser.userId },
-      { $addToSet: { following: targetUserId } }
+      { $addToSet: { following: targetUserId } },
     );
 
     return true;
@@ -398,7 +400,7 @@ const followUnfollowIntoDB = async (
  */
 const checkFollowStatusIntoDB = async (
   user: JwtPayload,
-  targetUserId: string
+  targetUserId: string,
 ) => {
   const currentUser = await User.findById(user?.userId);
   if (!currentUser) {
