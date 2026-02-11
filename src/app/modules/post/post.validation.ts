@@ -1,5 +1,8 @@
 import { z } from "zod";
-
+type IFormData = {
+  bannerId: string;
+  contentIds: string[];
+};
 // create post
 const createPostValidationSchema = z.object({
   body: z.object({
@@ -8,12 +11,16 @@ const createPostValidationSchema = z.object({
         required_error: "Title is required",
       })
       .min(5),
+    category: z.enum(["Adventure", "Business Travel", "Exploration"]),
+    image: z.string().url("Baner image is not added"),
     content: z
       .string({
         required_error: "content is required",
       })
       .min(100),
-    category: z.enum(["Adventure", "Business Travel", "Exploration"]),
+    premium: z.boolean(),
+    bannerId: z.string(),
+    contentIds: z.array(z.string()),
   }),
 });
 

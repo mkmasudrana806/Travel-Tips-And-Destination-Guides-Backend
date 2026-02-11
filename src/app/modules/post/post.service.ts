@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import TPost from "./post.interface";
+import TPost, { TPostCreate } from "./post.interface";
 import Post from "./post.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
@@ -9,7 +9,8 @@ import { allowedFieldsToUpdate, searchableFields } from "./post.constant";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { TfileUpload } from "../../interface/fileUploadType";
 import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
-
+import { Media } from "../media/media.model";
+import * as cheerio from "cheerio";
 /**
  * ------------- Create a new post ----------------
  * @param userId logged in user
@@ -18,23 +19,37 @@ import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
  */
 const createPostIntoDB = async (
   userId: Types.ObjectId,
-  file: TfileUpload,
-  payload: TPost
+  payload: TPostCreate,
 ) => {
-  if (!file) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Image is not attached!");
-  }
-
-  const imageName = `${userId}-${payload.category}`;
-  const path = file.path;
-  const uploadedImage: any = await sendImageToCloudinary(path, imageName);
-  if (!uploadedImage?.secure_url) {
-    throw new AppError(httpStatus.FORBIDDEN, "Image is not uploaded");
-  }
-  payload.image = uploadedImage.secure_url;
   payload.author = userId;
+  const { bannerId, contentIds, ...postData } = payload;
 
-  const newPost = await Post.create(payload);
+  // parsing the content
+  const $ = cheerio.load(postData.content);
+  const idsInEditor: string[] = [];
+
+  // loop through all image inside content and received ids
+  $("img").each((i, el) => {
+    const id = $(el).attr("data-image-id");
+    if (id) idsInEditor.push(id);
+  });
+
+  // only keep ids that used only
+  const finalContentIds = contentIds.filter((id) => idsInEditor.includes(id));
+
+  // as banner image mandatory so add into all ids
+  const allValidMediaIds = [...finalContentIds, bannerId];
+
+  // update Media isUsed: true.
+  // TODO: those are not used will be deleted by cron job
+  if (allValidMediaIds.length > 0) {
+    await Media.updateMany(
+      { _id: { $in: allValidMediaIds } },
+      { $set: { isUsed: true } },
+    );
+  }
+
+  const newPost = await Post.create(postData);
   return newPost;
 };
 
@@ -51,7 +66,7 @@ const getAllPostsFromDB = async (queries: Record<string, unknown>) => {
       path: "author",
       select: "_id name email isVerified profilePicture premiumAccess",
     }),
-    query
+    query,
   )
     .filter()
     .search(searchableFields)
@@ -86,14 +101,14 @@ const getAllPostsFromDB = async (queries: Record<string, unknown>) => {
  */
 const getUserPostsFromDB = async (
   userId: string,
-  query: Record<string, unknown>
+  query: Record<string, unknown>,
 ) => {
   const postQuery = new QueryBuilder(
     Post.find({ author: userId, isDeleted: false }).populate({
       path: "author",
       select: "_id name email isVerified profilePicture premiumAccess",
     }),
-    query
+    query,
   )
     .filter()
     .search(searchableFields)
@@ -129,12 +144,12 @@ const getSinglePostFromDB = async (postId: string) => {
 const updateAPostIntoDB = async (
   user: JwtPayload,
   postId: string,
-  payload: Partial<TPost>
+  payload: Partial<TPost>,
 ) => {
   // make updated post data
   const updatedPostData = makeAllowedFieldData<TPost>(
     allowedFieldsToUpdate,
-    payload
+    payload,
   );
 
   // update into database
@@ -143,7 +158,7 @@ const updateAPostIntoDB = async (
     updatedPostData,
     {
       new: true,
-    }
+    },
   );
   if (!result)
     throw new AppError(httpStatus.NOT_FOUND, "Post not found or update failed");
@@ -167,7 +182,7 @@ const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
         isDeleted: false,
       },
       { isDeleted: true },
-      { new: true }
+      { new: true },
     );
   } else if (user?.role === "admin") {
     deletedPost = await Post.findOneAndUpdate(
@@ -176,7 +191,7 @@ const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
         isDeleted: false,
       },
       { isDeleted: true },
-      { new: true }
+      { new: true },
     );
   }
 
@@ -205,7 +220,7 @@ const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
     // Remove the upvote: Remove user from the post's upvotes list
     await Post.updateOne(
       { _id: postId, isDeleted: false },
-      { $pull: { upvotes: currentUser.userId } }
+      { $pull: { upvotes: currentUser.userId } },
     );
     return { message: "Upvote removed", upvoted: false };
   } else {
@@ -215,7 +230,7 @@ const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
       {
         $addToSet: { upvotes: currentUser.userId },
         $pull: { downvotes: currentUser.userId },
-      }
+      },
     );
     return { message: "Upvote added", upvoted: true };
   }
@@ -243,7 +258,7 @@ const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
     // Remove the downvote: Remove user from the post's downvotes list
     await Post.updateOne(
       { _id: postId, isDeleted: false },
-      { $pull: { downvotes: currentUser.userId } }
+      { $pull: { downvotes: currentUser.userId } },
     );
     return { message: "Downvote removed", downvoted: false };
   } else {
@@ -253,7 +268,7 @@ const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
       {
         $addToSet: { downvotes: currentUser.userId },
         $pull: { upvotes: currentUser.userId },
-      }
+      },
     );
     return { message: "Downvote added", downvoted: true };
   }

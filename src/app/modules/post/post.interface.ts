@@ -12,4 +12,6 @@ type TPost = {
   isDeleted: boolean;
 };
 
+export type TPostCreate = TPost & { bannerId: string; contentIds: string[] };
+
 export default TPost;

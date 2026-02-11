@@ -11,7 +11,7 @@ const postSchema = new Schema<TPost>(
       required: true,
       enum: ["Adventure", "Business Travel", "Exploration"],
     },
-    image: { type: String },
+    image: { type: String, required: true },
     premium: { type: Boolean, default: false },
     upvotes: [{ type: Schema.Types.ObjectId, ref: "User" }],
     downvotes: [{ type: Schema.Types.ObjectId, ref: "User" }],

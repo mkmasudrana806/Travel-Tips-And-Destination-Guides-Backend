@@ -6,11 +6,9 @@ import { TfileUpload } from "../../interface/fileUploadType";
 
 // --------------- create a post --------------
 const createPost = asyncHanlder(async (req, res) => {
-  const result = await PostServices.createPostIntoDB(
-    req.user?.userId,
-    req?.file as TfileUpload,
-    req.body
-  );
+  const userId = req.user.userId;
+  const postData = req.body;
+  const result = await PostServices.createPostIntoDB(userId, postData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -36,7 +34,7 @@ const getAllPosts = asyncHanlder(async (req, res) => {
 const getUserPosts = asyncHanlder(async (req, res) => {
   const result = await PostServices.getUserPostsFromDB(
     req.params?.userId,
-    req.query
+    req.query,
   );
 
   sendResponse(res, {
@@ -64,7 +62,7 @@ const updatePost = asyncHanlder(async (req, res) => {
   const result = await PostServices.updateAPostIntoDB(
     req.user,
     req.params?.id,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -77,10 +75,7 @@ const updatePost = asyncHanlder(async (req, res) => {
 
 // --------------- delete a post ----------------
 const deletePost = asyncHanlder(async (req, res) => {
-  const result = await PostServices.deleteAPostFromDB(
-    req.user,
-    req.params.id
-  );
+  const result = await PostServices.deleteAPostFromDB(req.user, req.params.id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -94,7 +89,7 @@ const deletePost = asyncHanlder(async (req, res) => {
 const upvotePost = asyncHanlder(async (req, res) => {
   const result = await PostServices.upvotePostIntoDB(
     req.user,
-    req.params.postId
+    req.params.postId,
   );
 
   sendResponse(res, {
@@ -109,7 +104,7 @@ const upvotePost = asyncHanlder(async (req, res) => {
 const downvotePost = asyncHanlder(async (req, res) => {
   const result = await PostServices.downvotePostIntoDB(
     req.user,
-    req.params?.postId
+    req.params?.postId,
   );
 
   sendResponse(res, {

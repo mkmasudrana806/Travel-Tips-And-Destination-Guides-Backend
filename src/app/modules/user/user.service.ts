@@ -43,7 +43,7 @@ const createAnUserIntoDB = async (file: TfileUpload, payload: TUser) => {
   // set placeholder image if image is not provided
   else {
     payload.profilePicture =
-      "https://avatar.iran.liara.run/public/boy?username=Ash";
+      "";
   }
 
   const result = await User.create(payload);
