@@ -152,48 +152,48 @@ const makeUserPremiumAccess = asyncHanlder(async (req, res) => {
 });
 
 // ------------------- follow or unfollow -------------------
-const followUnfollow = asyncHanlder(async (req, res) => {
-  const result = await UserServices.followUnfollowIntoDB(
-    req.user,
-    req.params.targetUserId,
-  );
+// const followUnfollow = asyncHanlder(async (req, res) => {
+//   const result = await UserServices.followUnfollowIntoDB(
+//     req.user,
+//     req.params.targetUserId,
+//   );
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: result ? "Following successfull" : "Unfollowing successfull",
-    data: result,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: result ? "Following successfull" : "Unfollowing successfull",
+//     data: result,
+//   });
+// });
+
+// // ------------------- check follow status -------------------
+// const checkFollowStatus = asyncHanlder(async (req, res) => {
+//   const result = await UserServices.checkFollowStatusIntoDB(
+//     req.user,
+//     req.params.targetUserId,
+//   );
+
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: result
+//       ? "You are following this user"
+//       : "You are not following this user",
+//     data: result,
+//   });
+// });
 
 // ------------------- check follow status -------------------
-const checkFollowStatus = asyncHanlder(async (req, res) => {
-  const result = await UserServices.checkFollowStatusIntoDB(
-    req.user,
-    req.params.targetUserId,
-  );
+// const getUserFlowersUnflollowers = asyncHanlder(async (req, res) => {
+//   const result = await UserServices.getUserFlowersUnflollowersFromDB(req.body);
 
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: result
-      ? "You are following this user"
-      : "You are not following this user",
-    data: result,
-  });
-});
-
-// ------------------- check follow status -------------------
-const getUserFlowersUnflollowers = asyncHanlder(async (req, res) => {
-  const result = await UserServices.getUserFlowersUnflollowersFromDB(req.body);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Followers and Following Lists Retrieved Successfull",
-    data: result,
-  });
-});
+//   sendResponse(res, {
+//     statusCode: httpStatus.OK,
+//     success: true,
+//     message: "Followers and Following Lists Retrieved Successfull",
+//     data: result,
+//   });
+// });
 
 export const UserControllers = {
   createAnUser,
@@ -207,7 +207,7 @@ export const UserControllers = {
   changeUserRole,
   makeUserVerified,
   makeUserPremiumAccess,
-  followUnfollow,
-  checkFollowStatus,
-  getUserFlowersUnflollowers,
+  // followUnfollow,
+  // checkFollowStatus,
+  // getUserFlowersUnflollowers,
 };

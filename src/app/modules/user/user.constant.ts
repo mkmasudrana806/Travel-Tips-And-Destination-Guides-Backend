@@ -5,7 +5,6 @@ export const allowedFieldsToUpdate: (keyof TUser)[] = [
   "name",
   "age",
   "gender",
-  "contact",
   "address",
 ];
 

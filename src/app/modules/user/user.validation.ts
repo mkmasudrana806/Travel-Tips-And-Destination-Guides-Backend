@@ -20,10 +20,6 @@ const createUserValidationsSchema = z.object({
       invalid_type_error: "Gender is invalid",
       required_error: "Gender is required",
     }),
-    contact: z.string({
-      invalid_type_error: "Contact should be a string",
-      required_error: "Contact number is required",
-    }),
     address: z.string({
       invalid_type_error: "Address should be a string",
       required_error: "Address is required",
@@ -102,5 +98,4 @@ export const UserValidations = {
   changeUserRoleSchema,
   makeUserVerifiedSchema,
   makeUserPremiumAccessSchema,
-
 };

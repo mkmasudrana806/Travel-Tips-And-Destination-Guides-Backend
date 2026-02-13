@@ -22,9 +22,8 @@ const userSchema = new Schema<TUser, IUser>(
     gender: {
       type: String,
       required: true,
-      enum: ["male", "female", "others"],
+      enum: ["male", "female"],
     },
-    contact: { type: String, required: true },
     address: { type: String, required: true },
     role: {
       type: String,
@@ -38,16 +37,16 @@ const userSchema = new Schema<TUser, IUser>(
       enum: ["active", "blocked"],
       default: "active",
     },
-    profilePicture: { type: String, required: true },
+    profilePicture: { type: String },
     isVerified: { type: Boolean, required: true, default: false },
     premiumAccess: { type: Boolean, required: true, default: false },
-    followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    followerCount: { type: Number, default: 0 },
+    followingCount: { type: Number, default: 0 },
     isDeleted: { type: Boolean, required: true, default: false },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // ----------- pre middleware hook to hash password -----------
@@ -55,7 +54,7 @@ userSchema.pre("save", async function (next) {
   const user = this;
   user.password = await bcrypt.hash(
     user.password,
-    Number(config.bcrypt_salt_rounds)
+    Number(config.bcrypt_salt_rounds),
   );
   next();
 });
@@ -80,7 +79,7 @@ userSchema.post("findOneAndUpdate", function (doc) {
 // ----------- isPasswordMatch statics methods -----------
 userSchema.statics.isPasswordMatch = async function (
   plainPassword: string,
-  hashedPassword: string
+  hashedPassword: string,
 ) {
   const result = await bcrypt.compare(plainPassword, hashedPassword);
   return result;
@@ -89,7 +88,7 @@ userSchema.statics.isPasswordMatch = async function (
 // ----------- check is jwt issued before password change -----------
 userSchema.statics.isJWTIssuedBeforePasswordChange = function (
   passwordChangedTimestamp: Date,
-  jwtIssuedtimestamp: number
+  jwtIssuedtimestamp: number,
 ) {
   // UTC datetime to milliseconds
   const passwordChangedtime =
