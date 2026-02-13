@@ -13,13 +13,13 @@ const postSchema = new Schema<TPost>(
     },
     image: { type: String, required: true },
     premium: { type: Boolean, default: false },
-    upvotes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    downvotes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    upvoteCount: { type: Number, required: true, default: 0 },
+    downvoteCount: { type: Number, required: true, default: 0 },
     isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const Post = model<TPost>("Post", postSchema);

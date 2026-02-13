@@ -1,110 +1,109 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { UserControllers } from "./user.controller";
 import validateRequestData from "../../middlewares/validateRequest";
 import { UserValidations } from "./user.validation";
 import auth from "../../middlewares/auth";
-import { upload } from "../../utils/upload";
 import { PaymentValidations } from "../payments/payment.validation";
 import { CloudinaryMulterUpload } from "../../config/multer.config";
+import AppError from "../../utils/AppError";
+import httpStatus from "http-status";
+import { MediaValidationSchema } from "../media/media.validation";
 const router = express.Router();
 
 // create an user
 router.post(
   "/create-user",
-  // TODO: add file upload in client while register new user
-  // upload.single("file"), // file uploading
-  // (req: Request, res: Response, next: NextFunction) => {
-  //   if (req.body?.data) {
-  //     req.body = JSON.parse(req.body?.data);
-  //     next();
-  //   } else {
-  //     throw new AppError(httpStatus.BAD_REQUEST, "Please provide user data");
-  //   }
-  // },
   validateRequestData(UserValidations.createUserValidationsSchema),
-  UserControllers.createAnUser
+  UserControllers.createAnUser,
 );
 
 // get all users
 router.get("/", auth("admin"), UserControllers.getAllUsers);
 
-// get me route
+// get my profile
 router.get("/getMe", auth("user", "admin"), UserControllers.getMe);
 
-// get single user
+// get a user profile
 router.get("/:id", UserControllers.getSingleUser);
 
-// delete an user
+// delete an user account
 router.delete("/:id", auth("admin"), UserControllers.deleteUser);
 
-// update an user
+// update my profile
 router.patch(
   "/update-profile",
   auth("user", "admin"),
   validateRequestData(UserValidations.updateUserValidationsSchema),
-  UserControllers.updateUser
+  UserControllers.updateUser,
 );
 
-// update user profile picture
+// update my profile picture
 router.patch(
   "/update-profile-picture",
-  // upload.single("file"),
-  CloudinaryMulterUpload.single("file"),
   auth("user"),
-  validateRequestData(UserValidations.updateUserValidationsSchema),
-  UserControllers.updateProfilePicture
+  CloudinaryMulterUpload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    if (req.file) {
+      req.body = req.file;
+      validateRequestData(MediaValidationSchema);
+      next();
+    } else {
+      throw new AppError(httpStatus.BAD_REQUEST, "Failed to upload file!");
+    }
+  },
+  UserControllers.updateProfilePicture,
 );
 
-// change user status
+// change an user status
 router.patch(
   "/toggle-user-status/:id",
   auth("admin"),
   validateRequestData(UserValidations.changeUserStatusSchema),
-  UserControllers.changeUserStatus
+  UserControllers.changeUserStatus,
 );
 
-// change user role
+// change an user role
 router.patch(
   "/toggle-user-role/:id",
   auth("admin"),
   validateRequestData(UserValidations.changeUserRoleSchema),
-  UserControllers.changeUserRole
+  UserControllers.changeUserRole,
 );
 
-// make user verified
+// make an user verified
 router.post(
   "/user-verified",
   auth("user"),
   validateRequestData(PaymentValidations.paymentValidationSchema),
-  UserControllers.makeUserVerified
+  UserControllers.makeUserVerified,
 );
 
-// give user premium access
+// give an user premium access
 router.post(
   "/premium-access",
   auth("user"),
   validateRequestData(PaymentValidations.paymentValidationSchema),
-  UserControllers.makeUserPremiumAccess
+  UserControllers.makeUserPremiumAccess,
 );
 
-// follow unfollow user
+// follow and unfollow an user
 router.patch(
   "/follow-unfollow/:targetUserId",
   auth("user"),
-  UserControllers.followUnfollow
+  UserControllers.followUnfollow,
 );
 
-// check follow status
+// check follow status of a user
 router.get(
   "/follow-status/:targetUserId",
   auth("user"),
-  UserControllers.checkFollowStatus
+  UserControllers.checkFollowStatus,
 );
 
 // get user followers and following lists
 router.post(
   "/followers-followings",
-  UserControllers.getUserFlowersUnflollowers
+  UserControllers.getUserFlowersUnflollowers,
 );
 
 export const UserRoutes = router;

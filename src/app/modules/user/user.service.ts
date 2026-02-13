@@ -42,8 +42,7 @@ const createAnUserIntoDB = async (file: TfileUpload, payload: TUser) => {
   }
   // set placeholder image if image is not provided
   else {
-    payload.profilePicture =
-      "";
+    payload.profilePicture = "";
   }
 
   const result = await User.create(payload);
@@ -57,27 +56,15 @@ const createAnUserIntoDB = async (file: TfileUpload, payload: TUser) => {
  * @returns return newly created user
  */
 const updateProfilePictureIntoDB = async (
-  currentUser: JwtPayload,
+  userId: string,
   file: TfileUpload,
 ) => {
-  if (!file) {
-    throw new AppError(httpStatus.BAD_REQUEST, "No file attachement");
-  }
-  // set profilePicture if image is provided
-  if (file) {
-    const imageName = `${currentUser.email}`;
-    const path = file.path;
-    const uploadedImage: any = await sendImageToCloudinary(path, imageName);
-    if (!uploadedImage) {
-      throw new AppError(httpStatus.BAD_REQUEST, "Image is not uploaded");
-    }
-    // update to database
-    await User.findByIdAndUpdate(currentUser.userId, {
-      profilePicture: uploadedImage.secure_url,
-    });
+  // update to database
+  const result = await User.findByIdAndUpdate(userId, {
+    profilePicture: file.path,
+  });
 
-    return "Profile photo uploaded successfull";
-  }
+  return result;
 };
 
 /**
@@ -108,8 +95,6 @@ const getMe = async (user: JwtPayload) => {
     role: user?.role,
     isDeleted: false,
   });
-
-  console.log("user : ", result);
   return result;
 };
 
@@ -227,11 +212,11 @@ const changeUserRoleIntoDB = async (id: string, payload: { role: string }) => {
     );
   }
 
-  const result = await User.findByIdAndUpdate(id, payload, {
+  await User.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
   });
-  return result;
+  return "User role is changed";
 };
 
 /**

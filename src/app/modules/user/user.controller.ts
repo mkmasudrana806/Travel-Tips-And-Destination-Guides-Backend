@@ -8,7 +8,7 @@ import { TfileUpload } from "../../interface/fileUploadType";
 const createAnUser = asyncHanlder(async (req, res) => {
   const result = await UserServices.createAnUserIntoDB(
     req.file as TfileUpload,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -21,10 +21,9 @@ const createAnUser = asyncHanlder(async (req, res) => {
 
 // ------------------- update profile picture -------------------
 const updateProfilePicture = asyncHanlder(async (req, res) => {
-  const result = await UserServices.updateProfilePictureIntoDB(
-    req.user,
-    req.file as TfileUpload
-  );
+  const userId = req.user.userId;
+  const file = req.body;
+  const result = await UserServices.updateProfilePictureIntoDB(userId, file);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -47,7 +46,7 @@ const getAllUsers = asyncHanlder(async (req, res) => {
   });
 });
 
-// ------------------- get me -------------------
+// ------------------- get my profile -------------------
 const getMe = asyncHanlder(async (req, res) => {
   const result = await UserServices.getMe(req.user);
 
@@ -59,7 +58,7 @@ const getMe = asyncHanlder(async (req, res) => {
   });
 });
 
-// ------------------- get me -------------------
+// ------------------- get a user profile -------------------
 const getSingleUser = asyncHanlder(async (req, res) => {
   const result = await UserServices.getSingleUserFromDB(req?.params?.id);
 
@@ -99,7 +98,7 @@ const updateUser = asyncHanlder(async (req, res) => {
 const changeUserStatus = asyncHanlder(async (req, res) => {
   const result = await UserServices.changeUserStatusIntoDB(
     req.params.id,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -114,7 +113,7 @@ const changeUserStatus = asyncHanlder(async (req, res) => {
 const changeUserRole = asyncHanlder(async (req, res) => {
   const result = await UserServices.changeUserRoleIntoDB(
     req.params.id,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -141,7 +140,7 @@ const makeUserVerified = asyncHanlder(async (req, res) => {
 const makeUserPremiumAccess = asyncHanlder(async (req, res) => {
   const result = await UserServices.makeUserPremiumAccessIntoDB(
     req.user,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -156,7 +155,7 @@ const makeUserPremiumAccess = asyncHanlder(async (req, res) => {
 const followUnfollow = asyncHanlder(async (req, res) => {
   const result = await UserServices.followUnfollowIntoDB(
     req.user,
-    req.params.targetUserId
+    req.params.targetUserId,
   );
 
   sendResponse(res, {
@@ -171,7 +170,7 @@ const followUnfollow = asyncHanlder(async (req, res) => {
 const checkFollowStatus = asyncHanlder(async (req, res) => {
   const result = await UserServices.checkFollowStatusIntoDB(
     req.user,
-    req.params.targetUserId
+    req.params.targetUserId,
   );
 
   sendResponse(res, {

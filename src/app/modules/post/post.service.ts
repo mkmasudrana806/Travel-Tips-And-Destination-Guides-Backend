@@ -7,10 +7,9 @@ import { JwtPayload } from "jsonwebtoken";
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
 import { allowedFieldsToUpdate, searchableFields } from "./post.constant";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
-import { TfileUpload } from "../../interface/fileUploadType";
-import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
 import { Media } from "../media/media.model";
 import * as cheerio from "cheerio";
+
 /**
  * ------------- Create a new post ----------------
  * @param userId logged in user
@@ -75,22 +74,6 @@ const getAllPostsFromDB = async (queries: Record<string, unknown>) => {
     .sort();
 
   result = await postQuery.modelQuery;
-
-  if (queries?.sortBy && result?.length > 0) {
-    result = result.sort((a, b) => {
-      if (sortBy === "+upvote") {
-        return a.upvotes?.length - b.upvotes?.length;
-      } else if (sortBy === "-upvote") {
-        return b.upvotes?.length - a.upvotes?.length;
-      } else if (sortBy === "+downvote") {
-        return a.downvotes?.length - b.downvotes?.length;
-      } else if (sortBy === "-downvote") {
-        return b.downvotes?.length - a.downvotes?.length;
-      } else {
-        return 0;
-      }
-    });
-  }
   return result;
 };
 
@@ -206,35 +189,35 @@ const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
  * @validation add user to upvoted as well as remove user from downvoted if present
  * @returns return true if upvote added, else false
  */
-const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
-  // Check if the post exists
-  const targetPost = await Post.findById(postId);
-  if (!targetPost) {
-    throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
-  }
+// const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
+//   // Check if the post exists
+//   const targetPost = await Post.findById(postId);
+//   if (!targetPost) {
+//     throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
+//   }
 
-  // Check if user has already upvoted the post
-  const isAlreadyUpvote = targetPost.upvotes?.includes(currentUser.userId);
+//   // Check if user has already upvoted the post
+//   const isAlreadyUpvote = targetPost.upvotes?.includes(currentUser.userId);
 
-  if (isAlreadyUpvote) {
-    // Remove the upvote: Remove user from the post's upvotes list
-    await Post.updateOne(
-      { _id: postId, isDeleted: false },
-      { $pull: { upvotes: currentUser.userId } },
-    );
-    return { message: "Upvote removed", upvoted: false };
-  } else {
-    // Add upvote and remove from downvotes in a single query
-    await Post.updateOne(
-      { _id: postId, isDeleted: false },
-      {
-        $addToSet: { upvotes: currentUser.userId },
-        $pull: { downvotes: currentUser.userId },
-      },
-    );
-    return { message: "Upvote added", upvoted: true };
-  }
-};
+//   if (isAlreadyUpvote) {
+//     // Remove the upvote: Remove user from the post's upvotes list
+//     await Post.updateOne(
+//       { _id: postId, isDeleted: false },
+//       { $pull: { upvotes: currentUser.userId } },
+//     );
+//     return { message: "Upvote removed", upvoted: false };
+//   } else {
+//     // Add upvote and remove from downvotes in a single query
+//     await Post.updateOne(
+//       { _id: postId, isDeleted: false },
+//       {
+//         $addToSet: { upvotes: currentUser.userId },
+//         $pull: { downvotes: currentUser.userId },
+//       },
+//     );
+//     return { message: "Upvote added", upvoted: true };
+//   }
+// };
 
 /**
  * ------------------ downvote a post ----------------
@@ -244,35 +227,35 @@ const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
  * @validation add user to downvoted as well as remove user from upvoted if present
  * @returns return true if downvote added, else false
  */
-const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
-  // Check if the post exists
-  const targetPost = await Post.findOne({ _id: postId, isDeleted: false });
-  if (!targetPost) {
-    throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
-  }
+// const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
+//   // Check if the post exists
+//   const targetPost = await Post.findOne({ _id: postId, isDeleted: false });
+//   if (!targetPost) {
+//     throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
+//   }
 
-  // Check if user has already downvoted the post
-  const isAlreadyDownvoted = targetPost.downvotes?.includes(currentUser.userId);
+//   // Check if user has already downvoted the post
+//   const isAlreadyDownvoted = targetPost.downvotes?.includes(currentUser.userId);
 
-  if (isAlreadyDownvoted) {
-    // Remove the downvote: Remove user from the post's downvotes list
-    await Post.updateOne(
-      { _id: postId, isDeleted: false },
-      { $pull: { downvotes: currentUser.userId } },
-    );
-    return { message: "Downvote removed", downvoted: false };
-  } else {
-    // Add downvote and remove from upvotes in a single query
-    await Post.updateOne(
-      { _id: postId, isDeleted: false },
-      {
-        $addToSet: { downvotes: currentUser.userId },
-        $pull: { upvotes: currentUser.userId },
-      },
-    );
-    return { message: "Downvote added", downvoted: true };
-  }
-};
+//   if (isAlreadyDownvoted) {
+//     // Remove the downvote: Remove user from the post's downvotes list
+//     await Post.updateOne(
+//       { _id: postId, isDeleted: false },
+//       { $pull: { downvotes: currentUser.userId } },
+//     );
+//     return { message: "Downvote removed", downvoted: false };
+//   } else {
+//     // Add downvote and remove from upvotes in a single query
+//     await Post.updateOne(
+//       { _id: postId, isDeleted: false },
+//       {
+//         $addToSet: { downvotes: currentUser.userId },
+//         $pull: { upvotes: currentUser.userId },
+//       },
+//     );
+//     return { message: "Downvote added", downvoted: true };
+//   }
+// };
 
 export const PostServices = {
   createPostIntoDB,
@@ -281,6 +264,6 @@ export const PostServices = {
   getSinglePostFromDB,
   deleteAPostFromDB,
   updateAPostIntoDB,
-  upvotePostIntoDB,
-  downvotePostIntoDB,
+  // upvotePostIntoDB,
+  // downvotePostIntoDB,
 };

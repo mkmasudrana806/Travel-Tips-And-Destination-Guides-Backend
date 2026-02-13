@@ -7,8 +7,8 @@ type TPost = {
   category: "Adventure" | "Business Travel" | "Exploration";
   image: string;
   premium: boolean;
-  upvotes: string[];
-  downvotes: string[];
+  upvoteCount: number;
+  downvoteCount: number;
   isDeleted: boolean;
 };
 
