@@ -1,3 +1,4 @@
+import QueryBuilder from "../../queryBuilder/queryBuilder";
 import Post from "../post/post.model";
 import { VoteType } from "./postVote.interface";
 import PostVote from "./postVote.model";
@@ -65,6 +66,27 @@ const toggleVote = async (
   );
 };
 
+/**
+ * ------------- find total votes of a post ----------------
+ *
+ * @param postId postId to return total votes
+ * @param query limit and page for paginate
+ * @returns aggregated user list with name and profile picture
+ */
+const postVoterLists = async (
+  postId: string,
+  query: Record<string, unknown>,
+) => {
+  const votesBuild = new QueryBuilder(
+    PostVote.find({ post: postId }).populate("user", "name profilePicture"),
+    query,
+  ).paginate();
+
+  const result = await votesBuild.modelQuery;
+  return result;
+};
+
 export const PostVoteServices = {
   toggleVote,
+  postVoterLists,
 };

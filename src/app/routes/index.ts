@@ -31,6 +31,6 @@ router.use("/payments", PaymentRoutes);
 router.use("/insights", InsightsRoutes);
 
 // post vote
-router.use("/vote", PostVoteRoutes);
+router.use("/", PostVoteRoutes);
 
 export const ApiRoutes = router;

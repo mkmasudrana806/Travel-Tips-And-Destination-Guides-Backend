@@ -13,11 +13,26 @@ const votePost = asyncHanlder(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: result ? "upvote added successfull" : "upvote removed successfull",
+    message: "vote successfull",
+    data: result,
+  });
+});
+
+// ------------------- voter list of a post -------------------
+const postVoterLists = asyncHanlder(async (req, res) => {
+  const postId = req.params.postId;
+  const query = req.query;
+  const result = await PostVoteServices.postVoterLists(postId, query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Total votes of post retrived successfull",
     data: result,
   });
 });
 
 export const PostVoteController = {
   votePost,
+  postVoterLists,
 };
