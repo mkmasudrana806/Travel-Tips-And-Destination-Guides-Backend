@@ -9,4 +9,8 @@ router.post(
   auth("user"),
   UserFollowController.toggleFollow,
 );
+
+// get followers lists of an user
+router.get("/:userId/followers", UserFollowController.getFollowers);
+
 export const UserFollowRoutes = router;

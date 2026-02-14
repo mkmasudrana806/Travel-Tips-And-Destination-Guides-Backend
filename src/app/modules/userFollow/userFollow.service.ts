@@ -3,6 +3,7 @@ import { User } from "../user/user.model";
 import UserFollow from "./userFollow.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
 
 /**
  * ------------- follow/unfollow an user ----------------
@@ -88,6 +89,33 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
   }
 };
 
+/**
+ * ------------ get followers lists of an user -----------------
+ *
+ * @param userId userId, who want to get all his followers
+ * @param query pagination
+ * @returns meta and result
+ */
+const getFollowers = async (userId: string, query: Record<string, unknown>) => {
+  const followersQuery = new QueryBuilder(
+    UserFollow.find({ following: userId }).populate(
+      "follower",
+      "name profilePicture",
+    ),
+    query,
+  )
+    .paginate()
+    .sort();
+
+  const meta = await followersQuery.countTotal();
+  const result = await followersQuery.modelQuery;
+  return {
+    meta,
+    result,
+  };
+};
+
 export const UserFollowService = {
   toggleFollow,
+  getFollowers,
 };

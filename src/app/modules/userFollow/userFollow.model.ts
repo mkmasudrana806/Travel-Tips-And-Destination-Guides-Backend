@@ -4,8 +4,8 @@ import { TUserFollow } from "./userFollow.interface";
 // who following whom
 const userFollowSchema = new Schema<TUserFollow>(
   {
-    follower: { type: Schema.Types.ObjectId, ref: "Follow", required: true },
-    following: { type: Schema.Types.ObjectId, ref: "Follow", required: true },
+    follower: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    following: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   {
     timestamps: true,
