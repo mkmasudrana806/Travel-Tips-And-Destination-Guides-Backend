@@ -13,4 +13,7 @@ router.post(
 // get followers lists of an user
 router.get("/:userId/followers", UserFollowController.getFollowers);
 
+// get followings lists of an user
+router.get("/:userId/followings", UserFollowController.getFollowings);
+
 export const UserFollowRoutes = router;

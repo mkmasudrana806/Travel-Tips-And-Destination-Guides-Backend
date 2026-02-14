@@ -115,7 +115,37 @@ const getFollowers = async (userId: string, query: Record<string, unknown>) => {
   };
 };
 
+/**
+ * ------------ get followings lists of an user -----------------
+ *
+ * @param userId userId, who want to get all his followings
+ * @param query pagination
+ * @returns meta and result
+ */
+const getFollowings = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const followingsQuery = new QueryBuilder(
+    UserFollow.find({ follower: userId }).populate(
+      "following",
+      "name profilePicture",
+    ),
+    query,
+  )
+    .paginate()
+    .sort();
+
+  const meta = await followingsQuery.countTotal();
+  const result = await followingsQuery.modelQuery;
+  return {
+    meta,
+    result,
+  };
+};
+
 export const UserFollowService = {
   toggleFollow,
   getFollowers,
+  getFollowings,
 };

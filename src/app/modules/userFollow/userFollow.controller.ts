@@ -32,7 +32,23 @@ const getFollowers = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------- get followings lists of an user -------------------
+const getFollowings = asyncHanlder(async (req, res) => {
+  const userId = req.params.userId;
+  const query = req.query;
+  const { meta, result } = await UserFollowService.getFollowings(userId, query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Followings retrived sucessfully",
+    data: result,
+    meta: meta,
+  });
+});
+
 export const UserFollowController = {
   toggleFollow,
   getFollowers,
+  getFollowings,
 };
