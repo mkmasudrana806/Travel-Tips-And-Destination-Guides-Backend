@@ -1,6 +1,6 @@
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import Post from "../post/post.model";
-import { VoteType } from "./postVote.interface";
+import { TStatusVote, VoteType } from "./postVote.interface";
 import PostVote from "./postVote.model";
 
 /**
@@ -108,8 +108,29 @@ const listOfPostsIVote = async (
   return result;
 };
 
+/**
+ * ------------- my vote status of a post ----------------
+ * check my status to a post that i vote or not
+ *
+ * @param postId id of the post, want to check vote status with an user
+ * @param userId user who vote or not a post
+ * @returns // { "hasVoted": true, "type": "upvote" | "downvote" | null }
+ */
+const myVoteStatus = async (post: string, user: string) => {
+  const result = await PostVote.findOne({ post, user });
+
+  let status: TStatusVote = { hasVoted: false, type: null };
+  if (result) {
+    status.hasVoted = true;
+    status.type = result.type;
+  }
+
+  return status;
+};
+
 export const PostVoteServices = {
   toggleVote,
   postVoterLists,
   listOfPostsIVote,
+  myVoteStatus,
 };

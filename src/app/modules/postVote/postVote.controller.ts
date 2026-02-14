@@ -46,8 +46,23 @@ const listsOfPostsIVote = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------- my vote stutus of a post -------------------
+const myVoteStatus = asyncHanlder(async (req, res) => {
+  const postId = req.params.postId;
+  const userId = req.user.userId;
+  const result = await PostVoteServices.myVoteStatus(postId, userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "my status is: " + result.type,
+    data: result,
+  });
+});
+
 export const PostVoteController = {
   votePost,
   postVoterLists,
   listsOfPostsIVote,
+  myVoteStatus,
 };

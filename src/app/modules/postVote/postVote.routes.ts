@@ -23,4 +23,11 @@ router.get(
 // list of posts i votes
 router.get("/my-votes", auth("user"), PostVoteController.listsOfPostsIVote);
 
+// my vote status of a post
+router.get(
+  "/posts/:postId/my-status",
+  auth("user"),
+  PostVoteController.myVoteStatus,
+);
+
 export const PostVoteRoutes = router;
