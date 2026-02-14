@@ -32,7 +32,22 @@ const postVoterLists = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------- lists of posts, I vote -------------------
+const listsOfPostsIVote = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const query = req.query;
+  const result = await PostVoteServices.listOfPostsIVote(userId, query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Total votes of post retrived successfull",
+    data: result,
+  });
+});
+
 export const PostVoteController = {
   votePost,
   postVoterLists,
+  listsOfPostsIVote,
 };

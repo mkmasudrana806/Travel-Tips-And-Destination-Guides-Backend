@@ -67,7 +67,8 @@ const toggleVote = async (
 };
 
 /**
- * ------------- find total votes of a post ----------------
+ * ------------- all voters lists with user info of a post ----------------
+ * based on a post, return all voter info
  *
  * @param postId postId to return total votes
  * @param query limit and page for paginate
@@ -86,7 +87,29 @@ const postVoterLists = async (
   return result;
 };
 
+/**
+ * ------------- lists of posts, i vote ----------------
+ * based on an user id, return lists of post, this user votes
+ *
+ * @param userId user, who votes lists of posts
+ * @param query limit and page for paginate
+ * @returns lists of posts, the user given vote
+ */
+const listOfPostsIVote = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const votesBuild = new QueryBuilder(
+    PostVote.find({ user: userId }).populate("post"),
+    query,
+  ).paginate();
+
+  const result = await votesBuild.modelQuery;
+  return result;
+};
+
 export const PostVoteServices = {
   toggleVote,
   postVoterLists,
+  listOfPostsIVote,
 };

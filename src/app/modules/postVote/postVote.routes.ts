@@ -20,4 +20,7 @@ router.get(
   PostVoteController.postVoterLists,
 );
 
+// list of posts i votes
+router.get("/my-votes", auth("user"), PostVoteController.listsOfPostsIVote);
+
 export const PostVoteRoutes = router;
