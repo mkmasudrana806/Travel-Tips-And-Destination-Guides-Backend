@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import Post from "../post/post.model";
 import { TStatusVote, VoteType } from "./postVote.interface";
@@ -18,52 +19,69 @@ const toggleVote = async (
   post: string,
   newVoteType: VoteType,
 ) => {
-  const existingVote = await PostVote.findOne({ user, post });
+  // start transaction
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  // case 1: check if user has already voted on this post
-  if (existingVote) {
-    const existingVoteType = existingVote.type;
-    // if existing vote type and new vote type same. delete the vote
-    if (existingVoteType === newVoteType) {
-      await existingVote.deleteOne();
+  try {
+    const existingVote = await PostVote.findOne({ user, post }).session(
+      session,
+    );
+    // case 1: check if user has already voted on this post
+    if (existingVote) {
+      const existingVoteType = existingVote.type;
+      // if existing vote type and new vote type same. delete the vote
+      if (existingVoteType === newVoteType) {
+        await existingVote.deleteOne({ session });
+        const updateField =
+          newVoteType === "upvote"
+            ? { upvoteCount: -1 }
+            : { downvoteCount: -1 };
+
+        // decrement by 1 from vote count in Post document
+        await Post.findByIdAndUpdate(
+          post,
+          { $inc: updateField },
+          { new: true, session },
+        );
+      } else {
+        // case 2: user switch upvote -> downvote or vice versa
+        // so new type assign to existing type
+        existingVote.type = newVoteType;
+        await existingVote.save({ session });
+
+        // if newVote upvote, count inc by 1 and downvote dec by 1
+        const updateFields =
+          newVoteType === VoteType.UPVOTE
+            ? { upvoteCount: 1, downvoteCount: -1 }
+            : { upvoteCount: -1, downvoteCount: 1 };
+
+        await Post.findByIdAndUpdate(
+          post,
+          { $inc: updateFields },
+          { new: true, session },
+        );
+      }
+    } else {
+      // case 3: new vote. so direct create vote and update counter in post
+      await PostVote.create([{ user, post, type: newVoteType }], { session });
       const updateField =
-        newVoteType === "upvote" ? { upvoteCount: -1 } : { downvoteCount: -1 };
-
-      // decrement by 1 from vote count in Post document
-      return await Post.findByIdAndUpdate(
+        newVoteType === VoteType.UPVOTE
+          ? { upvoteCount: 1 }
+          : { downvoteCount: 1 };
+      await Post.findByIdAndUpdate(
         post,
         { $inc: updateField },
-        { new: true },
+        { new: true, session },
       );
     }
-
-    // case 2: user switch upvote -> downvote or vice versa
-    // so new type assign to existing type
-    existingVote.type = newVoteType;
-    await existingVote.save();
-
-    // if newVote upvote, count inc by 1 and downvote dec by 1
-    const updateFields =
-      newVoteType === VoteType.UPVOTE
-        ? { upvoteCount: 1, downvoteCount: -1 }
-        : { upvoteCount: -1, downvoteCount: 1 };
-
-    return await Post.findByIdAndUpdate(
-      post,
-      { $inc: updateFields },
-      { new: true },
-    );
+    // commit the transaction
+    await session.commitTransaction();
+    return "vote successfull";
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
   }
-
-  // case 3: new vote. so direct create vote and update counter in post
-  await PostVote.create({ user, post, type: newVoteType });
-  const updateField =
-    newVoteType === VoteType.UPVOTE ? { upvoteCount: 1 } : { downvoteCount: 1 };
-  return await Post.findByIdAndUpdate(
-    post,
-    { $inc: updateField },
-    { new: true },
-  );
 };
 
 /**
