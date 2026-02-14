@@ -3,6 +3,8 @@ import QueryBuilder from "../../queryBuilder/queryBuilder";
 import Post from "../post/post.model";
 import { TStatusVote, VoteType } from "./postVote.interface";
 import PostVote from "./postVote.model";
+import AppError from "../../utils/AppError";
+import httpStatus from "http-status";
 
 /**
  * ------------ vote to a post (upvote/downvote) -----------------
@@ -81,6 +83,7 @@ const toggleVote = async (
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to vote");
   }
 };
 

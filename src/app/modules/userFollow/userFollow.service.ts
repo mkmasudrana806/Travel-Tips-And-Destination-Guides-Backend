@@ -1,10 +1,14 @@
+import mongoose from "mongoose";
 import { User } from "../user/user.model";
 import UserFollow from "./userFollow.model";
+import AppError from "../../utils/AppError";
+import httpStatus from "http-status";
 
 /**
  * ------------- follow/unfollow an user ----------------
  *
  * who follow whom. who (follower) -> whom (following)
+ *
  * @param currentUser who want to follow 'targetUser'
  * @param targetUser whom currentUser will follow
  * @returns newly created UserFollow data
@@ -12,40 +16,75 @@ import UserFollow from "./userFollow.model";
 const toggleFollow = async (currentUser: string, targetUser: string) => {
   if (targetUser === currentUser) throw new Error("You cannot follow yourself");
 
-  // check if already following
-  const existingFollow = await UserFollow.findOne({
-    followerId: currentUser,
-    followingId: targetUser,
-  });
+  let result: boolean;
+  console.log(targetUser, currentUser);
+  // start transaction
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  if (existingFollow) {
-    // as exist, delete follow data
-    await existingFollow.deleteOne();
-
-    // dec by 1 following count in user profile
-    await User.findByIdAndUpdate(currentUser, {
-      $inc: { followingCount: -1 },
-    });
-
-    // dec follower count by 1 in the target user
-    await User.findByIdAndUpdate(targetUser, { $inc: { followerCount: -1 } });
-    return { isFollowing: false };
-  } else {
-    // as no follow data. so we create new userFollow record
-    await UserFollow.create({
+  try {
+    // check if already following
+    const existingFollow = await UserFollow.findOne({
       follower: currentUser,
       following: targetUser,
-    });
+    }).session(session);
 
-    // current user now followingCount by 1
-    await User.findByIdAndUpdate(currentUser, {
-      $inc: { followingCount: 1 },
-    });
+    if (existingFollow) {
+      // as exist, delete follow data
+      await existingFollow.deleteOne().session(session);
 
-    // targetUer get 1 follower. so update by 1
-    await User.findByIdAndUpdate(targetUser, { $inc: { followerCount: 1 } });
+      // dec by 1 following count in user profile
+      await User.findByIdAndUpdate(
+        currentUser,
+        {
+          $inc: { followingCount: -1 },
+        },
+        { session },
+      );
 
-    return { isFollowing: true };
+      // dec follower count by 1 in the target user
+      await User.findByIdAndUpdate(
+        targetUser,
+        { $inc: { followerCount: -1 } },
+        { session },
+      );
+      result = false;
+    } else {
+      // as no follow data. so we create new userFollow record
+      await UserFollow.create(
+        [
+          {
+            follower: currentUser,
+            following: targetUser,
+          },
+        ],
+        { session },
+      );
+
+      // current user now followingCount by 1
+      await User.findByIdAndUpdate(
+        currentUser,
+        {
+          $inc: { followingCount: 1 },
+        },
+        { session },
+      );
+
+      // targetUer get 1 follower. so update by 1
+      await User.findByIdAndUpdate(
+        targetUser,
+        { $inc: { followerCount: 1 } },
+        { session },
+      );
+      result = true;
+    }
+
+    await session.commitTransaction();
+    return result;
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(httpStatus.BAD_REQUEST, "Failed to follow");
   }
 };
 

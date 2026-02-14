@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { UserRoutes } from "../modules/user/user.routes";
 import { AuthRoutes } from "../modules/auth/auth.rotues";
 import { CommentRoutes } from "../modules/comments/comment.routes";
@@ -7,6 +7,7 @@ import { CloudinaryUploadFileRoutes } from "../modules/uploadFile/uploadFile.rou
 import { PaymentRoutes } from "../modules/payments/payment.routes";
 import { InsightsRoutes } from "../modules/insights/insights.routes";
 import { PostVoteRoutes } from "../modules/postVote/postVote.routes";
+import { UserFollowRoutes } from "../modules/userFollow/userFollow.routes";
 const router = express.Router();
 
 // user
@@ -32,5 +33,8 @@ router.use("/insights", InsightsRoutes);
 
 // post vote
 router.use("/", PostVoteRoutes);
+
+// user follow/unfowllow
+router.use("/users", UserFollowRoutes);
 
 export const ApiRoutes = router;
