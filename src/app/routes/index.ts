@@ -6,6 +6,7 @@ import { PostRoutes } from "../modules/post/post.routes";
 import { CloudinaryUploadFileRoutes } from "../modules/uploadFile/uploadFile.routes";
 import { PaymentRoutes } from "../modules/payments/payment.routes";
 import { InsightsRoutes } from "../modules/insights/insights.routes";
+import { PostVoteRoutes } from "../modules/postVote/postVote.routes";
 const router = express.Router();
 
 // user
@@ -28,5 +29,8 @@ router.use("/payments", PaymentRoutes);
 
 // insights
 router.use("/insights", InsightsRoutes);
+
+// post vote
+router.use("/vote", PostVoteRoutes);
 
 export const ApiRoutes = router;

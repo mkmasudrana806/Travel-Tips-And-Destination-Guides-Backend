@@ -4,7 +4,7 @@ import { z } from "zod";
 const postVoteValidation = z.object({
   body: z
     .object({
-      voteType: z.enum(["upvote", "downvote"]),
+      type: z.enum(["upvote", "downvote"]),
     })
     .strict(),
 });

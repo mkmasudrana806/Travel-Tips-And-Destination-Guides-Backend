@@ -12,7 +12,11 @@ import PostVote from "./postVote.model";
  * @returns a message of new/existing vote
  */
 
-const vote = async (user: string, post: string, newVoteType: VoteType) => {
+const toggleVote = async (
+  user: string,
+  post: string,
+  newVoteType: VoteType,
+) => {
   const existingVote = await PostVote.findOne({ user, post });
 
   // case 1: check if user has already voted on this post
@@ -62,5 +66,5 @@ const vote = async (user: string, post: string, newVoteType: VoteType) => {
 };
 
 export const PostVoteServices = {
-  vote,
+  toggleVote,
 };
