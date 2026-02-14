@@ -16,4 +16,11 @@ router.get("/:userId/followers", UserFollowController.getFollowers);
 // get followings lists of an user
 router.get("/:userId/followings", UserFollowController.getFollowings);
 
+// get mutual friends between two user
+router.get(
+  "/:targetUserId/mutual-friends",
+  auth("user"),
+  UserFollowController.getMutualFriends,
+);
+
 export const UserFollowRoutes = router;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { User } from "../user/user.model";
 import UserFollow from "./userFollow.model";
 import AppError from "../../utils/AppError";
@@ -144,8 +144,73 @@ const getFollowings = async (
   };
 };
 
+/**
+ * ------------ get mutual connection between two user -----------
+ * user A: who views user B profile. now show mutual friends between them.
+ * means both A and B followed by common users.
+ *
+ * @param viewerId who views a user profile
+ * @param targetUserId the id of the user, who profiled will be viewed
+ * @returns the mutal friends lists and counts
+ */
+const getMutualFriends = async (viewerId: string, targetUserId: string) => {
+  const viewerObjectId = new Types.ObjectId(viewerId);
+  const targetObjectId = new Types.ObjectId(targetUserId);
+
+  const mutuals = await UserFollow.aggregate([
+    {
+      $match: { follower: viewerObjectId },
+    },
+    {
+      $project: { following: 1 },
+    },
+    {
+      $lookup: {
+        from: "userfollows",
+        let: { followed_by_me: "$following" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$follower", "$$followed_by_me"] },
+                  { $eq: ["$following", targetObjectId] },
+                ],
+              },
+            },
+          },
+        ],
+        as: "relationship",
+      },
+    },
+    {
+      $match: { "relationship.0": { $exists: true } },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "following",
+        foreignField: "_id",
+        as: "userProfile",
+      },
+    },
+    { $unwind: "$userProfile" },
+    {
+      $project: {
+        _id: "$userProfile._id",
+        name: "$userProfile.name",
+        profilePicture: "$userProfile.profilePicture",
+      },
+    },
+    { $limit: 5 },
+  ]);
+
+  return mutuals;
+};
+
 export const UserFollowService = {
   toggleFollow,
   getFollowers,
   getFollowings,
+  getMutualFriends,
 };

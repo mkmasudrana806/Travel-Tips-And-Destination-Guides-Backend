@@ -47,8 +47,26 @@ const getFollowings = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------- get mutual friends between two users -------------------
+const getMutualFriends = asyncHanlder(async (req, res) => {
+  const viewerId = req.user.userId;
+  const targetUserId = req.params.targetUserId;
+  const result = await UserFollowService.getMutualFriends(
+    viewerId,
+    targetUserId,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Mutual friends retrived sucessfully",
+    data: result,
+  });
+});
+
 export const UserFollowController = {
   toggleFollow,
   getFollowers,
   getFollowings,
+  getMutualFriends,
 };
