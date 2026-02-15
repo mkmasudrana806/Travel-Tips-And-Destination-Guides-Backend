@@ -1,9 +1,10 @@
-import mongoose, { Types } from "mongoose";
+import mongoose, { PipelineStage, Types } from "mongoose";
 import { User } from "../user/user.model";
 import UserFollow from "./userFollow.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { getFollowSuggestions, getPublicSuggestions } from "./userFollow.utils";
 
 /**
  * ------------- follow/unfollow an user ----------------
@@ -206,6 +207,39 @@ const getMutualFriends = async (viewerId: string, targetUserId: string) => {
   ]);
 
   return mutuals;
+};
+
+/**
+ * ------------ get follow suggestion with fallback for new user ------------
+ * it handle three cases: non logged-in, logged in but new user and old user who follow people.
+ * case 1: if user is not logged in, then suggest public profile based on followers counts
+ * case 2: new user and logged in, show public profile who's followers counts and newly user
+ * case 3: old user, show recommended users based on mutual friends
+ *
+ * @param userId user to show follow recommendation
+ * @param page by default 1
+ * @param limit by default 10
+ * @returns lists of recommended profile
+ */
+
+export const getFollowSuggestionsWithFallback = async (
+  userId: string,
+  page = 1,
+  limit = 10,
+) => {
+  // public is not logged in, blocked, token not valid. means guest user
+  if (!userId) {
+    return getPublicSuggestions(page, limit);
+  }
+
+  // personalized suggestion when user logged in.
+  const suggestions = await getFollowSuggestions(userId, page, limit);
+  if (suggestions.data.length > 5) {
+    return suggestions;
+  }
+
+  // if personalized suggestion not found, then return some users as fallback
+  return getPublicSuggestions(page, limit);
 };
 
 export const UserFollowService = {
