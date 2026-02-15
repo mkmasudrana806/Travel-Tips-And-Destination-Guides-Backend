@@ -86,24 +86,4 @@ router.post(
   UserControllers.makeUserPremiumAccess,
 );
 
-// follow and unfollow an user
-// router.patch(
-//   "/follow-unfollow/:targetUserId",
-//   auth("user"),
-//   UserControllers.followUnfollow,
-// );
-
-// check follow status of a user
-// router.get(
-//   "/follow-status/:targetUserId",
-//   auth("user"),
-//   UserControllers.checkFollowStatus,
-// );
-
-// get user followers and following lists
-// router.post(
-//   "/followers-followings",
-//   UserControllers.getUserFlowersUnflollowers,
-// );
-
 export const UserRoutes = router;

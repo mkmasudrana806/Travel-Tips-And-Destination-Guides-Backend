@@ -222,8 +222,8 @@ const getMutualFriends = async (viewerId: string, targetUserId: string) => {
  * @returns lists of recommended profile
  */
 
-export const getFollowSuggestionsWithFallback = async (
-  userId: string,
+const getFollowSuggestionsWithFallback = async (
+  userId = null,
   page = 1,
   limit = 10,
 ) => {
@@ -234,9 +234,11 @@ export const getFollowSuggestionsWithFallback = async (
 
   // personalized suggestion when user logged in.
   const suggestions = await getFollowSuggestions(userId, page, limit);
-  if (suggestions.data.length > 5) {
+  if (suggestions.data.length > 0) {
     return suggestions;
   }
+
+  console.log("suggestion: ", suggestions);
 
   // if personalized suggestion not found, then return some users as fallback
   return getPublicSuggestions(page, limit);
@@ -247,4 +249,5 @@ export const UserFollowService = {
   getFollowers,
   getFollowings,
   getMutualFriends,
+  getFollowSuggestionsWithFallback,
 };

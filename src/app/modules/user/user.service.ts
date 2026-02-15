@@ -327,73 +327,6 @@ const makeUserPremiumAccessIntoDB = async (
   return session;
 };
 
-// /**
-//  *------------------ follow unfollow into DB ----------------
-//  *
-//  * @param currentUser current logged in user
-//  * @param targetUserId target user id to follow or unfollow
-//  * @returns return message of follow or unfollow
-//  */
-// const followUnfollowIntoDB = async (
-//   currentUser: JwtPayload,
-//   targetUserId: string,
-// ) => {
-//   // Check if the target user exists in the database
-//   const targetUser = await User.findById(targetUserId);
-//   if (!targetUser) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Target user not found!");
-//   }
-
-//   // check if already following
-//   const isAlreadyFollowing = targetUser.followers?.includes(currentUser.userId);
-
-//   if (isAlreadyFollowing) {
-//     // Unfollow: Remove current user from target user's followers list and
-//     // remove target user from current user's following list
-//     await User.updateOne(
-//       { _id: targetUserId },
-//       { $pull: { followers: currentUser.userId } },
-//     );
-//     await User.updateOne(
-//       { _id: currentUser.userId },
-//       { $pull: { following: targetUserId } },
-//     );
-
-//     return false;
-//   } else {
-//     // Follow: Add current user to target user's followers list and
-//     // add target user to current user's following list
-//     await User.updateOne(
-//       { _id: targetUserId },
-//       { $addToSet: { followers: currentUser.userId } },
-//     );
-//     await User.updateOne(
-//       { _id: currentUser.userId },
-//       { $addToSet: { following: targetUserId } },
-//     );
-
-//     return true;
-//   }
-// };
-
-// // ------------------ follow unfollow into DB ----------------
-// /**
-//  *
-//  * @param currentUser current logged in user
-//  * @param targetUserId target user id to follow or unfollow
-//  * @returns return message of follow or unfollow
-//  */
-// const checkFollowStatusIntoDB = async (
-//   user: JwtPayload,
-//   targetUserId: string,
-// ) => {
-//   const currentUser = await User.findById(user?.userId);
-//   if (!currentUser) {
-//     throw new AppError(httpStatus.NOT_FOUND, "User not found!");
-//   }
-//   const isFollowing = currentUser.following?.includes(targetUserId);
-//   return isFollowing;
-// };
 
 // -------------------- get user flowers and unfollowers --------------------
 /**
@@ -433,7 +366,5 @@ export const UserServices = {
   changeUserRoleIntoDB,
   makeUserVerifiedIntoDB,
   makeUserPremiumAccessIntoDB,
-  // followUnfollowIntoDB,
-  // checkFollowStatusIntoDB,
   getUserFlowersUnflollowersFromDB,
 };

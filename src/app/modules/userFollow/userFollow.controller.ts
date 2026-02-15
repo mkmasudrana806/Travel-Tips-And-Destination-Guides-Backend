@@ -64,9 +64,24 @@ const getMutualFriends = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------------ get friend suggestion -------------------
+const getFollowSuggestionsWithFallback = asyncHanlder(async (req, res) => {
+  const userId = req.user?.userId;
+  const result =
+    await UserFollowService.getFollowSuggestionsWithFallback(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Mutual friends retrived sucessfully",
+    data: result,
+  });
+});
+
 export const UserFollowController = {
   toggleFollow,
   getFollowers,
   getFollowings,
   getMutualFriends,
+  getFollowSuggestionsWithFallback,
 };

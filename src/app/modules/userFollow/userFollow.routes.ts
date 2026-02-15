@@ -1,6 +1,7 @@
 import express from "express";
 import { UserFollowController } from "./userFollow.controller";
 import auth from "../../middlewares/auth";
+import optionalAuth from "../../middlewares/optionalAuth";
 const router = express.Router();
 
 // follow/unfollow toggle
@@ -21,6 +22,13 @@ router.get(
   "/:targetUserId/mutual-friends",
   auth("user"),
   UserFollowController.getMutualFriends,
+);
+
+// get profile suggestion
+router.get(
+  "/profile/suggestions",
+  optionalAuth(),
+  UserFollowController.getFollowSuggestionsWithFallback,
 );
 
 export const UserFollowRoutes = router;
