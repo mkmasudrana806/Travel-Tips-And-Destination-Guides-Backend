@@ -9,4 +9,6 @@ router.post("/:postId", auth("user"), SavedPostController.savedPost);
 // delete a saved post
 router.delete("/:postId", auth("user"), SavedPostController.deleteSavedPost);
 
+router.get("/", auth("user"), SavedPostController.getAllSavedPosts);
+
 export const SavedPostRoutes = router;

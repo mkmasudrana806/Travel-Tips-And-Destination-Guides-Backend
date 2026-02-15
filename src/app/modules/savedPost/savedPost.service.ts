@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
 import SavedPost from "./savedPost.model";
+import { TSavedPostQuery } from "./savedPost.interface";
 
 /**
  * ------------ saved a travel post ------------
@@ -43,7 +44,35 @@ const deleteSavedPost = async (userId: string, postId: string) => {
   return true;
 };
 
+/**
+ * ------------- get all saved posts --------------
+ *
+ * @param userId user who want to get his all saved posts
+ * @param query limit and page
+ * @returns all saved post based on query
+ */
+const getAllSavedPosts = async (userId: string, query: TSavedPostQuery) => {
+  const { limit = 10, page = 1 } = query; // by default limit 10
+  const skip = (page - 1) * limit;
+
+  const result = await SavedPost.find({ user: userId })
+    .sort({ createdAt: 1 })
+    .skip(skip)
+    .limit(limit)
+    .populate({
+      path: "post",
+      populate: {
+        path: "author",
+        select: "name profilePicture",
+      },
+    });
+  const total = await SavedPost.countDocuments({ user: userId });
+  const meta = { total, page, limit };
+  return { result, meta };
+};
+
 export const SavedPostService = {
   savePost,
   deleteSavedPost,
+  getAllSavedPosts,
 };
