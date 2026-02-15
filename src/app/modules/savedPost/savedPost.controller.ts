@@ -18,6 +18,21 @@ const savedPost = asyncHanlder(async (req, res) => {
   });
 });
 
+// --------------- delete/unsaved a saved post ----------------
+const deleteSavedPost = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const postId = req.params.postId;
+  const result = await SavedPostService.deleteSavedPost(userId, postId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Saved post deleted successfully",
+    data: result,
+  });
+});
+
 export const SavedPostController = {
   savedPost,
+  deleteSavedPost,
 };

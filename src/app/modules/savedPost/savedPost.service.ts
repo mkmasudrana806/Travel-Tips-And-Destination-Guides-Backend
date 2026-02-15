@@ -28,6 +28,22 @@ const savePost = async (userId: string, postId: string) => {
   return result;
 };
 
+/**
+ *  ------------ delete a saved travel post ------------
+ * @param userId who want to delete saved post
+ * @param postId post need to be unsaved/deleted
+ * @returns true
+ */
+const deleteSavedPost = async (userId: string, postId: string) => {
+  await SavedPost.findOneAndDelete({
+    user: userId,
+    post: postId,
+  });
+
+  return true;
+};
+
 export const SavedPostService = {
   savePost,
+  deleteSavedPost,
 };
