@@ -34,4 +34,7 @@ router.patch(
 // delete a post
 router.delete("/:id", auth("user", "admin"), PostControllers.deletePost);
 
+// filter post based on user queries
+router.get("/advanced/hard/filtered", PostControllers.getFilteredTravelPosts);
+
 export const PostRoutes = router;

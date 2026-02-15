@@ -85,6 +85,20 @@ const deletePost = asyncHanlder(async (req, res) => {
   });
 });
 
+// --------------- delete a post ----------------
+const getFilteredTravelPosts = asyncHanlder(async (req, res) => {
+  const query = req.query;
+  const { data, meta } = await PostServices.getFilteredTravelPosts(query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Filtered post retrived successfully",
+    data: data,
+    meta: meta,
+  });
+});
+
 export const PostControllers = {
   createPost,
   getAllPosts,
@@ -92,4 +106,5 @@ export const PostControllers = {
   getPost,
   updatePost,
   deletePost,
+  getFilteredTravelPosts,
 };

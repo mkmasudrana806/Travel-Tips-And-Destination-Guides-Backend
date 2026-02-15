@@ -182,45 +182,88 @@ const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
   return deletedPost;
 };
 
-
-
 /**
- * ------------------ downvote a post ----------------
+ * -------- get filtered travel posts based on user queries -----------
  *
- * @param currentUser current user
- * @param postId post id to upvote
- * @validation add user to downvoted as well as remove user from upvoted if present
- * @returns return true if downvote added, else false
+ * @param query query params like country, location, limit, page, travel type etc
+ * @returns returned filtered travel post based on query with pagination
  */
-// const downvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
-//   // Check if the post exists
-//   const targetPost = await Post.findOne({ _id: postId, isDeleted: false });
-//   if (!targetPost) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
-//   }
+const getFilteredTravelPosts = async (query: any) => {
+  const {
+    location,
+    country,
+    minCost,
+    maxCost,
+    days,
+    travelType,
+    page = 1,
+    limit = 10,
+    sort = "latest",
+  } = query;
 
-//   // Check if user has already downvoted the post
-//   const isAlreadyDownvoted = targetPost.downvotes?.includes(currentUser.userId);
+  // make a query object
+  const filter: any = {
+    isDeleted: false,
+  };
 
-//   if (isAlreadyDownvoted) {
-//     // Remove the downvote: Remove user from the post's downvotes list
-//     await Post.updateOne(
-//       { _id: postId, isDeleted: false },
-//       { $pull: { downvotes: currentUser.userId } },
-//     );
-//     return { message: "Downvote removed", downvoted: false };
-//   } else {
-//     // Add downvote and remove from upvotes in a single query
-//     await Post.updateOne(
-//       { _id: postId, isDeleted: false },
-//       {
-//         $addToSet: { downvotes: currentUser.userId },
-//         $pull: { upvotes: currentUser.userId },
-//       },
-//     );
-//     return { message: "Downvote added", downvoted: true };
-//   }
-// };
+  // location filter
+  if (location) {
+    filter.locationName = { $regex: location, $options: "i" };
+  }
+
+  // country filter
+  if (country) {
+    filter.country = { $regex: country, $options: "i" };
+  }
+
+  // cost range. as i received min and max. so i will keep only in range budget
+  if (minCost || maxCost) {
+    filter.estimatedCost = {};
+    if (minCost) filter.estimatedCost.$gte = Number(minCost);
+    if (maxCost) filter.estimatedCost.$lte = Number(maxCost);
+  }
+
+  // travel days
+  if (days) {
+    filter.travelDays = Number(days);
+  }
+
+  // travel type
+  if (travelType) {
+    filter.travelType = travelType;
+  }
+
+  // sorting by default latest
+  // but user can sort based on cost, upvote counts
+  let sortOption: any = { createdAt: -1 };
+
+  if (sort === "cheapest") {
+    sortOption = { estimatedCost: 1 };
+  } else if (sort === "popular") {
+    sortOption = { upvoteCount: -1 };
+  }
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const posts = await Post.find(filter)
+    .sort(sortOption)
+    .skip(skip)
+    .limit(Number(limit))
+    .populate("author", "name profilePicture");
+
+  // create meta data
+  const total = await Post.countDocuments(filter);
+  const meta = {
+    total,
+    page: Number(page),
+    limit: Number(limit),
+  };
+
+  return {
+    data: posts,
+    meta,
+  };
+};
 
 export const PostServices = {
   createPostIntoDB,
@@ -229,4 +272,5 @@ export const PostServices = {
   getSinglePostFromDB,
   deleteAPostFromDB,
   updateAPostIntoDB,
+  getFilteredTravelPosts,
 };
