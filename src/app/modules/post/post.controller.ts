@@ -85,38 +85,6 @@ const deletePost = asyncHanlder(async (req, res) => {
   });
 });
 
-// ------------------- upvote a post -------------------
-// const upvotePost = asyncHanlder(async (req, res) => {
-//   const result = await PostServices.upvotePostIntoDB(
-//     req.user,
-//     req.params.postId,
-//   );
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: result ? "upvote added successfull" : "upvote removed successfull",
-//     data: result,
-//   });
-// });
-
-// // ------------------- downvote a post -------------------
-// const downvotePost = asyncHanlder(async (req, res) => {
-//   const result = await PostServices.downvotePostIntoDB(
-//     req.user,
-//     req.params?.postId,
-//   );
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: result
-//       ? "downvote added successfull"
-//       : "downvote removed successfull",
-//     data: result,
-//   });
-// });
-
 export const PostControllers = {
   createPost,
   getAllPosts,
@@ -124,6 +92,4 @@ export const PostControllers = {
   getPost,
   updatePost,
   deletePost,
-  // upvotePost,
-  // downvotePost,
 };

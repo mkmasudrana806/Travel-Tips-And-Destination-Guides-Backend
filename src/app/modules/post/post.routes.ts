@@ -5,6 +5,7 @@ import { PostValidtions } from "./post.validation";
 import validateRequestData from "../../middlewares/validateRequest";
 
 const router = express.Router();
+
 // create a new post
 router.post(
   "/create-post",
@@ -32,11 +33,5 @@ router.patch(
 
 // delete a post
 router.delete("/:id", auth("user", "admin"), PostControllers.deletePost);
-
-// // upvote a post
-// router.patch("/upvote/:postId", auth("user"), PostControllers.upvotePost);
-
-// // downvote a post
-// router.patch("/downvote/:postId", auth("user"), PostControllers.downvotePost);
 
 export const PostRoutes = router;

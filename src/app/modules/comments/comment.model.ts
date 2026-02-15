@@ -4,12 +4,12 @@ import { TComment } from "./comment.interface";
 // comment schema
 const commentSchema = new Schema<TComment>(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    postId: {
+    post: {
       type: Schema.Types.ObjectId,
       ref: "Post",
       required: true,

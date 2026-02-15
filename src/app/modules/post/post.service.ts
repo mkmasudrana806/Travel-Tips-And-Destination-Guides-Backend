@@ -182,42 +182,7 @@ const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
   return deletedPost;
 };
 
-/**
- * ------------------ upvote a post ----------------
- * @param currentUser current user
- * @param postId post id to upvote
- * @validation add user to upvoted as well as remove user from downvoted if present
- * @returns return true if upvote added, else false
- */
-// const upvotePostIntoDB = async (currentUser: JwtPayload, postId: string) => {
-//   // Check if the post exists
-//   const targetPost = await Post.findById(postId);
-//   if (!targetPost) {
-//     throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
-//   }
 
-//   // Check if user has already upvoted the post
-//   const isAlreadyUpvote = targetPost.upvotes?.includes(currentUser.userId);
-
-//   if (isAlreadyUpvote) {
-//     // Remove the upvote: Remove user from the post's upvotes list
-//     await Post.updateOne(
-//       { _id: postId, isDeleted: false },
-//       { $pull: { upvotes: currentUser.userId } },
-//     );
-//     return { message: "Upvote removed", upvoted: false };
-//   } else {
-//     // Add upvote and remove from downvotes in a single query
-//     await Post.updateOne(
-//       { _id: postId, isDeleted: false },
-//       {
-//         $addToSet: { upvotes: currentUser.userId },
-//         $pull: { downvotes: currentUser.userId },
-//       },
-//     );
-//     return { message: "Upvote added", upvoted: true };
-//   }
-// };
 
 /**
  * ------------------ downvote a post ----------------
@@ -264,6 +229,4 @@ export const PostServices = {
   getSinglePostFromDB,
   deleteAPostFromDB,
   updateAPostIntoDB,
-  // upvotePostIntoDB,
-  // downvotePostIntoDB,
 };

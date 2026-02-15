@@ -5,6 +5,11 @@ type TPost = {
   title: string;
   content: string;
   category: "Adventure" | "Business Travel" | "Exploration";
+  locationName: string;
+  country: string;
+  travelDays: number;
+  estimatedCost: number;
+  travelType: "budget" | "midrange" | "luxury";
   image: string;
   premium: boolean;
   upvoteCount: number;

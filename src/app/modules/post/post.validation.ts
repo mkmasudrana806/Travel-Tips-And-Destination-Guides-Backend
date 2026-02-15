@@ -18,6 +18,11 @@ const createPostValidationSchema = z.object({
         required_error: "content is required",
       })
       .min(100),
+    locationName: z.string(),
+    country: z.string(),
+    travelDays: z.number(),
+    estimatedCost: z.number(),
+    travelType: z.enum(["budget", "midrange", "luxury"]),
     premium: z.boolean(),
     bannerId: z.string(),
     contentIds: z.array(z.string()),

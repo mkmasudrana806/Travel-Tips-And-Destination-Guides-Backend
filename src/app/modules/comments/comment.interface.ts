@@ -2,8 +2,8 @@ import { Date, Types } from "mongoose";
 
 export type TComment = {
   _id: Types.ObjectId;
-  postId: Types.ObjectId;
-  userId: Types.ObjectId;
+  post: Types.ObjectId;
+  user: Types.ObjectId;
   comment: string;
   createdAt: Date;
   updatedAt: Date;

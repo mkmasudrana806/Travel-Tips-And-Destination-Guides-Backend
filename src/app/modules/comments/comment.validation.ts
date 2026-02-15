@@ -4,7 +4,7 @@ import { z } from "zod";
 // create a comment schema
 const createACommentSchema = z.object({
   body: z.object({
-    postId: z
+    post: z
       .string({ required_error: "Product id is required" })
       .refine((value) => Types.ObjectId.isValid(value), {
         message: "Invalid postId, it should be mongoose _id",
