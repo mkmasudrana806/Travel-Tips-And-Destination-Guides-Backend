@@ -22,6 +22,24 @@ const createTravelRequest = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------- get all requets of a plan -------------------
+const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const planId = req.params.planId;
+  const result = await TravelRequestService.getAllRequestsForPlan(
+    planId,
+    userId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "All requests for a plan retrived sucessfully",
+    data: result,
+  });
+});
+
 export const TravelRequestController = {
   createTravelRequest,
+  getAllRequestsForPlan,
 };

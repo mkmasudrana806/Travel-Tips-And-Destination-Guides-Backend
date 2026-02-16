@@ -13,4 +13,11 @@ router.post(
   TravelRequestController.createTravelRequest,
 );
 
+// get all request for a plan
+router.get(
+  "/plans/:planId/requests",
+  auth("user"),
+  TravelRequestController.getAllRequestsForPlan,
+);
+
 export const TravelRequestRoutes = router;

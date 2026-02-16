@@ -40,6 +40,31 @@ const createTravelRequest = async (
   return request;
 };
 
+/**
+ * ---------- get all travel request for a plan -----------
+ *
+ * @param planId travel plan id to get all its request
+ * @param userId the owner of that travel plan
+ */
+const getAllRequestsForPlan = async (planId: string, userId: string) => {
+  const plan = await TravelPlan.findById(planId);
+  if (!plan) {
+    throw new AppError(httpStatus.NOT_FOUND, "Travel plan not found");
+  }
+  // you have no access to this travel plan.
+  if (plan.user.toString() !== userId) {
+    throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
+  }
+  const requests = await TravelRequest.find({
+    travelPlan: planId,
+  })
+    .populate("requester", "name profilePicture")
+    .sort({ createdAt: -1 });
+
+  return requests;
+};
+
 export const TravelRequestService = {
   createTravelRequest,
+  getAllRequestsForPlan,
 };
