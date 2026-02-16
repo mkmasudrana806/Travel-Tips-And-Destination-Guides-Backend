@@ -53,7 +53,14 @@ const getMyAllTravelPlans = async (
   return result;
 };
 
-// update travel plans
+/**
+ *  ----------- update travel plans -----------
+ *
+ * @param userId user who want to update plan
+ * @param planId plan id
+ * @param payload updated data
+ * @returns updated data
+ */
 const updateTravelPlan = async (
   userId: string,
   planId: string,
@@ -89,8 +96,31 @@ const updateTravelPlan = async (
   return result;
 };
 
+/**
+ * ------------- close a travel plan ----------------
+ *
+ * @param userId user want to close the plan
+ * @param planId plan id which to be closed
+ * @returns closed plan data
+ */
+const closeTravelPlan = async (userId: string, planId: string) => {
+  const result = await TravelPlan.findOneAndUpdate(
+    { _id: planId, user: userId, status: "open" },
+    { status: "close" },
+  );
+
+  if (!result) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Travel plan is already deleted",
+    );
+  }
+  return result;
+};
+
 export const TravelPlanService = {
   createTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
+  closeTravelPlan,
 };

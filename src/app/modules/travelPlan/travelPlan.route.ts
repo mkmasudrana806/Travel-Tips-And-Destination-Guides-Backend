@@ -24,4 +24,11 @@ router.patch(
   TravelPlanController.updateTravelPlan,
 );
 
+// close a travel paln
+router.patch(
+  "/:planId/close",
+  auth("user"),
+  TravelPlanController.closeTravelPlan,
+);
+
 export const TravelPlanRoutes = router;
