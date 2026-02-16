@@ -9,6 +9,7 @@ import { InsightsRoutes } from "../modules/insights/insights.routes";
 import { PostVoteRoutes } from "../modules/postVote/postVote.routes";
 import { UserFollowRoutes } from "../modules/userFollow/userFollow.routes";
 import { SavedPostRoutes } from "../modules/savedPost/savedPost.route";
+import { TravelPlanRoutes } from "../modules/travelPlan/travelPlan.route";
 const router = express.Router();
 
 // user
@@ -40,5 +41,8 @@ router.use("/users", UserFollowRoutes);
 
 // saved travel post
 router.use("/saved-post", SavedPostRoutes);
+
+// travel plans
+router.use("/travel-plans", TravelPlanRoutes);
 
 export const ApiRoutes = router;
