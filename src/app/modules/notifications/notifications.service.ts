@@ -27,6 +27,40 @@ const createNotification = async (payload: CreateNotificationPayload) => {
   return result;
 };
 
+/**
+ * ----------- get my all notifications ------------
+ *
+ * @param userId user who wants his all read/undread all notifications
+ * @param page by default 1
+ * @param limit by default 10
+ * @returns result
+ */
+const getMyNotifications = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+  const notifications = await Notification.find({
+    recipient: userId,
+  })
+    .populate("sender", "name profilePicture")
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total: limit,
+    },
+    result: notifications,
+  };
+};
+
 export const NotificationService = {
   createNotification,
+  getMyNotifications,
 };

@@ -11,6 +11,7 @@ import { UserFollowRoutes } from "../modules/userFollow/userFollow.routes";
 import { SavedPostRoutes } from "../modules/savedPost/savedPost.route";
 import { TravelPlanRoutes } from "../modules/travelPlan/travelPlan.route";
 import { TravelRequestRoutes } from "../modules/travelRequest/travelRequest.route";
+import { NotificationsRoutes } from "../modules/notifications/notifications.route";
 const router = express.Router();
 
 // user
@@ -48,5 +49,8 @@ router.use("/travel-plans", TravelPlanRoutes);
 
 // travel request
 router.use("/travel-request", TravelRequestRoutes);
+
+// notifications
+router.use("/notifications", NotificationsRoutes);
 
 export const ApiRoutes = router;
