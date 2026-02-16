@@ -1,0 +1,27 @@
+import httpStatus from "http-status";
+import sendResponse from "../../utils/sendResponse";
+import asyncHanlder from "../../utils/asyncHandler";
+import { TravelRequestService } from "./travelRequest.service";
+
+// ---------------- create a travel request ---------------
+const createTravelRequest = asyncHanlder(async (req, res) => {
+  const requesterId = req.user.userId;
+  const travelPlanId = req.params.planId;
+  const data = req.body;
+  const result = await TravelRequestService.createTravelRequest(
+    travelPlanId,
+    requesterId,
+    data,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Trip request sucessfull",
+    data: result,
+  });
+});
+
+export const TravelRequestController = {
+  createTravelRequest,
+};
