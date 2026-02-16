@@ -31,4 +31,7 @@ router.patch(
   TravelPlanController.closeTravelPlan,
 );
 
+// delete a travel plan
+router.delete("/:planId", auth("user"), TravelPlanController.deleteTravelPlan);
+
 export const TravelPlanRoutes = router;

@@ -112,9 +112,24 @@ const closeTravelPlan = async (userId: string, planId: string) => {
   if (!result) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "Travel plan is already deleted",
+      "Travel plan is already closed",
     );
   }
+  return result;
+};
+
+/**
+ * ------------- delete a travel plan ----------------
+ *
+ * @param userId user want to delete the plan
+ * @param planId plan id which to be deleted
+ * @returns deleted plan data
+ */
+const deleteTravelPlan = async (userId: string, planId: string) => {
+  const result = await TravelPlan.findOneAndDelete({
+    _id: planId,
+    user: userId,
+  });
   return result;
 };
 
@@ -123,4 +138,5 @@ export const TravelPlanService = {
   getMyAllTravelPlans,
   updateTravelPlan,
   closeTravelPlan,
+  deleteTravelPlan,
 };

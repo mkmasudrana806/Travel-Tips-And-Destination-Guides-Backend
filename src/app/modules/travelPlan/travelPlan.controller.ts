@@ -60,9 +60,24 @@ const closeTravelPlan = asyncHanlder(async (req, res) => {
   });
 });
 
+// ---------------- delete my travel plan ---------------
+const deleteTravelPlan = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const planId = req.params.planId;
+  const result = await TravelPlanService.deleteTravelPlan(userId, planId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "travel plan deleted sucessfull",
+    data: result,
+  });
+});
+
 export const TravelPlanController = {
   createTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
   closeTravelPlan,
+  deleteTravelPlan,
 };
