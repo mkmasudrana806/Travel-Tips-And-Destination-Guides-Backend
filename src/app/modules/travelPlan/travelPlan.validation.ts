@@ -7,6 +7,8 @@ const travelPlanBodySchema = z.object({
   endDate: z.coerce.date(),
   minBudget: z.number(),
   maxBudget: z.number(),
+  contact: z.string(),
+  note: z.string().max(200, "Maximum 200 characters are allowed"),
 });
 
 // create travel

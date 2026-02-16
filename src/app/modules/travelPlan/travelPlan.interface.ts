@@ -9,6 +9,8 @@ export type TTravelPlan = {
   travelDays: number;
   minBudget: number;
   maxBudget: number;
+  contact: string;
+  note: string;
   status: "open" | "closed";
   createdAt: Date;
   updatedAt: Date;

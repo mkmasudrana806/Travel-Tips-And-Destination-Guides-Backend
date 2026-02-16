@@ -24,6 +24,15 @@ const travelPlanSchema = new Schema<TTravelPlan>(
       type: Number,
       required: true,
     },
+    contact: {
+      type: String,
+      required: true,
+      select: 0,
+    },
+    note: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["open", "close"],
