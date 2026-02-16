@@ -16,7 +16,6 @@ const notificationSchema = new Schema<TNotification>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     sender: {
       type: Schema.Types.ObjectId,
@@ -34,7 +33,8 @@ const notificationSchema = new Schema<TNotification>(
     },
 
     resourceId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     message: {

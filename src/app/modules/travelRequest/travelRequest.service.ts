@@ -3,6 +3,9 @@ import AppError from "../../utils/AppError";
 import TravelPlan from "../travelPlan/travelPlan.model";
 import TravelRequest from "./travelRequest.model";
 import { TTravelRequest } from "./travelRequest.interface";
+import { NotificationService } from "../notifications/notifications.service";
+import mongoose, { Schema, Types } from "mongoose";
+import { User } from "../user/user.model";
 
 /**
  * ----------- create a travel request with note -------------
@@ -17,7 +20,7 @@ const createTravelRequest = async (
   requesterId: string,
   payload: Partial<TTravelRequest>,
 ) => {
-  const plan = await TravelPlan.findById(planId);
+  const plan = await TravelPlan.findById(planId).populate("user", "name");
 
   if (!plan) {
     throw new AppError(httpStatus.NOT_FOUND, "Travel plan not found");
@@ -37,7 +40,28 @@ const createTravelRequest = async (
     ...payload,
   });
 
-  return request;
+  // fetch user name
+  const user = await User.findById(requesterId).select("name");
+
+  try {
+    // create notification
+    await NotificationService.createNotification({
+      recipient: plan.user,
+      sender: new mongoose.Types.ObjectId(requesterId),
+      type: "travel_request",
+      senderName: user?.name || "An User",
+      destination: plan.destination,
+      resourceType: "TravelPlan",
+      resourceId: plan._id,
+    });
+  } catch (error) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Failed to create notification for TRAVEL_REQUEST",
+    );
+  } finally {
+    return request;
+  }
 };
 
 /**

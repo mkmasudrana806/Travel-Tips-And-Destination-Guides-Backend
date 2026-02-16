@@ -16,16 +16,16 @@ export type TNotification = {
   type: NotificationType;
   message: string;
   resourceType: string;
-  resourceId: string;
+  resourceId: Types.ObjectId;
   isRead: boolean;
 };
 
 export type CreateNotificationPayload = {
-  recipient: string;
-  sender: string;
+  recipient: Types.ObjectId;
+  sender: Types.ObjectId;
   type: NotificationType;
   resourceType: string;
-  resourceId: string;
+  resourceId: Types.ObjectId;
   senderName: string;
   destination?: string;
 };
