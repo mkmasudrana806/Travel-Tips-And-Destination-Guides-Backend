@@ -80,8 +80,25 @@ const markAsRead = async (notificationId: string, userId: string) => {
   return result;
 };
 
+/**
+ * ------------- mark all notification as read ---------------
+ *
+ * @param userId who want to mark all notification as read
+ * @returns nothing
+ */
+const markAllAsRead = async (userId: string) => {
+  return Notification.updateMany(
+    {
+      recipient: userId,
+      isRead: false,
+    },
+    { isRead: true },
+  );
+};
+
 export const NotificationService = {
   createNotification,
   getMyNotifications,
   markAsRead,
+  markAllAsRead,
 };
