@@ -35,10 +35,23 @@ const travelPlanSchema = new Schema<TTravelPlan>(
   },
 );
 
-travelPlanSchema.index({ user: 1 });
-travelPlanSchema.index({ status: 1 });
+travelPlanSchema.index({ user: 1, createdAt: -1 });
 travelPlanSchema.index({ destination: 1 });
-travelPlanSchema.index({ startDate: 1, endDate: 1 });
+travelPlanSchema.index({ travelDays: 1 });
+travelPlanSchema.index({
+  destination: 1,
+  minBudget: 1,
+  maxBudget: 1,
+});
+travelPlanSchema.index({
+  destination: 1,
+  travelDays: 1,
+});
+travelPlanSchema.index({
+  destination: 1,
+  startDate: 1,
+  endDate: 1,
+});
 
 const TravelPlan = model<TTravelPlan>("TravelPlan", travelPlanSchema);
 
