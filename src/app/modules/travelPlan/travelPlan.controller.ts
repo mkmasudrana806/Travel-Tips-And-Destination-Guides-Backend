@@ -31,7 +31,23 @@ const getMyAllTravelPlans = asyncHanlder(async (req, res) => {
   });
 });
 
+// ---------------- update my travel plan ---------------
+const updateTravelPlan = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const planId = req.params.planId;
+  const data = req.body;
+  const result = await TravelPlanService.updateTravelPlan(userId, planId, data);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "travel plan updated sucessfull",
+    data: result,
+  });
+});
+
 export const TravelPlanController = {
   createTravelPlan,
   getMyAllTravelPlans,
+  updateTravelPlan,
 };

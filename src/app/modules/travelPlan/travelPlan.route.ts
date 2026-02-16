@@ -16,4 +16,12 @@ router.post(
 // get my all travel plans
 router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
 
+// update travel plan
+router.patch(
+  "/:planId",
+  auth("user"),
+  validateRequestData(TravelPlanValidation.updateTravelPlan),
+  TravelPlanController.updateTravelPlan,
+);
+
 export const TravelPlanRoutes = router;

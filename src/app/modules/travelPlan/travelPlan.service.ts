@@ -3,6 +3,7 @@ import { TTravelPlan } from "./travelPlan.interface";
 import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
+import { getTravelDays } from "./travelPlan.utils";
 
 /**
  * ------------- create a travel plan -------------
@@ -18,27 +19,19 @@ const createTravelPlan = async (
   payload.user = new mongoose.Types.ObjectId(userId);
 
   // travel days calculate and validate
-  const { startDate, endDate } = payload;
-  if (!startDate || !endDate) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Start date and end date are required",
-    );
-  }
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  if (end < start) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "End date must be after start date",
-    );
-  }
+  payload.travelDays = getTravelDays(payload.startDate, payload.endDate);
 
-  const msInDay = 1000 * 24 * 60 * 60;
-  start.setHours(0, 0, 0, 0);
-  end.setHours(0, 0, 0, 0);
-  const diff = (end.getTime() - start.getTime()) / msInDay;
-  payload.travelDays = diff + 1; // inclusive days counts
+  // budget validation
+  if (
+    payload.minBudget &&
+    payload.maxBudget &&
+    payload.minBudget > payload.maxBudget
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Min budget should not greater than maxBudget!",
+    );
+  }
 
   const result = await TravelPlan.create(payload);
   return result;
@@ -60,7 +53,44 @@ const getMyAllTravelPlans = async (
   return result;
 };
 
+// update travel plans
+const updateTravelPlan = async (
+  userId: string,
+  planId: string,
+  payload: Partial<TTravelPlan>,
+) => {
+  // update travels days
+  if (payload.startDate) {
+    payload.travelDays = getTravelDays(payload.startDate, payload.endDate);
+  }
+
+  // budget validation
+  if (
+    payload.minBudget &&
+    payload.maxBudget &&
+    payload.minBudget > payload.maxBudget
+  ) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Min budget should not greater than maxBudget!",
+    );
+  }
+
+  // only open travel plan should update
+  const result = await TravelPlan.findOneAndUpdate(
+    { _id: planId, user: userId },
+    payload,
+    {
+      new: true,
+      runValidators: true,
+    },
+  );
+
+  return result;
+};
+
 export const TravelPlanService = {
   createTravelPlan,
   getMyAllTravelPlans,
+  updateTravelPlan,
 };
