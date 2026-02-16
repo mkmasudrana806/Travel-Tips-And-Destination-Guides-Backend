@@ -58,8 +58,22 @@ const acceptRejectTravelRequest = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------- accept/reject a travel partner request -------------------
+const getTravelRequestsForAnUser = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const result = await TravelRequestService.getTravelRequestsForAnUser(userId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "All requested trip sharing retrived sucessfull",
+    data: result,
+  });
+});
+
 export const TravelRequestController = {
   createTravelRequest,
   getAllRequestsForPlan,
   acceptRejectTravelRequest,
+  getTravelRequestsForAnUser,
 };

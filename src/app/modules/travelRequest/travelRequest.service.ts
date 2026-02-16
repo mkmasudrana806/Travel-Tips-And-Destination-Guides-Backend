@@ -41,7 +41,7 @@ const createTravelRequest = async (
 };
 
 /**
- * ---------- get all travel request for a plan -----------
+ * ---------- get all travel request for a plan (author side) -----------
  *
  * @param planId travel plan id to get all its request
  * @param userId the owner of that travel plan
@@ -114,8 +114,31 @@ const acceptRejectTravelRequest = async (
   return travelRequest;
 };
 
+/**
+ * ----------- get all requested trip for an user (user side) --------------
+ *
+ * @param requesterId requester id, who want to see the status of requested travel plan
+ * @returns lists of requested travel trips
+ */
+const getTravelRequestsForAnUser = async (requesterId: string) => {
+  const result = await TravelRequest.find({
+    requester: requesterId,
+  })
+    .populate({
+      path: "travelPlan",
+      populate: {
+        path: "user",
+        select: "name profilePicture",
+      },
+    })
+    .sort({ createdAt: -1 });
+
+  return result;
+};
+
 export const TravelRequestService = {
   createTravelRequest,
   getAllRequestsForPlan,
   acceptRejectTravelRequest,
+  getTravelRequestsForAnUser,
 };

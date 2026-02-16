@@ -28,4 +28,11 @@ router.patch(
   TravelRequestController.acceptRejectTravelRequest,
 );
 
+// get my all requested travel plan
+router.get(
+  "/me",
+  auth("user"),
+  TravelRequestController.getTravelRequestsForAnUser,
+);
+
 export const TravelRequestRoutes = router;
