@@ -17,6 +17,19 @@ const createTravelPlan = asyncHanlder(async (req, res) => {
   });
 });
 
+// ---------------- get single travel plan details ---------------
+const getSingleTravelPlan = asyncHanlder(async (req, res) => {
+  const planId = req.params.planId;
+  const result = await TravelPlanService.getSingleTravelPlan(planId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Travel plan is retrieved",
+    data: result,
+  });
+});
+
 // ---------------- get my all travel plans ---------------
 const getMyAllTravelPlans = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
@@ -76,6 +89,7 @@ const deleteTravelPlan = asyncHanlder(async (req, res) => {
 
 export const TravelPlanController = {
   createTravelPlan,
+  getSingleTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
   closeTravelPlan,

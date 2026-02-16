@@ -13,6 +13,9 @@ router.post(
   TravelPlanController.createTravelPlan,
 );
 
+// get single travel plan
+router.get("/:planId", TravelPlanController.getSingleTravelPlan);
+
 // get my all travel plans
 router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
 

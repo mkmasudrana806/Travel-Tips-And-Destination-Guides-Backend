@@ -38,6 +38,20 @@ const createTravelPlan = async (
 };
 
 /**
+ * ----------- get a travel plan details =-=--------------
+ *
+ * @param planId single plan id to view
+ * @returns single plan data
+ */
+const getSingleTravelPlan = async (planId: string) => {
+  const result = await TravelPlan.findOne({ _id: planId }).populate(
+    "user",
+    "name profilePicture",
+  );
+  return result;
+};
+
+/**
  * ------------ get my all travel plans ------------
  *
  * @param userId user who want to get his all plans
@@ -110,10 +124,7 @@ const closeTravelPlan = async (userId: string, planId: string) => {
   );
 
   if (!result) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Travel plan is already closed",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Travel plan is already closed");
   }
   return result;
 };
@@ -135,6 +146,7 @@ const deleteTravelPlan = async (userId: string, planId: string) => {
 
 export const TravelPlanService = {
   createTravelPlan,
+  getSingleTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
   closeTravelPlan,
