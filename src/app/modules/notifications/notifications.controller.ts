@@ -48,8 +48,22 @@ const markAllAsRead = asyncHanlder(async (req, res) => {
   });
 });
 
+// --------------- mark notification as read ----------------
+const getUnreadCount = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const result = await NotificationService.getUnreadCount(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Calculated un read notification counts",
+    data: result,
+  });
+});
+
 export const NotificationsController = {
   getMyNotifications,
   markAsRead,
   markAllAsRead,
+  getUnreadCount,
 };

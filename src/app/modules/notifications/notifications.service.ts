@@ -96,9 +96,25 @@ const markAllAsRead = async (userId: string) => {
   );
 };
 
+/**
+ * -------------- get unread count -----------------
+ *
+ * @param userId who want to get unread notification counts
+ * @returns unread count
+ */
+const getUnreadCount = async (userId: string) => {
+  const count = await Notification.countDocuments({
+    recipient: userId,
+    isRead: false,
+  });
+
+  return { unreadCount: count };
+};
+
 export const NotificationService = {
   createNotification,
   getMyNotifications,
   markAsRead,
   markAllAsRead,
+  getUnreadCount,
 };

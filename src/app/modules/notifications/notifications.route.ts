@@ -16,4 +16,11 @@ router.patch(
 // mark all notification as read
 router.patch("/read-all", auth("user"), NotificationsController.markAllAsRead);
 
+// get unread notificaitons counts
+router.get(
+  "/unread/count",
+  auth("user"),
+  NotificationsController.getUnreadCount,
+);
+
 export const NotificationsRoutes = router;
