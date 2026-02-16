@@ -20,4 +20,12 @@ router.get(
   TravelRequestController.getAllRequestsForPlan,
 );
 
+// accept or reject a partner request
+router.patch(
+  "/:requestId/accept-reject",
+  auth("user"),
+  validateRequestData(TravelRequestValidation.acceptRejectPartnerRequest),
+  TravelRequestController.acceptRejectTravelRequest,
+);
+
 export const TravelRequestRoutes = router;

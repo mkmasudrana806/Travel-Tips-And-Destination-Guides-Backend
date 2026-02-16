@@ -1,4 +1,4 @@
-import httpStatus from "http-status";
+import httpStatus, { FORBIDDEN } from "http-status";
 import AppError from "../../utils/AppError";
 import TravelPlan from "../travelPlan/travelPlan.model";
 import TravelRequest from "./travelRequest.model";
@@ -64,7 +64,58 @@ const getAllRequestsForPlan = async (planId: string, userId: string) => {
   return requests;
 };
 
+/**
+ * --------- aceept/reject travel request ------------
+ *
+ * @param requestId which request to be accepted
+ * @param authorId author who want to accept a request
+ * @param payload new status
+ * @returns updated travelRequest data
+ */
+const acceptRejectTravelRequest = async (
+  authorId: string,
+  requestId: string,
+  payload: Partial<TTravelRequest>,
+) => {
+  // status transition
+  const statusTransition: Record<string, string[]> = {
+    pending: ["accepted", "rejected"],
+  };
+
+  const travelRequest = await TravelRequest.findOne({
+    _id: requestId,
+  }).populate("travelPlan");
+
+  if (!travelRequest) {
+    throw new AppError(httpStatus.NOT_FOUND, "Request not found");
+  }
+
+  const plan = travelRequest.travelPlan as any;
+  // check author ownership
+  if (plan.user.toString() !== authorId) {
+    throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
+  }
+
+  if (!payload.status) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Status is required");
+  }
+
+  // check only allowed transition
+  const allowedTransition: string[] = statusTransition[travelRequest.status];
+  if (!allowedTransition || !allowedTransition.includes(payload.status)) {
+    throw new AppError(
+      FORBIDDEN,
+      `Cannot change status from ${travelRequest.status} to ${payload.status}`,
+    );
+  }
+  travelRequest.status = payload.status;
+  await travelRequest.save();
+
+  return travelRequest;
+};
+
 export const TravelRequestService = {
   createTravelRequest,
   getAllRequestsForPlan,
+  acceptRejectTravelRequest,
 };

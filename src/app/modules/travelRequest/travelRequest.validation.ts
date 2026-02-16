@@ -8,6 +8,16 @@ const createTravelRequest = z.object({
     .strict(),
 });
 
+// accept or reject partner request
+const acceptRejectPartnerRequest = z.object({
+  body: z
+    .object({
+      status: z.enum(["accepted", "rejected"]),
+    })
+    .strict(),
+});
+
 export const TravelRequestValidation = {
   createTravelRequest,
+  acceptRejectPartnerRequest,
 };
