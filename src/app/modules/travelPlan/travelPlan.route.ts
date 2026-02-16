@@ -14,7 +14,7 @@ router.post(
 );
 
 // get single travel plan
-router.get("/:planId", TravelPlanController.getSingleTravelPlan);
+router.get("/details/:planId", TravelPlanController.getSingleTravelPlan);
 
 // get my all travel plans
 router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
@@ -36,5 +36,8 @@ router.patch(
 
 // delete a travel plan
 router.delete("/:planId", auth("user"), TravelPlanController.deleteTravelPlan);
+
+// all travel plans
+router.get("/", TravelPlanController.getAllTravelPlansFiltered);
 
 export const TravelPlanRoutes = router;

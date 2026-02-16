@@ -87,6 +87,21 @@ const deleteTravelPlan = asyncHanlder(async (req, res) => {
   });
 });
 
+// ---------------- delete my travel plan ---------------
+const getAllTravelPlansFiltered = asyncHanlder(async (req, res) => {
+  const query = req.query;
+  const { result, meta } =
+    await TravelPlanService.getAllTravelPlansFiltered(query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "All plans retrieved sucessfull",
+    data: result,
+    meta,
+  });
+});
+
 export const TravelPlanController = {
   createTravelPlan,
   getSingleTravelPlan,
@@ -94,4 +109,5 @@ export const TravelPlanController = {
   updateTravelPlan,
   closeTravelPlan,
   deleteTravelPlan,
+  getAllTravelPlansFiltered,
 };

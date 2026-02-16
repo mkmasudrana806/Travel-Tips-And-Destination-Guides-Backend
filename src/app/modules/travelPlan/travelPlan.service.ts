@@ -3,7 +3,7 @@ import { TTravelPlan } from "./travelPlan.interface";
 import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
-import { getTravelDays } from "./travelPlan.utils";
+import { buildTravelPlanFilter, getTravelDays } from "./travelPlan.utils";
 
 /**
  * ------------- create a travel plan -------------
@@ -144,6 +144,30 @@ const deleteTravelPlan = async (userId: string, planId: string) => {
   return result;
 };
 
+//
+/**
+ * ----------- get all travel plans (public route) --------------
+ * dynamically return all travel plans based on user queries
+ *
+ * @param query different user queries params
+ * @return return filtered all travel plans
+ */
+const getAllTravelPlansFiltered = async (query: Record<string, unknown>) => {
+  const filter = buildTravelPlanFilter(query);
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const result = await TravelPlan.find(filter)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await TravelPlan.find(filter).countDocuments();
+  const meta = { page, limit, total };
+  return { meta, result };
+};
+
 export const TravelPlanService = {
   createTravelPlan,
   getSingleTravelPlan,
@@ -151,4 +175,5 @@ export const TravelPlanService = {
   updateTravelPlan,
   closeTravelPlan,
   deleteTravelPlan,
+  getAllTravelPlansFiltered,
 };

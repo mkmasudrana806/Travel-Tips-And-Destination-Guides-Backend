@@ -34,3 +34,41 @@ export const getTravelDays = (
   const diff = (end.getTime() - start.getTime()) / msInDay;
   return diff + 1;
 };
+
+/**
+ * ---------- build travel plan filter -----------------
+ *
+ * @param query pass query object for the travelPlan feeds
+ * @returns equivalent mongodb supported query object
+ */
+export const buildTravelPlanFilter = (query: Record<string, unknown>) => {
+  const filter: any = {};
+
+  if (query.destination) {
+    filter.destination = {
+      $regex: query.destination,
+      $options: "i",
+    };
+  }
+
+  if (query.startLocation) {
+    filter.startLocation = {
+      $regex: query.startLocation,
+      $options: "i",
+    };
+  }
+
+  if (query.travelDays) {
+    filter.travelDays = Number(query.travelDays);
+  }
+
+  if (query.minBudget) {
+    filter.maxBudget = { $gte: Number(query.minBudget) };
+  }
+
+  if (query.maxBudget) {
+    filter.minBudget = { $lte: Number(query.maxBudget) };
+  }
+
+  return filter;
+};
