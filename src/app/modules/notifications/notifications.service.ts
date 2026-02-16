@@ -60,7 +60,28 @@ const getMyNotifications = async (
   };
 };
 
+/**
+ * ------------ mark notification as read -------------
+ *
+ * @param notificationId notification id to mark as read
+ * @param userId who want to mark notification as read
+ * @returns read data
+ */
+const markAsRead = async (notificationId: string, userId: string) => {
+  const result = Notification.findOneAndUpdate(
+    {
+      _id: notificationId,
+      recipient: userId,
+    },
+    { isRead: true },
+    { new: true },
+  );
+
+  return result;
+};
+
 export const NotificationService = {
   createNotification,
   getMyNotifications,
+  markAsRead,
 };
