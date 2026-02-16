@@ -4,6 +4,13 @@ import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 
+/**
+ * ------------- create a travel plan -------------
+ *
+ * @param userId user who want to create travel plan
+ * @param payload travel plan data
+ * @returns created plan
+ */
 const createTravelPlan = async (
   userId: string,
   payload: Partial<TTravelPlan>,
@@ -37,6 +44,23 @@ const createTravelPlan = async (
   return result;
 };
 
+/**
+ * ------------ get my all travel plans ------------
+ *
+ * @param userId user who want to get his all plans
+ * @param query query like status=open, status=close, destination=dhaka etc
+ * @returns all listed travel plans
+ */
+const getMyAllTravelPlans = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  query.user = userId;
+  const result = await TravelPlan.find(query).sort({ createdAt: -1 });
+  return result;
+};
+
 export const TravelPlanService = {
   createTravelPlan,
+  getMyAllTravelPlans,
 };

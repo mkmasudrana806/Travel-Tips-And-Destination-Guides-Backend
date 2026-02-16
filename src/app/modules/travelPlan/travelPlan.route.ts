@@ -13,6 +13,7 @@ router.post(
   TravelPlanController.createTravelPlan,
 );
 
-
+// get my all travel plans
+router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
 
 export const TravelPlanRoutes = router;
