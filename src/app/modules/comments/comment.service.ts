@@ -7,15 +7,32 @@ import mongoose from "mongoose";
 
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
 import { COMMENT_ALLOWED_FIELDS_TO_UPDATE } from "./comment.constant";
+import { NotificationService } from "../notifications/notifications.service";
+import Post from "../post/post.model";
 
 // -------------- create a comment into db --------------
 const createACommentIntoDB = async (
   userData: JwtPayload,
   payload: TComment,
 ) => {
-  payload.user = userData?.user;
+  const post = await Post.findById(payload.post).populate("author", "_id");
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
+  }
+
+  payload.user = userData?.userId;
   // TODO: check postId, if post exists
   const result = await Comment.create(payload);
+
+  // create notification on comment
+  await NotificationService.createNotification({
+    recipient: post.author._id,
+    sender: new mongoose.Types.ObjectId(userData.userId),
+    type: "post_comment",
+    resourceType: "Post",
+    resourceId: payload.post,
+  });
+
   return result;
 };
 
