@@ -6,6 +6,7 @@ import { TTravelRequest } from "./travelRequest.interface";
 import { NotificationService } from "../notifications/notifications.service";
 import mongoose, { Schema, Types } from "mongoose";
 import { User } from "../user/user.model";
+import { NotificationType } from "../notifications/notifications.interface";
 
 /**
  * ----------- create a travel request with note -------------
@@ -133,7 +134,28 @@ const acceptRejectTravelRequest = async (
   travelRequest.status = payload.status;
   await travelRequest.save();
 
-  return travelRequest;
+  // notification
+  const typeSelect: Record<string, NotificationType> = {
+    accepted: "request_accepted",
+    rejected: "request_rejected",
+  };
+
+  try {
+    await NotificationService.createNotification({
+      recipient: travelRequest.requester,
+      sender: new mongoose.Types.ObjectId(authorId),
+      type: typeSelect[payload.status],
+      resourceType: "TravelRequest",
+      resourceId: travelRequest._id,
+    });
+  } catch (error) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Failed to create notification for TRAVEL_REQUEST",
+    );
+  } finally {
+    return travelRequest;
+  }
 };
 
 /**
