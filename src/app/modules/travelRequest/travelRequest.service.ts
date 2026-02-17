@@ -49,8 +49,6 @@ const createTravelRequest = async (
       recipient: plan.user,
       sender: new mongoose.Types.ObjectId(requesterId),
       type: "travel_request",
-      senderName: user?.name || "An User",
-      destination: plan.destination,
       resourceType: "TravelPlan",
       resourceId: plan._id,
     });

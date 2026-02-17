@@ -14,7 +14,6 @@ export type TNotification = {
   recipient: Types.ObjectId;
   sender: Types.ObjectId;
   type: NotificationType;
-  message: string;
   resourceType: string;
   resourceId: Types.ObjectId;
   isRead: boolean;
@@ -26,6 +25,4 @@ export type CreateNotificationPayload = {
   type: NotificationType;
   resourceType: string;
   resourceId: Types.ObjectId;
-  senderName: string;
-  destination?: string;
 };

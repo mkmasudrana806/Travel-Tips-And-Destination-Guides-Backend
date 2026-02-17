@@ -31,14 +31,9 @@ const notificationSchema = new Schema<TNotification>(
       type: String,
       required: true,
     },
-
     resourceId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-    },
-    message: {
-      type: String,
       required: true,
     },
     isRead: {
