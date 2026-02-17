@@ -232,7 +232,7 @@ const getMutualFriends = async (viewerId: string, targetUserId: string) => {
  */
 
 const getFollowSuggestionsWithFallback = async (
-  userId = null,
+  userId: any,
   page = 1,
   limit = 10,
 ) => {

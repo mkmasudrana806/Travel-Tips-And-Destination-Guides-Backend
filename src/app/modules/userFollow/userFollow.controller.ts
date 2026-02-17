@@ -66,7 +66,7 @@ const getMutualFriends = asyncHanlder(async (req, res) => {
 
 // ------------------ get friend suggestion -------------------
 const getFollowSuggestionsWithFallback = asyncHanlder(async (req, res) => {
-  const userId = req.user?.userId;
+  const userId = req.user.userId;
   const result =
     await UserFollowService.getFollowSuggestionsWithFallback(userId);
 

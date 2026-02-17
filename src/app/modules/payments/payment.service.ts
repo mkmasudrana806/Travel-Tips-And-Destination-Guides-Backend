@@ -1,10 +1,10 @@
 import { Payment } from "./payment.model";
-import { JwtPayload } from "jsonwebtoken";
 import { verifyPayment } from "./payment.utils";
 import mongoose from "mongoose";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
+import { TJwtPayload } from "../../interface/JwtPayload";
 
 // --------------- upgrade user to premiumAccess and payment status to "completed"
 const upgradeUserToPremiumIntoDB = async (
@@ -156,7 +156,7 @@ const allPaymentsHistoryFromDB = async () => {
 };
 
 // get user payments history
-const userPaymentsHistoryFromDB = async (userData: JwtPayload) => {
+const userPaymentsHistoryFromDB = async (userData: TJwtPayload) => {
   const result = await Payment.find({ userId: userData.userId });
   return result;
 };

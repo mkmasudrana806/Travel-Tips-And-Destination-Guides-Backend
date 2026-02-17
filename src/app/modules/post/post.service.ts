@@ -1,14 +1,14 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import TPost, { TPostCreate } from "./post.interface";
 import Post from "./post.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
-import { JwtPayload } from "jsonwebtoken";
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
 import { allowedFieldsToUpdate, searchableFields } from "./post.constant";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { Media } from "../media/media.model";
 import * as cheerio from "cheerio";
+import { TJwtPayload } from "../../interface/JwtPayload";
 
 /**
  * ------------- Create a new post ----------------
@@ -16,11 +16,8 @@ import * as cheerio from "cheerio";
  * @param payload new post data
  * @returns newly created post
  */
-const createPostIntoDB = async (
-  userId: Types.ObjectId,
-  payload: TPostCreate,
-) => {
-  payload.author = userId;
+const createPostIntoDB = async (userId: string, payload: TPostCreate) => {
+  payload.author = new mongoose.Types.ObjectId(userId);
   const { bannerId, contentIds, ...postData } = payload;
 
   // parsing the content
@@ -125,7 +122,7 @@ const getSinglePostFromDB = async (postId: string) => {
  * @returns return updated post data
  */
 const updateAPostIntoDB = async (
-  user: JwtPayload,
+  user: TJwtPayload,
   postId: string,
   payload: Partial<TPost>,
 ) => {
@@ -155,7 +152,7 @@ const updateAPostIntoDB = async (
  * @param postId post id to delete
  * @returns deleted post
  */
-const deleteAPostFromDB = async (user: JwtPayload, postId: string) => {
+const deleteAPostFromDB = async (user: TJwtPayload, postId: string) => {
   let deletedPost;
   if (user?.role === "user") {
     deletedPost = await Post.findOneAndUpdate(

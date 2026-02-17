@@ -1,17 +1,17 @@
-import { JwtPayload } from "jsonwebtoken";
 import Post from "../post/post.model";
 import { Payment } from "../payments/payment.model";
 import { User } from "../user/user.model";
+import { TJwtPayload } from "../../interface/JwtPayload";
 
 // -------------------- get user insights --------------------
 /** TODO:
  * @param followers user jwt payload
  * @returns return user posts, payments, followers and followings
  */
-const getUserInsightsFromDB = async (user: JwtPayload) => {
+const getUserInsightsFromDB = async (user: TJwtPayload) => {
   // calculate total posts
   const totalPosts = await Post.find({
-    author: user?.userId,
+    author: user.userId,
     isDeleted: false,
   });
 };
@@ -21,7 +21,7 @@ const getUserInsightsFromDB = async (user: JwtPayload) => {
  * @param followers user jwt payload
  * @returns return all posts, revenue and payments
  */
-const getAdminInsightsFromDB = async (user: JwtPayload) => {
+const getAdminInsightsFromDB = async (user: TJwtPayload) => {
   // Calculate total posts
   const totalPostsPromise = Post.aggregate([
     { $match: { isDeleted: false } },
@@ -57,7 +57,7 @@ const getAdminInsightsFromDB = async (user: JwtPayload) => {
 };
 
 // -------------------- get get Monthly Overview --------------------
-const getMonthlyOverviewFromDB = async (user: JwtPayload) => {
+const getMonthlyOverviewFromDB = async (user: TJwtPayload) => {
   // Aggregate total payments by month
   const paymentsByMonthPromise = Payment.aggregate([
     {

@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import AppError from "../utils/AppError";
-import httpStatus from "http-status";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import config from "../config";
 import { User } from "../modules/user/user.model";
 import asyncHanlder from "../utils/asyncHandler";
+import { TJwtPayload } from "../interface/JwtPayload";
 
 /**
  * ------------------- optional auth --------------------
@@ -28,15 +27,15 @@ const optionalAuth = () => {
         decoded = jwt.verify(
           token,
           config.jwt_access_secret as string,
-        ) as JwtPayload;
+        ) as TJwtPayload;
       } catch (error) {
         // if invalid token then ignore and continue as guest
         return next();
       }
 
-      const { email, role, iat } = decoded;
+      const { userId, role, iat } = decoded;
 
-      const user = await User.findOne({ email, role });
+      const user = await User.findOne({ _id: userId, role });
 
       // if user not found or blocked then treat as guest
       if (!user || user.status === "blocked" || user.isDeleted) {
@@ -48,7 +47,7 @@ const optionalAuth = () => {
         user.passwordChangedAt &&
         User.isJWTIssuedBeforePasswordChange(
           user.passwordChangedAt,
-          iat as number,
+          iat,
         )
       ) {
         // no problem, we treat it as guest user

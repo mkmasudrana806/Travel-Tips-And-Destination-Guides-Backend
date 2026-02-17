@@ -23,9 +23,9 @@ const loginUser = asyncHanlder(async (req, res) => {
 
 // ---------------------- Change user password -----------------------
 const changeUserPassword = asyncHanlder(async (req, res) => {
-  const user = req.user;
+  const userData = req.user;
   const payload = req.body;
-  const result = await AuthServices.changeUserPassword(user, payload);
+  const result = await AuthServices.changeUserPassword(userData, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

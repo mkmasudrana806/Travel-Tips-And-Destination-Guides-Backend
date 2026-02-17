@@ -2,17 +2,15 @@ import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
 import { TComment } from "./comment.interface";
 import { Comment } from "./comment.model";
-import { JwtPayload } from "jsonwebtoken";
-import mongoose from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
-import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
-import { COMMENT_ALLOWED_FIELDS_TO_UPDATE } from "./comment.constant";
 import { NotificationService } from "../notifications/notifications.service";
 import Post from "../post/post.model";
+import { TJwtPayload } from "../../interface/JwtPayload";
 
 // -------------- create a comment into db --------------
 const createACommentIntoDB = async (
-  userData: JwtPayload,
+  userData: TJwtPayload,
   payload: TComment,
 ) => {
   const post = await Post.findById(payload.post).populate("author", "_id");
@@ -20,7 +18,7 @@ const createACommentIntoDB = async (
     throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
   }
 
-  payload.user = userData?.userId;
+  payload.user = new mongoose.Types.ObjectId(userData.userId);
   // TODO: check postId, if post exists
   const result = await Comment.create(payload);
 

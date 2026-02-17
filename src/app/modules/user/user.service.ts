@@ -1,4 +1,3 @@
-import { JwtPayload } from "jsonwebtoken";
 import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
 import { allowedFieldsToUpdate, searchableFields } from "./user.constant";
 import { TUser } from "./user.interface";
@@ -12,8 +11,9 @@ import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
 import { TPayment } from "../payments/payment.interface";
 import { Payment } from "../payments/payment.model";
 import { initiatePayment } from "../payments/payment.utils";
-import { Date } from "mongoose";
+import mongoose, { Date } from "mongoose";
 import Post from "../post/post.model";
+import { TJwtPayload } from "../../interface/JwtPayload";
 
 /**
  * ----------------------- Create an user----------------------
@@ -89,7 +89,7 @@ const getAllUsersFromDB = async (query: Record<string, any>) => {
  * @param role user role
  * @returns own user data based on jwt payload data
  */
-const getMe = async (user: JwtPayload) => {
+const getMe = async (user: TJwtPayload) => {
   const result = await User.findOne({
     _id: user?.userId,
     role: user?.role,
@@ -130,7 +130,7 @@ const deleteUserFromDB = async (id: string) => {
  * @returns return updated user data
  */
 const updateUserIntoDB = async (
-  currentUser: JwtPayload,
+  currentUser: TJwtPayload,
   payload: Partial<TUser>,
 ) => {
   // filter allowed fileds only
@@ -224,7 +224,7 @@ const changeUserRoleIntoDB = async (id: string, payload: { role: string }) => {
  * @param user user jwt payload
  * @param payload boolean payload
  */
-const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
+const makeUserVerifiedIntoDB = async (user: TJwtPayload, payload: TPayment) => {
   // Find one post where the author is the user and upvotes array is non-empty
   const isPostFound = await Post.findOne({
     author: user?.userId,
@@ -245,9 +245,9 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
   // payment data
   const tnxId = `tnx-${Date.now()}`;
   const paymentData: Partial<TPayment> = {
-    userId: user?.userId,
-    username: user?.name,
-    email: user?.email,
+    userId: new mongoose.Types.ObjectId( user.userId),
+    // username: user?.name,
+    // email: user?.email,
     amount: payload.amount,
     subscriptionType: payload.subscriptionType,
     transactionId: tnxId,
@@ -286,15 +286,15 @@ const makeUserVerifiedIntoDB = async (user: JwtPayload, payload: TPayment) => {
  * @param payload boolean payload
  */
 const makeUserPremiumAccessIntoDB = async (
-  user: JwtPayload,
+  user: TJwtPayload,
   payload: TPayment,
 ) => {
   // payment data
   const tnxId = `tnx-${Date.now()}`;
   const paymentData: Partial<TPayment> = {
-    userId: user?.userId,
-    username: user?.name,
-    email: user?.email,
+    userId: new mongoose.Types.ObjectId(user.userId),
+    // username: user?.name,
+    // email: user?.email,
     amount: payload.amount,
     subscriptionType: payload.subscriptionType,
     transactionId: tnxId,

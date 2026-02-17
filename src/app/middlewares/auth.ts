@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import AppError from "../utils/AppError";
 import httpStatus from "http-status";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import config from "../config";
 import { User } from "../modules/user/user.model";
 import asyncHanlder from "../utils/asyncHandler";
+import { TJwtPayload } from "../interface/JwtPayload";
 
 /**
  * ------------------- auth --------------------
@@ -21,35 +22,35 @@ const auth = (...requiredRoles: string[]) => {
       }
 
       // decoded the token
-      let decoded;
+      let decoded: TJwtPayload;
       try {
         decoded = jwt.verify(
           token,
-          config.jwt_access_secret as string
-        ) as JwtPayload;
+          config.jwt_access_secret as string,
+        ) as TJwtPayload;
       } catch (error) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access!");
       }
 
-      const { email, role, iat } = decoded;
+      const { userId, role, iat } = decoded;
       // check if the user exits and not blocked and not deleted
-      const user = await User.findOne({ email, role });
+      const user = await User.findOne({ _id: userId, role });
       if (!user) {
         throw new AppError(
           httpStatus.NOT_FOUND,
-          "Authorized user is not found!"
+          "Authorized user is not found!",
         );
       }
       if (user.status === "blocked") {
         throw new AppError(
           httpStatus.NOT_FOUND,
-          "Authorized user is already blocked!"
+          "Authorized user is already blocked!",
         );
       }
       if (user.isDeleted) {
         throw new AppError(
           httpStatus.NOT_FOUND,
-          "Authorized user is already deleted!"
+          "Authorized user is already deleted!",
         );
       }
 
@@ -58,7 +59,7 @@ const auth = (...requiredRoles: string[]) => {
         user.passwordChangedAt &&
         User.isJWTIssuedBeforePasswordChange(
           user.passwordChangedAt,
-          iat as number
+          iat,
         )
       ) {
         throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");
@@ -72,7 +73,7 @@ const auth = (...requiredRoles: string[]) => {
       // make sure project has index.d.ts file which include user in Request object anywhere in ./src directory
       req.user = decoded;
       next();
-    }
+    },
   );
 };
 

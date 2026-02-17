@@ -2,10 +2,11 @@ import httpStatus from "http-status";
 import bcrypt from "bcrypt";
 import AppError from "../../utils/AppError";
 import { User } from "../user/user.model";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import config from "../../config";
 import { TLoginUser } from "./auth.interface";
 import sendEmail from "../../utils/sendEmail";
+import { TJwtPayload } from "../../interface/JwtPayload";
 
 /**
  * -------------------- Login user into DB ---------------------
@@ -15,7 +16,7 @@ import sendEmail from "../../utils/sendEmail";
  * @returns return access token
  */
 const loginUserIntoDB = async (payload: TLoginUser) => {
-  const user = await User.findOne({ email: payload?.email });
+  const user = await User.findOne({ email: payload.email });
   // check if user exists, not deleted or blocked
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
@@ -28,19 +29,14 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
   }
 
   // check if the password is correct
-  if (!(await User.isPasswordMatch(payload?.password, user.password))) {
+  if (!(await User.isPasswordMatch(payload.password, user.password))) {
     throw new AppError(httpStatus.BAD_REQUEST, "Password is incorrect!");
   }
 
   // make access token and refresh token
   const jwtPayload = {
-    name: user?.name,
-    userId: user?._id,
-    email: user?.email,
-    role: user?.role,
-    isVerified: user?.isVerified,
-    premiumAccess: user?.premiumAccess,
-    profilePicture: user?.profilePicture,
+    userId: user._id,
+    role: user.role,
   };
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in,
@@ -51,7 +47,7 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
     config.jwt_refresh_secret as string,
     {
       expiresIn: config.jwt_refresh_expires_in,
-    }
+    },
   );
   return { accessToken, refreshToken };
 };
@@ -64,11 +60,11 @@ const loginUserIntoDB = async (payload: TLoginUser) => {
  * @returns return updated user data
  */
 const changeUserPassword = async (
-  userData: JwtPayload,
-  payload: { oldPassword: string; newPassword: string }
+  userData: TJwtPayload,
+  payload: { oldPassword: string; newPassword: string },
 ) => {
   const user = await User.findOne({
-    email: userData?.email,
+    _id: userData.userId,
     role: userData?.role,
   });
   // check if user exists, not deleted or blocked
@@ -90,21 +86,21 @@ const changeUserPassword = async (
   // hash the new password
   const hashedPassword = await bcrypt.hash(
     payload.newPassword,
-    Number(config.bcrypt_salt_rounds)
+    Number(config.bcrypt_salt_rounds),
   );
 
   // update the password
   const result = await User.findOneAndUpdate(
     {
-      email: userData?.email,
-      role: userData?.role,
+      _id: userData.userId,
+      role: userData.role,
     },
     {
       password: hashedPassword,
       needsPasswordChange: false,
       passwordChangedAt: new Date(),
     },
-    { new: true }
+    { new: true },
   );
 
   return result;
@@ -159,7 +155,7 @@ const forgotPassword = async (email: string) => {
 const resetPasswordIntoDB = async (
   email: string,
   newPassword: string,
-  token: string
+  token: string,
 ) => {
   // check if the token is given
   if (!token) {
@@ -169,9 +165,9 @@ const resetPasswordIntoDB = async (
   // decoded the token
   const decoded = jwt.verify(
     token,
-    config.jwt_access_secret as string
-  ) as JwtPayload;
-  if (!decoded || decoded.email !== email) {
+    config.jwt_access_secret as string,
+  ) as TJwtPayload;
+  if (!decoded || decoded.userId !== email) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access!");
   }
 
@@ -190,7 +186,7 @@ const resetPasswordIntoDB = async (
   // hash the new password
   const hashedPassword = await bcrypt.hash(
     newPassword,
-    Number(config.bcrypt_salt_rounds)
+    Number(config.bcrypt_salt_rounds),
   );
 
   const result = await User.findOneAndUpdate(
@@ -200,7 +196,7 @@ const resetPasswordIntoDB = async (
       passwordChangedAt: new Date(),
       needsPasswordChange: false,
     },
-    { new: true }
+    { new: true },
   );
 
   return result;
@@ -221,13 +217,13 @@ const refreshTokenSetup = async (token: string) => {
   // decoded the token
   const decoded = jwt.verify(
     token,
-    config.jwt_refresh_secret as string
-  ) as JwtPayload;
+    config.jwt_refresh_secret as string,
+  ) as TJwtPayload;
   if (!decoded) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access!");
   }
 
-  const user = await User.findOne({ email: decoded.email });
+  const user = await User.findById(decoded.userId);
   // check if user exists, not deleted or blocked
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
@@ -244,24 +240,19 @@ const refreshTokenSetup = async (token: string) => {
     user.passwordChangedAt &&
     User.isJWTIssuedBeforePasswordChange(
       user.passwordChangedAt,
-      decoded.iat as number
+      decoded.iat,
     )
   ) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,
-      "Unauthorized access!, your refresh token is invalid!"
+      "Unauthorized access!, your refresh token is invalid!",
     );
   }
 
   // create an access token
   const jwtPayload = {
-    name: user?.name,
-    userId: user?._id,
-    email: user?.email,
-    role: user?.role,
-    isVerified: user?.isVerified,
-    premiumAccess: user?.premiumAccess,
-    profilePicture: user?.profilePicture,
+    userId: user._id,
+    role: user.role,
   };
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: config.jwt_access_expires_in,
