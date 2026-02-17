@@ -5,6 +5,7 @@ import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { getFollowSuggestions, getPublicSuggestions } from "./userFollow.utils";
+import { NotificationService } from "../notifications/notifications.service";
 
 /**
  * ------------- follow/unfollow an user ----------------
@@ -19,7 +20,6 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
   if (targetUser === currentUser) throw new Error("You cannot follow yourself");
 
   let result: boolean;
-  console.log(targetUser, currentUser);
   // start transaction
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -79,6 +79,15 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
         { session },
       );
       result = true;
+
+      // create notification when follow
+      await NotificationService.createNotification({
+        recipient: new mongoose.Types.ObjectId(targetUser),
+        sender: new mongoose.Types.ObjectId(currentUser),
+        type: "new_follower",
+        resourceType: "Post",
+        resourceId: new mongoose.Types.ObjectId(currentUser),
+      });
     }
 
     await session.commitTransaction();
