@@ -5,6 +5,7 @@ import { TStatusVote, VoteType } from "./postVote.interface";
 import PostVote from "./postVote.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
+import { NotificationService } from "../notifications/notifications.service";
 
 /**
  * ------------ vote to a post (upvote/downvote) -----------------
@@ -21,6 +22,11 @@ const toggleVote = async (
   post: string,
   newVoteType: VoteType,
 ) => {
+  const existingPost = await Post.findById(post);
+  if (!existingPost) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
+  }
+
   // start transaction
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -64,6 +70,17 @@ const toggleVote = async (
           { new: true, session },
         );
       }
+
+      // create notification if upvote
+      if (newVoteType === VoteType.UPVOTE) {
+        await NotificationService.createNotification({
+          recipient: existingPost.author,
+          sender: new mongoose.Types.ObjectId(user),
+          type: "post_upvote",
+          resourceType: "Post",
+          resourceId: existingPost._id,
+        });
+      }
     } else {
       // case 3: new vote. so direct create vote and update counter in post
       await PostVote.create([{ user, post, type: newVoteType }], { session });
@@ -76,10 +93,20 @@ const toggleVote = async (
         { $inc: updateField },
         { new: true, session },
       );
+
+      // create notification if upvote
+      if (newVoteType === VoteType.UPVOTE) {
+        await NotificationService.createNotification({
+          recipient: existingPost.author,
+          sender: new mongoose.Types.ObjectId(user),
+          type: "post_upvote",
+          resourceType: "Post",
+          resourceId: existingPost._id,
+        });
+      }
     }
     // commit the transaction
     await session.commitTransaction();
-    return "vote successfull";
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
