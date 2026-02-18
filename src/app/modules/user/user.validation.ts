@@ -1,56 +1,37 @@
-import z, { string } from "zod";
+import z from "zod";
+
+const userSchema = z.object({
+  name: z.string({
+    required_error: "Name is required",
+  }),
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email("Invalid email address"),
+  password: z.string(),
+  age: z.number({
+    invalid_type_error: "Age should be a number",
+    required_error: "Age is required",
+  }),
+  gender: z.enum(["male", "female", "others"], {
+    invalid_type_error: "Gender is invalid",
+    required_error: "Gender is required",
+  }),
+  address: z.string({
+    invalid_type_error: "Address should be a string",
+    required_error: "Address is required",
+  }),
+});
 
 // create user validations schema
 const createUserValidationsSchema = z.object({
-  body: z.object({
-    name: z.string({
-      required_error: "Name is required",
-    }),
-    email: z
-      .string({
-        required_error: "Email is required",
-      })
-      .email("Invalid email address"),
-    password: z.string().optional(),
-    age: z.number({
-      invalid_type_error: "Age should be a number",
-      required_error: "Age is required",
-    }),
-    gender: z.enum(["male", "female", "others"], {
-      invalid_type_error: "Gender is invalid",
-      required_error: "Gender is required",
-    }),
-    address: z.string({
-      invalid_type_error: "Address should be a string",
-      required_error: "Address is required",
-    }),
-  }),
+  body: userSchema.strict(),
 });
 
 // update user validations schema
 const updateUserValidationsSchema = z.object({
-  body: z.object({
-    name: z
-      .string({
-        invalid_type_error: "Name should be a string",
-      })
-      .optional(),
-    age: z
-      .number({
-        invalid_type_error: "Age should be a number",
-      })
-      .optional(),
-    contact: z
-      .string({
-        invalid_type_error: "Contact should be a string",
-      })
-      .optional(),
-    address: z
-      .string({
-        invalid_type_error: "Address should be a string",
-      })
-      .optional(),
-  }),
+  body: userSchema.omit({ password: true, email: true }).partial(),
 });
 
 // change user status schema
