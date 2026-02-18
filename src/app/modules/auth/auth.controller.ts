@@ -2,7 +2,6 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
-import config from "../../config";
 
 // ---------------------- Login an user -----------------------
 const loginUser = asyncHanlder(async (req, res) => {
@@ -53,8 +52,9 @@ const forgotPassword = asyncHanlder(async (req, res) => {
 
 // ---------------------- reset password -----------------------
 const resetPassword = asyncHanlder(async (req, res) => {
-  const { email, newPassword, token } = req.body;
+  const { email, userId, newPassword, token } = req.body;
   const result = await AuthServices.resetPasswordIntoDB(
+    userId,
     email,
     newPassword,
     token,
@@ -68,7 +68,7 @@ const resetPassword = asyncHanlder(async (req, res) => {
   });
 });
 
-// ---------------------- refresh token generate -----------------------
+// ---------------------- access token generate using refresh token -----------------------
 const refreshTokenSetup = asyncHanlder(async (req, res) => {
   const { refreshToken } = req.cookies;
   const { accessToken } = await AuthServices.refreshTokenSetup(refreshToken);

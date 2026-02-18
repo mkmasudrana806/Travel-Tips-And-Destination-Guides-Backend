@@ -65,21 +65,15 @@ const changeUserPassword = async (
 ) => {
   const user = await User.findOne({
     _id: userData.userId,
-    role: userData?.role,
+    role: userData.role,
   });
   // check if user exists, not deleted or blocked
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
   }
-  if (user.isDeleted) {
-    throw new AppError(httpStatus.FORBIDDEN, "User is already deleted!");
-  }
-  if (user.status === "blocked") {
-    throw new AppError(httpStatus.FORBIDDEN, "User is already blocked!");
-  }
 
   // check if the password is correct
-  if (!(await User.isPasswordMatch(payload?.oldPassword, user.password))) {
+  if (!(await User.isPasswordMatch(payload.oldPassword, user.password))) {
     throw new AppError(httpStatus.BAD_REQUEST, "Password is incorrect!");
   }
 
@@ -127,32 +121,29 @@ const forgotPassword = async (email: string) => {
 
   // jwt payload and create an access token
   const jwtPayload = {
-    name: user.name,
-    userId: user?._id,
-    email: user?.email,
-    role: user?.role,
-    isVerified: user?.isVerified,
-    premiumAccess: user?.premiumAccess,
-    profilePicture: user?.profilePicture,
+    userId: user._id,
+    role: user.role,
   };
   const resetToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: "10m",
   });
 
   // send reset link to email address
-  const resetUILink = `${config.reset_password_ui_link}?email=${email}&token=${resetToken}`;
-  const result = await sendEmail(user?.email, `<p>${resetUILink}</p>`);
+  const resetUILink = `${config.reset_password_ui_link}?email=${email}&userId=${user._id}&token=${resetToken}`;
+  const result = await sendEmail(user.email, `<p>${resetUILink}</p>`);
   return result;
 };
 
 /**
  * --------------------- reset password into db ---------------------
- * @param email email address
+ * @param userId userId passed by reset link
+ * @param email email address passed by reset link
  * @param newPassword new password from client
  * @param token token from mail inbox
  * @returns return updated user data
  */
 const resetPasswordIntoDB = async (
+  userId: string,
   email: string,
   newPassword: string,
   token: string,
@@ -167,11 +158,11 @@ const resetPasswordIntoDB = async (
     token,
     config.jwt_access_secret as string,
   ) as TJwtPayload;
-  if (!decoded || decoded.userId !== email) {
+  if (!decoded || decoded.userId !== userId) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access!");
   }
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ _id: userId, email });
   // check if user exists, not deleted or blocked
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
@@ -238,10 +229,7 @@ const refreshTokenSetup = async (token: string) => {
   // check if jwt is not issued before password change
   if (
     user.passwordChangedAt &&
-    User.isJWTIssuedBeforePasswordChange(
-      user.passwordChangedAt,
-      decoded.iat,
-    )
+    User.isJWTIssuedBeforePasswordChange(user.passwordChangedAt, decoded.iat)
   ) {
     throw new AppError(
       httpStatus.UNAUTHORIZED,

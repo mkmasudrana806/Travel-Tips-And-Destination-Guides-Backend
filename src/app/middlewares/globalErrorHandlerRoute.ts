@@ -56,6 +56,27 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorSources = [{ path: "", message: err?.message }];
   }
 
+  // handle nodemailer error
+  else if ((err as any)?.code === "EAUTH") {
+    statusCode = 500;
+    message = "Email service authentication failed";
+    errorSources = [
+      {
+        path: "email",
+        message: "Unable to send email. Check mail configuration.",
+      },
+    ];
+  }
+
+  // for each possible error, check below logs
+  // console.log({
+  //   name: err?.name,
+  //   message: err?.message,
+  //   constructor: err?.constructor?.name,
+  //   code: err?.code,
+  //   stack: err?.stack,
+  // });
+
   res.status(statusCode).json({
     success: false,
     message,

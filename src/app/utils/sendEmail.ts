@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import config from "../config";
+
 /**
  * sendEmail for reseting user password
  *
