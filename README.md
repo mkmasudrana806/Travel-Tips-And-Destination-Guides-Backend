@@ -36,7 +36,7 @@ The system combines social media features with travel planning, partner matching
 
 ### High-Level System Architecture (Payment):
 
-![System Architecture](docs\architecture\AmarPay-payment-system-diagram.png)
+![System Architecture](docs/architecture/AmarPay-payment-system-diagram.png)
 
 > More architecture diagram will be added later
 
