@@ -9,6 +9,8 @@ const config = {
   app_port: process.env.PORT,
   database_url: process.env.DATABASE_URL,
   default_password: process.env.DEFAULT_PASSWORD,
+  admin_email: process.env.ADMIN_EMAIL,
+  admin_password: process.env.ADMIN_PASSWORD,
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
   node_environment: process.env.NODE_ENVIRONMENT,
   jwt_access_secret: process.env.JWT_ACCESS_SECRET,

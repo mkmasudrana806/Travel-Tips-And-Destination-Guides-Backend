@@ -1,11 +1,12 @@
 import httpStatus from "http-status";
 import { User } from "../modules/user/user.model";
 import AppError from "../utils/AppError";
+import config from "../config";
 
 const adminData = {
   name: "Masud Rana",
-  email: "admin@gmail.com",
-  password: "admin",
+  email: config.admin_email,
+  password: config.admin_password,
   role: "admin",
   age: 20,
   gender: "male",
