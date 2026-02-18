@@ -2,16 +2,20 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { AuthServices } from "./auth.service";
+import config from "../../config";
 
 // ---------------------- Login an user -----------------------
 const loginUser = asyncHanlder(async (req, res) => {
   const loginInfo = req.body;
-  const { accessToken, refreshToken } = await AuthServices.loginUserIntoDB(
-    loginInfo
-  );
+  const { accessToken, refreshToken } =
+    await AuthServices.loginUserIntoDB(loginInfo);
 
   // set refresh token to cookie
-  res.cookie("refreshToken", refreshToken);
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    maxAge: 10 * 24 * 60 * 60 * 1000,
+    secure: true,
+  });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -53,7 +57,7 @@ const resetPassword = asyncHanlder(async (req, res) => {
   const result = await AuthServices.resetPasswordIntoDB(
     email,
     newPassword,
-    token
+    token,
   );
 
   sendResponse(res, {
