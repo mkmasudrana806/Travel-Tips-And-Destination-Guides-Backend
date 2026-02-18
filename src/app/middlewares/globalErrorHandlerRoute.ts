@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { TErrorSources } from "../interface/error";
 import config from "../config";
 import handleZodError from "../errors/handleZodError";
-import { Error, MongooseError } from "mongoose";
+import mongoose, { Error, MongooseError } from "mongoose";
 import handleValidationError from "../errors/handleValidationError";
 import handleCastError from "../errors/handleCastError";
 import handleDuplicateKeyError from "../errors/handleDuplicateKeyError";
@@ -12,9 +12,7 @@ import AppError from "../utils/AppError";
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;
   let message = err.message || "INTERNAL SERVER ERROR";
-  let errorSources: TErrorSources = [
-    { path: "", message: "Someting went wrong!" },
-  ];
+  let errorSources: TErrorSources = [{ path: err?.name, message: message }];
 
   // handle zod validation errors
   if (err instanceof ZodError) {
@@ -24,14 +22,14 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     errorSources = simplifiedError.errorSources;
   }
   // handle mongoose validation errors
-  else if (err instanceof Error.ValidationError) {
+  else if (err instanceof mongoose.Error.ValidationError) {
     const simplifiedError = handleValidationError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
   }
   // handle mongodb cast errors
-  else if (err instanceof Error.CastError) {
+  else if (err instanceof mongoose.Error.CastError) {
     const simplifiedError = handleCastError(err);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
@@ -48,12 +46,12 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   else if (err instanceof AppError) {
     statusCode = err.statusCode;
     message = err.message;
-    errorSources = [{ path: "", message: err?.message }];
+    errorSources = [{ path: err?.name, message: err?.message }];
   }
   // handle express Error errors
   else if (err instanceof Error) {
     message = err.message;
-    errorSources = [{ path: "", message: err?.message }];
+    errorSources = [{ path: err?.name, message: err?.message }];
   }
 
   // handle nodemailer error
@@ -69,13 +67,13 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   // for each possible error, check below logs
-  // console.log({
-  //   name: err?.name,
-  //   message: err?.message,
-  //   constructor: err?.constructor?.name,
-  //   code: err?.code,
-  //   stack: err?.stack,
-  // });
+  console.log({
+    name: err?.name,
+    message: err?.message,
+    constructor: err?.constructor?.name,
+    code: err?.code,
+    stack: err?.stack,
+  });
 
   res.status(statusCode).json({
     success: false,

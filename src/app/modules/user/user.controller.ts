@@ -2,14 +2,11 @@ import httpStatus from "http-status";
 import { UserServices } from "./user.service";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
-import { TfileUpload } from "../../interface/fileUploadType";
 
 // ------------------- create an user -------------------
 const createAnUser = asyncHanlder(async (req, res) => {
-  const result = await UserServices.createAnUserIntoDB(
-    req.file as TfileUpload,
-    req.body,
-  );
+  const data = req.body;
+  const result = await UserServices.createAnUserIntoDB(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -60,7 +57,8 @@ const getMe = asyncHanlder(async (req, res) => {
 
 // ------------------- get a user profile -------------------
 const getSingleUser = asyncHanlder(async (req, res) => {
-  const result = await UserServices.getSingleUserFromDB(req?.params?.id);
+  const userId = req.params.userId;
+  const result = await UserServices.getSingleUserFromDB(userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -72,7 +70,8 @@ const getSingleUser = asyncHanlder(async (req, res) => {
 
 // ------------------- delete an user -------------------
 const deleteUser = asyncHanlder(async (req, res) => {
-  const result = await UserServices.deleteUserFromDB(req.params?.id);
+  const userId = req.params.userId;
+  const result = await UserServices.deleteUserFromDB(userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -84,7 +83,9 @@ const deleteUser = asyncHanlder(async (req, res) => {
 
 // ------------------- update an user -------------------
 const updateUser = asyncHanlder(async (req, res) => {
-  const result = await UserServices.updateUserIntoDB(req.user, req.body);
+  const userId = req.user.userId;
+  const payload = req.body;
+  const result = await UserServices.updateUserIntoDB(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

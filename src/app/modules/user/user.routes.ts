@@ -12,7 +12,7 @@ const router = express.Router();
 
 // create an user
 router.post(
-  "/create-user",
+  "/",
   validateRequestData(UserValidations.createUserValidationsSchema),
   UserControllers.createAnUser,
 );
@@ -21,18 +21,18 @@ router.post(
 router.get("/", auth("admin"), UserControllers.getAllUsers);
 
 // get my profile
-router.get("/getMe", auth("user", "admin"), UserControllers.getMe);
+router.get("/me", auth("user"), UserControllers.getMe);
 
 // get a user profile
-router.get("/:id", UserControllers.getSingleUser);
+router.get("/:userId", UserControllers.getSingleUser);
 
 // delete an user account
-router.delete("/:id", auth("admin"), UserControllers.deleteUser);
+router.delete("/:userId", auth("admin"), UserControllers.deleteUser);
 
 // update my profile
-router.patch(
-  "/update-profile",
-  auth("user", "admin"),
+router.put(
+  "/",
+  auth("user"),
   validateRequestData(UserValidations.updateUserValidationsSchema),
   UserControllers.updateUser,
 );

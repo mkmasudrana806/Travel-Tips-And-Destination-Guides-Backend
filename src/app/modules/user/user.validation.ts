@@ -31,7 +31,7 @@ const createUserValidationsSchema = z.object({
 
 // update user validations schema
 const updateUserValidationsSchema = z.object({
-  body: userSchema.omit({ password: true, email: true }).partial(),
+  body: userSchema.partial().omit({ password: true, email: true }).strict(),
 });
 
 // change user status schema

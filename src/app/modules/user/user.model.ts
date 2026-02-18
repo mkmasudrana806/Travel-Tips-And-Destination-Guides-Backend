@@ -11,7 +11,7 @@ const userSchema = new Schema<TUser, IUser>(
       type: String,
       required: true,
       unique: true,
-      index: true
+      index: true,
     },
     password: {
       type: String,
@@ -70,6 +70,11 @@ userSchema.post("find", function (docs) {
   docs.forEach((doc: TUser) => {
     doc.password = "";
   });
+});
+
+// ----------- hide password to client response -----------
+userSchema.post("findOne", function (doc) {
+  doc.password = "";
 });
 
 // ----------- hide password to client response -----------

@@ -6,8 +6,6 @@ import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { TfileUpload } from "../../interface/fileUploadType";
-import config from "../../config";
-import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
 import { TPayment } from "../payments/payment.interface";
 import { Payment } from "../payments/payment.model";
 import { initiatePayment } from "../payments/payment.utils";
@@ -17,40 +15,23 @@ import { TJwtPayload } from "../../interface/JwtPayload";
 
 /**
  * ----------------------- Create an user----------------------
- * @param file image file to upload (optional)
+ *
  * @param payload new user data
  * @returns return newly created user
  */
-const createAnUserIntoDB = async (file: TfileUpload, payload: TUser) => {
-  // set default password if password is not provided
-  payload.password = payload.password || (config.default_password as string);
-
+const createAnUserIntoDB = async (payload: TUser) => {
   // check if the user already exists
   const user = await User.findOne({ email: payload.email });
   if (user) {
     throw new AppError(httpStatus.BAD_REQUEST, "User already exists");
   }
-
-  // set profilePicture if image is provided
-  if (file) {
-    const imageName = `${payload.email}-${payload.name}`;
-    const path = file.path;
-    const uploadedImage: any = await sendImageToCloudinary(path, imageName);
-    if (!uploadedImage)
-      throw new AppError(httpStatus.BAD_REQUEST, "Image is not uploaded");
-    payload.profilePicture = uploadedImage.secure_url;
-  }
-  // set placeholder image if image is not provided
-  else {
-    payload.profilePicture = "";
-  }
-
   const result = await User.create(payload);
   return result;
 };
 
 /**
  * ----------------------- update profile picture ----------------------
+ *
  * @param user currently logged in user jwt payload
  * @param file image file to upload
  * @returns return newly created user
@@ -69,6 +50,7 @@ const updateProfilePictureIntoDB = async (
 
 /**
  * ----------------------- get all users ----------------------
+ *
  * @return return all users
  */
 const getAllUsersFromDB = async (query: Record<string, any>) => {
@@ -85,14 +67,15 @@ const getAllUsersFromDB = async (query: Record<string, any>) => {
 
 /**
  * -----------------  get me  -----------------
+ *
  * @param email email address
  * @param role user role
  * @returns own user data based on jwt payload data
  */
 const getMe = async (user: TJwtPayload) => {
   const result = await User.findOne({
-    _id: user?.userId,
-    role: user?.role,
+    _id: user.userId,
+    role: user.role,
     isDeleted: false,
   });
   return result;
@@ -100,22 +83,28 @@ const getMe = async (user: TJwtPayload) => {
 
 /**
  * ----------------- get single user -----------------
+ *
  * @param id mongoose id of the user
  * return a user data
  */
-const getSingleUserFromDB = async (id: string) => {
-  const result = await User.findById(id);
+const getSingleUserFromDB = async (userId: string) => {
+  const result = await User.findOne({
+    _id: userId,
+    isDeleted: false,
+    status: "active",
+  });
   return result;
 };
 
 /**
  * --------------- delete an user form db ----------------
- * @param id user id
+ *
+ * @param userId userId to delete
  * @returns return deleted user data
  */
-const deleteUserFromDB = async (id: string) => {
+const deleteUserFromDB = async (userId: string) => {
   const result = await User.findByIdAndUpdate(
-    id,
+    userId,
     { isDeleted: true },
     { new: true },
   );
@@ -124,29 +113,17 @@ const deleteUserFromDB = async (id: string) => {
 
 /**
  * --------------- update an user form db ----------------
- * @param id user id
- * @param payload update user data
+ *
+ * @param userId user id
+ * @param payload updated user data
  * @featurs admin can change own and user data. user can change own data only
  * @returns return updated user data
  */
-const updateUserIntoDB = async (
-  currentUser: TJwtPayload,
-  payload: Partial<TUser>,
-) => {
-  // filter allowed fileds only
-  const allowedFieldData = makeAllowedFieldData<TUser>(
-    allowedFieldsToUpdate,
-    payload,
-  );
-
-  const result = await User.findByIdAndUpdate(
-    currentUser?.userId,
-    allowedFieldData,
-    {
-      new: true,
-      runValidators: true,
-    },
-  );
+const updateUserIntoDB = async (userId: string, payload: Partial<TUser>) => {
+  const result = await User.findByIdAndUpdate(userId, payload, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 
@@ -245,7 +222,7 @@ const makeUserVerifiedIntoDB = async (user: TJwtPayload, payload: TPayment) => {
   // payment data
   const tnxId = `tnx-${Date.now()}`;
   const paymentData: Partial<TPayment> = {
-    userId: new mongoose.Types.ObjectId( user.userId),
+    userId: new mongoose.Types.ObjectId(user.userId),
     // username: user?.name,
     // email: user?.email,
     amount: payload.amount,
@@ -326,7 +303,6 @@ const makeUserPremiumAccessIntoDB = async (
   const session = await initiatePayment(paymentData, successUrl, faildUrl);
   return session;
 };
-
 
 // -------------------- get user flowers and unfollowers --------------------
 /**
