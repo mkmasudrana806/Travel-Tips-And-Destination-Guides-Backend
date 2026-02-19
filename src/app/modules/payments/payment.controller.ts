@@ -36,6 +36,19 @@ const onPaymentFailed = asyncHanlder(async (req, res) => {
   res.redirect(`${config.frontend_url}/payments/failed?txnId=${mer_txnid}`);
 });
 
+// ------------- on payment cancelled by user -------------
+const onPaymentCancelled = asyncHanlder(async (req, res) => {
+  const { cus_email, mer_txnid } = req.body;
+  const result = await PaymentServices.onPaymentCancelled(cus_email, mer_txnid);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Payment is cancelled successfully",
+    data: result,
+  });
+});
+
 // -------------  upgrade user to verified
 const upgradeUserToVerified = asyncHanlder(async (req, res) => {
   const { tnxId, userId, status } = req?.query;
@@ -94,6 +107,7 @@ export const PaymentControllers = {
   getSubscriptionSession,
   onPaymentSuccess,
   onPaymentFailed,
+  onPaymentCancelled,
   upgradeUserToVerified,
   allPaymentHistory,
   userPaymentHistory,

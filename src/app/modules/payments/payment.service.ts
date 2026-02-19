@@ -79,7 +79,7 @@ const getSubscriptionSession = async (userId: string, payload: TPayment) => {
 
   const successUrl = `${config.backend_url}/subscriptions/success`;
   const faildUrl = `${config.backend_url}/subscriptions/failed`;
-  const cancelUrl = `${config.backend_url}/subscriptions/onPaymentCancelled?txnId=${tnxId}&userId=${userId}`;
+  const cancelUrl = `${config.backend_url}/subscriptions/cancelled?txnId=${tnxId}&userId=${userId}`;
 
   //  initiate amarPay session and return session url
   const session = await initiatePayment(
@@ -195,6 +195,46 @@ const onPaymentFailed = async (userEmail: string, txnId: string) => {
   }
 };
 
+/**
+ * --------------- on payment cancelled ------------------
+ *
+ * @param userEmail user email who's payment is failed
+ * @param txnId transaction Id of the failed payment
+ */
+const onPaymentCancelled = async (userEmail: string, txnId: string) => {
+  // check transaction id and user email exist in database with pending status
+  const payment = await Payment.findOne({
+    transactionId: txnId,
+    email: userEmail,
+    status: "pending",
+  });
+
+  if (!payment) {
+    throw new AppError(httpStatus.FORBIDDEN, "Payment data is not available");
+  }
+
+  // first verify payment in amarpay database
+  const isPaidtoAmarpay = await verifyPayment(txnId);
+
+  if (isPaidtoAmarpay && isPaidtoAmarpay.pay_status === "Cancelled") {
+    // update payment status to failed
+    const paymentStatus = await Payment.findOneAndUpdate(
+      { transactionId: txnId, email: userEmail, status: "pending" },
+      { status: "cancelled" },
+      { runValidators: true },
+    );
+
+    if (!paymentStatus) {
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Faild to update payment status",
+      );
+    }
+
+    return paymentStatus;
+  }
+};
+
 // --------------- upgrade user to verified
 const upgradeUserToVerifiedIntoDB = async (
   tnxId: string,
@@ -296,6 +336,7 @@ export const PaymentServices = {
   getSubscriptionSession,
   onPaymentSuccess,
   onPaymentFailed,
+  onPaymentCancelled,
   upgradeUserToVerifiedIntoDB,
   allPaymentsHistoryFromDB,
   userPaymentsHistoryFromDB,

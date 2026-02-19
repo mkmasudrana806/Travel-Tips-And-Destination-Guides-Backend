@@ -27,6 +27,15 @@ router.post(
   PaymentControllers.onPaymentFailed,
 );
 
+// on payment cancelled by user
+// TODO: add auth("user") in production because only logged in user can cancel the payment. for testing purpose i keep it public, i am using postman client.
+
+router.post(
+  "/cancelled",
+  validateRequestData(PaymentValidations.onPaymentSuccessSchema),
+  PaymentControllers.onPaymentCancelled,
+);
+
 router.post("/user-verified", PaymentControllers.upgradeUserToVerified);
 
 // get all payments history
