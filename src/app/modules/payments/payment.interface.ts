@@ -1,4 +1,4 @@
-import { Date, Types } from "mongoose";
+import { Types } from "mongoose";
 
 // Payment type
 export type TPayment = {
@@ -7,8 +7,9 @@ export type TPayment = {
   email: string;
   amount: number;
   paymentDate: Date;
-  expiresIn: Date;
-  status: "pending" | "completed" | "failed";
+  expiresAt: Date;
+  status: "pending" | "completed" | "failed" | "cancelled";
   subscriptionType: "monthly" | "yearly";
-  transactionId?: string;
+  transactionId: string;
+  paymentProvider: "aamarPay";
 };

@@ -10,12 +10,13 @@ const app = express();
 
 // parsers (middleware)
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     // origin: ["https://travel-tips-and-destination-guides-client.vercel.app"],
     origin: ["http://localhost:3000"],
     credentials: true,
-  })
+  }),
 ); // your client url
 app.use(cookieParser());
 app.use(express.static("./uploads"));

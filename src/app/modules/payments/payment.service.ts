@@ -6,19 +6,40 @@ import httpStatus from "http-status";
 import { User } from "../user/user.model";
 import { TJwtPayload } from "../../interface/JwtPayload";
 import { TPayment } from "./payment.interface";
+import config from "../../config";
 
 /**
- * -------------------- get Premium content Access ----------------------
+ * -------------------- initiate subscriptions session ----------------------
  *
- * Uubscribe premium content (monthly/yearly). Access premium post content
- * @param user user jwt payload
+ * Initiate aamarPay payment session for subscriptions premium content (monthly/yearly)
+ * @param userId user who want to get premium subscription
  * @param payload boolean payload
  */
-const getSubscription = async (userId: string, payload: TPayment) => {
+const getSubscriptionSession = async (userId: string, payload: TPayment) => {
   // check if user exist
   const user = await User.findById(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
+  }
+
+  // check if user already has premium access. or payment pending/completed
+  // in same month with completed or pending status is not allowed in this api route
+  // for upgrade plan user have to use upgrade plan api route
+  const existingPayment = await Payment.findOne({
+    userId,
+    status: { $in: ["pending", "completed"] },
+  }).sort({ paymentDate: -1 });
+
+  if (existingPayment && existingPayment.status === "pending") {
+    throw new AppError(400, "Payment already in progress");
+  }
+
+  if (
+    existingPayment &&
+    existingPayment.status === "completed" &&
+    existingPayment.expiresAt > new Date()
+  ) {
+    throw new AppError(400, "Active subscription already exists");
   }
 
   // payment data
@@ -32,14 +53,15 @@ const getSubscription = async (userId: string, payload: TPayment) => {
     transactionId: tnxId,
   };
 
-  // set subscription expires date
-  const expiredDate = new Date();
+  // expiresAt calculation
+  const now = new Date();
+  let expiresAt: Date = new Date(now);
   if (paymentData.subscriptionType === "monthly") {
-    expiredDate.setDate(expiredDate.getDate() + 30);
+    expiresAt.setMonth(expiresAt.getMonth() + 1);
   } else if (paymentData.subscriptionType === "yearly") {
-    expiredDate.setDate(expiredDate.getDate() + 365);
+    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
   }
-  paymentData.expiresIn = expiredDate as unknown as Date;
+  paymentData.expiresAt = expiresAt;
 
   //  save payment info to DB
   const result = await Payment.create(paymentData);
@@ -50,50 +72,50 @@ const getSubscription = async (userId: string, payload: TPayment) => {
     );
   }
 
-  const successUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
+  /*
+  Note: as this is a practice project. I am not implementing aamarPay webhook to update payment status. I am updating payment status when frontend url is redirected, at the same time i will call backend. which is not a good practice for production level project. as it can be easily manipulated by the user. but for this project it is fine.
+  in production level project we have to implement aamarPay webhook to update payment status. and in the callback url we have to verify payment status from aamarPay database and then update payment status in our database.
+  */
 
-  const faildUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
+  const successUrl = `${config.backend_url}/subscriptions/success`;
+  const faildUrl = `${config.backend_url}/subscriptions/failed`;
+  const cancelUrl = `${config.backend_url}/subscriptions/onPaymentCancelled?txnId=${tnxId}&userId=${userId}`;
 
   //  initiate amarPay session and return session url
-  const session = await initiatePayment(paymentData, successUrl, faildUrl);
+  const session = await initiatePayment(
+    paymentData,
+    successUrl,
+    faildUrl,
+    cancelUrl,
+  );
   return session;
 };
 
-// --------------- upgrade user to premiumAccess and payment status to "completed"
-const upgradeUserToPremiumIntoDB = async (
-  tnxId: string,
-  userId: string,
-  status: string,
-) => {
-  if (status === "failed") {
-    // update payment status
-    const paymentStatus = await Payment.findOneAndUpdate(
-      { transactionId: tnxId },
-      { status: "failed" },
-      { runValidators: true },
-    );
+// ---------------  "
+const onPaymentSuccess = async (userEmail: string, txnId: string) => {
+  // check transaction id and user email exist in database with pending status
+  const payment = await Payment.findOne({
+    transactionId: txnId,
+    email: userEmail,
+    status: "pending",
+  });
 
-    if (!paymentStatus) {
-      throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to update payment status",
-      );
-    }
-    return;
+  if (!payment) {
+    throw new AppError(httpStatus.FORBIDDEN, "Payment data is not available");
   }
-  // first verify payment in amarpay database
-  const isPaidtoAmarpay = await verifyPayment(tnxId);
 
-  // now update payment status and user premiumAccess
+  // first verify payment in amarpay database
+  const isPaidtoAmarpay = await verifyPayment(txnId);
+
+  // now update payment status and give user premiumAccess
   if (isPaidtoAmarpay && isPaidtoAmarpay.pay_status === "Successful") {
     const session = await mongoose.startSession();
     try {
       // start transaction
       session.startTransaction();
-
       // update payment status
       const paymentStatus = await Payment.findOneAndUpdate(
-        { transactionId: tnxId },
+        { transactionId: txnId, email: userEmail },
         { status: "completed" },
         { runValidators: true, session },
       );
@@ -106,8 +128,8 @@ const upgradeUserToPremiumIntoDB = async (
       }
 
       // update user premiumAccess
-      const userPremiumAccess = await User.findByIdAndUpdate(
-        userId,
+      const userPremiumAccess = await User.findOneAndUpdate(
+        { email: userEmail },
         { premiumAccess: true },
         { session },
       );
@@ -228,8 +250,8 @@ const updatePaymentStatusIntoDB = async (
 };
 
 export const PaymentServices = {
-  getSubscription,
-  upgradeUserToPremiumIntoDB,
+  getSubscriptionSession,
+  onPaymentSuccess,
   upgradeUserToVerifiedIntoDB,
   allPaymentsHistoryFromDB,
   userPaymentsHistoryFromDB,

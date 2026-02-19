@@ -1,11 +1,22 @@
 import { z } from "zod";
 
-// make a payment validation schema
-const paymentValidationSchema = z.object({
-  body: z.object({
-    amount: z.number({ required_error: "Amount is required" }),
-    subscriptionType: z.enum(["monthly", "yearly"]),
-  }),
+// initiate subscription session
+const getSubscriptionSchema = z.object({
+  body: z
+    .object({
+      amount: z.number({ required_error: "Amount is required" }),
+      subscriptionType: z.enum(["monthly", "yearly"]),
+    })
+    .strict(),
+});
+
+// on sucess payment, update the status
+const onPaymentSuccessSchema = z.object({
+  body: z
+    .object({
+      cus_email: z.string({ required_error: "Customer email is required" }),
+      mer_txnid: z.string({ required_error: "Transaction ID is required" }),
+    }),
 });
 
 // update payment status
@@ -16,6 +27,7 @@ const updatePaymentStatusSchema = z.object({
 });
 
 export const PaymentValidations = {
-  paymentValidationSchema,
+  getSubscriptionSchema,
+  onPaymentSuccessSchema,
   updatePaymentStatusSchema,
 };

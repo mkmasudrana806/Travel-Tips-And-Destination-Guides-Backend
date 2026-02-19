@@ -5,17 +5,24 @@ import validateRequestData from "../../middlewares/validateRequest";
 import { PaymentValidations } from "./payment.validation";
 const router = express.Router();
 
+// initiate payment session for premium subscription
 router.post(
   "/",
   auth("user"),
-  validateRequestData(PaymentValidations.paymentValidationSchema),
-  PaymentControllers.getSubscription,
+  validateRequestData(PaymentValidations.getSubscriptionSchema),
+  PaymentControllers.getSubscriptionSession,
 );
 
-// upgrade user to premium
-router.post("/upgrade-user", PaymentControllers.upgradeUserToPremium);
+// on payment status
+router.post(
+  "/success",
+  validateRequestData(PaymentValidations.onPaymentSuccessSchema),
+  PaymentControllers.onPaymentSuccess,
+);
 
-// verified
+// on payment failed
+// router.post("/failed", PaymentControllers.onPaymentFailed);
+
 router.post("/user-verified", PaymentControllers.upgradeUserToVerified);
 
 // get all payments history

@@ -8,7 +8,8 @@ dotenv.config();
 export const initiatePayment = async (
   paymentData: Partial<TPayment>,
   success_url: string,
-  fail_url: string
+  fail_url: string,
+  cancel_url: string,
 ) => {
   const response = await axios.post(process.env.PAYMENT_URL as string, {
     store_id: process.env.STORE_ID,
@@ -16,17 +17,12 @@ export const initiatePayment = async (
     tran_id: paymentData.transactionId,
     success_url: success_url,
     fail_url: fail_url,
-    cancel_url: "https://travel-tips-and-destination-guides-client.vercel.app/",
+    cancel_url: cancel_url,
     amount: paymentData.amount,
     currency: "BDT",
     desc: "Merchant Registration Payment",
-    cus_name: paymentData?.username,
-    cus_email: paymentData?.email,
-    cus_add1: "N/A",
-    cus_add2: "N/A",
-    cus_city: "N/A",
-    cus_state: "N/A",
-    cus_postcode: "N/A",
+    cus_name: paymentData.username,
+    cus_email: paymentData.email,
     cus_country: "Bangladesh",
     cus_phone: "N/A",
     type: "json",

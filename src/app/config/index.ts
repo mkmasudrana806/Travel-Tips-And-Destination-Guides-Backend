@@ -23,6 +23,8 @@ const config = {
   cloudinary_name: process.env.CLOUDINARY_NAME,
   cloudinary_api_key: process.env.CLOUDINARY_API_KEY,
   cloudinary_secret_key: process.env.CLOUDINARY_SECRET_KEY,
+  frontend_url: process.env.FRONTEND_URL,
+  backend_url: process.env.BACKEND_URL,
 };
 
 export default config;

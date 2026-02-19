@@ -9,7 +9,7 @@ const paymentSchema = new Schema<TPayment>(
     email: { type: String, required: true },
     amount: { type: Number, required: true },
     paymentDate: { type: Date, required: true, default: new Date() },
-    expiresIn: { type: Date, required: true, default: new Date() },
+    expiresAt: { type: Date, required: true, default: new Date() },
     status: {
       type: String,
       required: true,
@@ -25,7 +25,11 @@ const paymentSchema = new Schema<TPayment>(
     transactionId: {
       type: String,
       required: true,
-      default: "cash_on_delivery",
+    },
+    paymentProvider: {
+      type: String,
+      enum: ["aamarPay"],
+      default: "aamarPay",
     },
   },
   { timestamps: true },

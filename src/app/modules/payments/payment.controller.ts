@@ -2,12 +2,13 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { PaymentServices } from "./payment.service";
+import config from "../../config";
 
 // ------------------- get premium content access -------------------
-const getSubscription = asyncHanlder(async (req, res) => {
+const getSubscriptionSession = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const payload = req.body;
-  const result = await PaymentServices.getSubscription(userId, payload);
+  const result = await PaymentServices.getSubscriptionSession(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -17,19 +18,26 @@ const getSubscription = asyncHanlder(async (req, res) => {
   });
 });
 
-// -------------  upgrade user to premiumAccess
-const upgradeUserToPremium = asyncHanlder(async (req, res) => {
-  const { tnxId, userId, status } = req?.query;
+// ------------- on payment success -------------
+const onPaymentSuccess = asyncHanlder(async (req, res) => {
+  const { cus_email, mer_txnid } = req.body;
+  await PaymentServices.onPaymentSuccess(cus_email, mer_txnid);
 
-  // double check if payment success in amarpay then update payment status and user premiumAccess status
+  // after updating payment status in database. now redirect user to frontend with txnId as params. so that frontend can call backend to find out the status of the payment by txnId.
+  res.redirect(`${config.frontend_url}/payments/success?txnId=${mer_txnid}`);
+});
 
-  await PaymentServices.upgradeUserToPremiumIntoDB(
-    tnxId as string,
-    userId as string,
-    status as string,
-  );
+// ------------- on payment failed -------------
+const onPaymentFailed = asyncHanlder(async (req, res) => {
+  console.log("payment failed callback url hit", req.body);
 
-  res.send(`<h1>Payment ${status}</h1>`);
+  // await PaymentServices.onPaymentFailed(
+  //   tnxId as string,
+  //   userId as string,
+  //   status as string,
+  // );
+
+  res.send(`<h1>Payment failed</h1>`);
 });
 
 // -------------  upgrade user to verified
@@ -87,8 +95,9 @@ const updatePaymentStatus = asyncHanlder(async (req, res) => {
 });
 
 export const PaymentControllers = {
-  getSubscription,
-  upgradeUserToPremium,
+  getSubscriptionSession,
+  onPaymentSuccess,
+  onPaymentFailed,
   upgradeUserToVerified,
   allPaymentHistory,
   userPaymentHistory,
