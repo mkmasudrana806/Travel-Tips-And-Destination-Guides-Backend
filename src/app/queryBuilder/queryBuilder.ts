@@ -35,7 +35,7 @@ class QueryBuilder<T> {
 
   /**
    * ------------------- filter -------------------
-   * @returns exact matching. ex: email=mkmasudrana806@gmail.com.  except: ['searchTerm','priceRange', 'selectedCategories', 'sort', 'limit', 'page', 'fields'] these query fields
+   * @returns exact matching. ex: email=mkmasudrana806@gmail.com.  except: ['searchTerm','sort', 'limit', 'page', 'fields'] these query fields
    */
   filter() {
     const queryObj = { ...this.query };
@@ -56,16 +56,6 @@ class QueryBuilder<T> {
       queryObj.category = {
         $in: categories.map((cat) => decodeURIComponent(cat)),
       };
-    }
-
-    // Handle price range for exact matches
-    if (queryObj.minPrice && queryObj.maxPrice) {
-      queryObj.price = {
-        $gte: Number(queryObj.minPrice),
-        $lte: Number(queryObj.maxPrice),
-      };
-      delete queryObj.minPrice;
-      delete queryObj.maxPrice;
     }
 
     // Handle other filters like price or other exact matches

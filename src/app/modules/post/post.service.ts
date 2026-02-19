@@ -1,10 +1,9 @@
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 import TPost, { TPostCreate } from "./post.interface";
 import Post from "./post.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
-import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
-import { allowedFieldsToUpdate, searchableFields } from "./post.constant";
+import { searchableFields } from "./post.constant";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { Media } from "../media/media.model";
 import * as cheerio from "cheerio";
@@ -12,11 +11,12 @@ import { TJwtPayload } from "../../interface/JwtPayload";
 
 /**
  * ------------- Create a new post ----------------
- * @param userId logged in user
+ *
+ * @param userId who will create the post
  * @param payload new post data
  * @returns newly created post
  */
-const createPostIntoDB = async (userId: string, payload: TPostCreate) => {
+const createPost = async (userId: string, payload: TPostCreate) => {
   payload.author = new mongoose.Types.ObjectId(userId);
   const { bannerId, contentIds, ...postData } = payload;
 
@@ -50,144 +50,15 @@ const createPostIntoDB = async (userId: string, payload: TPostCreate) => {
 };
 
 /**
- * ----------- Get all posts ---------
- * @param query req.query object
- * @returns all posts
- */
-const getAllPostsFromDB = async (queries: Record<string, unknown>) => {
-  const { sortBy, ...query } = queries;
-  let result;
-  const postQuery = new QueryBuilder(
-    Post.find({ isDeleted: false }).populate({
-      path: "author",
-      select: "_id name email isVerified profilePicture premiumAccess",
-    }),
-    query,
-  )
-    .filter()
-    .search(searchableFields)
-    .fieldsLimiting()
-    .paginate()
-    .sort();
-
-  result = await postQuery.modelQuery;
-  return result;
-};
-
-/**
- * ----------- Get user posts   ---------
- * @param query req.query object
- * @returns all posts
- */
-const getUserPostsFromDB = async (
-  userId: string,
-  query: Record<string, unknown>,
-) => {
-  const postQuery = new QueryBuilder(
-    Post.find({ author: userId, isDeleted: false }).populate({
-      path: "author",
-      select: "_id name email isVerified profilePicture premiumAccess",
-    }),
-    query,
-  )
-    .filter()
-    .search(searchableFields)
-    .fieldsLimiting()
-    .paginate()
-    .sort();
-
-  const result = await postQuery.modelQuery;
-  return result;
-};
-
-/**
- * --------------- Get a single post by its ID -------------
- * @param postId post ID
- * @returns return single post
- */
-const getSinglePostFromDB = async (postId: string) => {
-  const post = await Post.findOne({ _id: postId, isDeleted: false }).populate({
-    path: "author",
-    select: "_id name email isVerified profilePicture premiumAccess",
-  });
-  if (!post) throw new Error("Post not found");
-  return post;
-};
-
-/**
- * -----------------Update a post by its ID --------------
- * @param user logged in user id
- * @param postId post id to update
- * @param payload updated post data
- * @returns return updated post data
- */
-const updateAPostIntoDB = async (
-  user: TJwtPayload,
-  postId: string,
-  payload: Partial<TPost>,
-) => {
-  // make updated post data
-  const updatedPostData = makeAllowedFieldData<TPost>(
-    allowedFieldsToUpdate,
-    payload,
-  );
-
-  // update into database
-  const result = await Post.findOneAndUpdate(
-    { _id: postId, author: user?.userId, isDeleted: false },
-    updatedPostData,
-    {
-      new: true,
-    },
-  );
-  if (!result)
-    throw new AppError(httpStatus.NOT_FOUND, "Post not found or update failed");
-  return result;
-};
-
-// Delete a post by its ID
-/**
- *
- * @param userId user id from jwt payload
- * @param postId post id to delete
- * @returns deleted post
- */
-const deleteAPostFromDB = async (user: TJwtPayload, postId: string) => {
-  let deletedPost;
-  if (user?.role === "user") {
-    deletedPost = await Post.findOneAndUpdate(
-      {
-        author: user?.userId,
-        _id: postId,
-        isDeleted: false,
-      },
-      { isDeleted: true },
-      { new: true },
-    );
-  } else if (user?.role === "admin") {
-    deletedPost = await Post.findOneAndUpdate(
-      {
-        _id: postId,
-        isDeleted: false,
-      },
-      { isDeleted: true },
-      { new: true },
-    );
-  }
-
-  if (!deletedPost) throw new Error("Post not found or deletion failed");
-  return deletedPost;
-};
-
-/**
  * -------- get filtered travel posts based on user queries -----------
  *
  * @param query query params like country, location, limit, page, travel type etc
  * @returns returned filtered travel post based on query with pagination
  */
-const getFilteredTravelPosts = async (query: any) => {
+const getAllTravelPosts = async (query: any) => {
   const {
     location,
+    category,
     country,
     minCost,
     maxCost,
@@ -203,6 +74,10 @@ const getFilteredTravelPosts = async (query: any) => {
     isDeleted: false,
   };
 
+  // category filter
+  if (category) {
+    filter.category = { $regex: category, $options: "i" };
+  }
   // location filter
   if (location) {
     filter.locationName = { $regex: location, $options: "i" };
@@ -262,12 +137,160 @@ const getFilteredTravelPosts = async (query: any) => {
   };
 };
 
+/**
+ * -------------- Get my all posts ----------------
+ * @param userId who want to see his all posts
+ * @param query req.query object
+ * @returns all posts
+ */
+const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
+  const postQuery = new QueryBuilder(
+    Post.find({ author: userId, isDeleted: false }).populate({
+      path: "author",
+      select: "_id name email isVerified profilePicture premiumAccess",
+    }),
+    query,
+  )
+    .filter()
+    .search(searchableFields)
+    .fieldsLimiting()
+    .paginate()
+    .sort();
+
+  const data = await postQuery.modelQuery;
+  const meta = await postQuery.countTotal();
+
+  return { meta, data };
+};
+
+/**
+ * --------------- Get single post -------------
+ *
+ * @param postId post id to get details
+ * @returns return single post
+ */
+const getSinglePost = async (postId: string) => {
+  const post = await Post.findOne({ _id: postId, isDeleted: false }).populate({
+    path: "author",
+    select: "_id name email isVerified profilePicture premiumAccess",
+  });
+  if (!post) throw new Error("Post not found");
+  return post;
+};
+
+/**
+ * -----------------Update a post  --------------
+ * @param userId who want to update the post
+ * @param postId post id to update
+ * @param payload updated post data
+ * @returns return updated post data
+ */
+const updateAPost = async (
+  userId: string,
+  postId: string,
+  payload: Partial<TPost> & { contentIds: string[] },
+) => {
+  // check if the post exists and belongs to the user
+  const post = await Post.findOne({
+    _id: postId,
+    author: userId,
+    isDeleted: false,
+  });
+  if (!post) throw new AppError(httpStatus.NOT_FOUND, "Post not found");
+
+  // if content changed and some media are removed or some added.
+  // then we have to update media isUsed field accordingly
+  if (payload.content) {
+    const $ = cheerio.load(payload.content);
+    const idsInEditor: string[] = [];
+    // loop through all image inside content and received ids
+    $("img").each((i, el) => {
+      const id = $(el).attr("data-image-id");
+      if (id) idsInEditor.push(id);
+    });
+
+    // we have two task. 1st find out news ids which is not present in the contentIds but present in IdsInEditor. because those are the new media added in the content. those media isUsed should be true. 2nd find out removed media ids which is present in contentIds but not present in IdsInEditor. because those media is removed from the content. so we have to set isUsed false for those media. we don't allow to change banner id.
+
+    if (payload.contentIds) {
+      // new media ids which is added in the updated content. those media isUsed should be true
+      const newMediaIds = idsInEditor.filter(
+        (id) => !payload.contentIds.includes(id),
+      );
+      const removedMediaIds = payload.contentIds.filter(
+        (id) => !idsInEditor.includes(id),
+      );
+
+      if (newMediaIds.length > 0) {
+        await Media.updateMany(
+          { _id: { $in: newMediaIds } },
+          { $set: { isUsed: true } },
+        );
+      }
+
+      if (removedMediaIds.length > 0) {
+        await Media.updateMany(
+          { _id: { $in: removedMediaIds } },
+          { $set: { isUsed: false } },
+        );
+      }
+    }
+  }
+
+  // update into database
+  const result = await Post.findOneAndUpdate(
+    { _id: postId, author: userId, isDeleted: false },
+    payload,
+    {
+      new: true,
+    },
+  );
+  if (!result)
+    throw new AppError(httpStatus.NOT_FOUND, "Post not found or update failed");
+  return result;
+};
+
+/**
+ * --------------- delete a post ---------------
+ *
+ * @param userId user who want to delete the post
+ * @param postId post to delete
+ * @returns deleted post
+ */
+const deleteAPost = async (user: TJwtPayload, postId: string) => {
+  let deletedPost;
+  // if user is normal user. then only allowed to delete his own post.
+  if (user.role === "user") {
+    deletedPost = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        author: user.userId,
+        isDeleted: false,
+      },
+      { isDeleted: true },
+      { new: true },
+    );
+    // if user is an admin then allowed to delete any post.
+    // because admin has the super power ha ha ha
+  } else if (user.role === "admin") {
+    deletedPost = await Post.findOneAndUpdate(
+      {
+        _id: postId,
+        isDeleted: false,
+      },
+      { isDeleted: true },
+      { new: true },
+    );
+  }
+
+  if (!deletedPost) throw new Error("Post not found or deletion failed");
+  return deletedPost;
+};
+
 export const PostServices = {
-  createPostIntoDB,
-  getAllPostsFromDB,
-  getUserPostsFromDB,
-  getSinglePostFromDB,
-  deleteAPostFromDB,
-  updateAPostIntoDB,
-  getFilteredTravelPosts,
+  createPost,
+  getAllTravelPosts,
+  getMyPosts,
+  getSinglePost,
+  deleteAPost,
+  updateAPost,
 };

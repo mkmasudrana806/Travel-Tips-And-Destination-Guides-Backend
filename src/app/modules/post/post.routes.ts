@@ -8,33 +8,30 @@ const router = express.Router();
 
 // create a new post
 router.post(
-  "/create-post",
+  "/",
   auth("user"),
   validateRequestData(PostValidtions.createPostValidationSchema),
   PostControllers.createPost,
 );
 
-// get all posts
-router.get("/", PostControllers.getAllPosts);
+// get all posts with filter, pagination and sorting
+router.get("/", PostControllers.getAllTravelPosts);
 
 // get my posts
-router.get("/my-posts/:userId", PostControllers.getUserPosts);
+router.get("/me", auth("user"), PostControllers.getMyPosts);
 
 // get single post
-router.get("/:id", PostControllers.getPost);
+router.get("/:postId", PostControllers.getSinglePost);
 
 // update a post
 router.patch(
-  "/:id",
+  "/:postId",
   auth("user"),
   validateRequestData(PostValidtions.updatePostValidationSchema),
   PostControllers.updatePost,
 );
 
 // delete a post
-router.delete("/:id", auth("user", "admin"), PostControllers.deletePost);
-
-// filter post based on user queries
-router.get("/advanced/hard/filtered", PostControllers.getFilteredTravelPosts);
+router.delete("/:postId", auth("user", "admin"), PostControllers.deletePost);
 
 export const PostRoutes = router;

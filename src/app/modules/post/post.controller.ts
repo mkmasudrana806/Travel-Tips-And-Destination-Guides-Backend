@@ -8,7 +8,7 @@ import { TfileUpload } from "../../interface/fileUploadType";
 const createPost = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const postData = req.body;
-  const result = await PostServices.createPostIntoDB(userId, postData);
+  const result = await PostServices.createPost(userId, postData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -18,36 +18,39 @@ const createPost = asyncHanlder(async (req, res) => {
   });
 });
 
-// -------------- get all posts ------------
-const getAllPosts = asyncHanlder(async (req, res) => {
-  const result = await PostServices.getAllPostsFromDB(req.query);
+// --------------- get all travel posts ----------------
+const getAllTravelPosts = asyncHanlder(async (req, res) => {
+  const query = req.query;
+  const { data, meta } = await PostServices.getAllTravelPosts(query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Posts retrieved successfully",
-    data: result,
+    message: "Filtered post retrived successfully",
+    data: data,
+    meta: meta,
   });
 });
 
-// -------------- get user posts ------------
-const getUserPosts = asyncHanlder(async (req, res) => {
-  const result = await PostServices.getUserPostsFromDB(
-    req.params?.userId,
-    req.query,
-  );
+// -------------- get my all posts ------------
+const getMyPosts = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const query = req.query;
+  const { data, meta } = await PostServices.getMyPosts(userId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "user posts retrieved successfully",
-    data: result,
+    data: data,
+    meta: meta,
   });
 });
 
 // -------------- get single post ----------------
-const getPost = asyncHanlder(async (req, res) => {
-  const result = await PostServices.getSinglePostFromDB(req.params?.id);
+const getSinglePost = asyncHanlder(async (req, res) => {
+  const postId = req.params.postId;
+  const result = await PostServices.getSinglePost(postId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -59,11 +62,10 @@ const getPost = asyncHanlder(async (req, res) => {
 
 // ------------ update single post ----------------
 const updatePost = asyncHanlder(async (req, res) => {
-  const result = await PostServices.updateAPostIntoDB(
-    req.user,
-    req.params?.id,
-    req.body,
-  );
+  const userId = req.user.userId;
+  const postId = req.params.postId;
+  const newData = req.body;
+  const result = await PostServices.updateAPost(userId, postId, newData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -75,7 +77,8 @@ const updatePost = asyncHanlder(async (req, res) => {
 
 // --------------- delete a post ----------------
 const deletePost = asyncHanlder(async (req, res) => {
-  const result = await PostServices.deleteAPostFromDB(req.user, req.params.id);
+  const postId = req.params.postId;
+  const result = await PostServices.deleteAPost(req.user, postId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -85,26 +88,11 @@ const deletePost = asyncHanlder(async (req, res) => {
   });
 });
 
-// --------------- delete a post ----------------
-const getFilteredTravelPosts = asyncHanlder(async (req, res) => {
-  const query = req.query;
-  const { data, meta } = await PostServices.getFilteredTravelPosts(query);
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Filtered post retrived successfully",
-    data: data,
-    meta: meta,
-  });
-});
-
 export const PostControllers = {
   createPost,
-  getAllPosts,
-  getUserPosts,
-  getPost,
+  getAllTravelPosts,
+  getMyPosts,
+  getSinglePost,
   updatePost,
   deletePost,
-  getFilteredTravelPosts,
 };
