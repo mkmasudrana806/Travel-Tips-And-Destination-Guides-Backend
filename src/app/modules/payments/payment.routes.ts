@@ -5,6 +5,13 @@ import validateRequestData from "../../middlewares/validateRequest";
 import { PaymentValidations } from "./payment.validation";
 const router = express.Router();
 
+router.post(
+  "/",
+  auth("user"),
+  validateRequestData(PaymentValidations.paymentValidationSchema),
+  PaymentControllers.getSubscription,
+);
+
 // upgrade user to premium
 router.post("/upgrade-user", PaymentControllers.upgradeUserToPremium);
 
@@ -18,7 +25,7 @@ router.get("/", auth("admin"), PaymentControllers.allPaymentHistory);
 router.get(
   "/my-payments-history",
   auth("user"),
-  PaymentControllers.userPaymentHistory
+  PaymentControllers.userPaymentHistory,
 );
 
 // update payment status
@@ -26,7 +33,7 @@ router.post(
   "/:id",
   auth("admin"),
   validateRequestData(PaymentValidations.updatePaymentStatusSchema),
-  PaymentControllers.updatePaymentStatus
+  PaymentControllers.updatePaymentStatus,
 );
 
 export const PaymentRoutes = router;

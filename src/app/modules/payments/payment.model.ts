@@ -6,9 +6,9 @@ const paymentSchema = new Schema<TPayment>(
   {
     userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     username: { type: String, required: true },
-    email: { type: String, required: true},
+    email: { type: String, required: true },
     amount: { type: Number, required: true },
-    date: { type: Date, required: true, default: new Date() },
+    paymentDate: { type: Date, required: true, default: new Date() },
     expiresIn: { type: Date, required: true, default: new Date() },
     status: {
       type: String,
@@ -28,7 +28,7 @@ const paymentSchema = new Schema<TPayment>(
       default: "cash_on_delivery",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Payment = model("Payment", paymentSchema);

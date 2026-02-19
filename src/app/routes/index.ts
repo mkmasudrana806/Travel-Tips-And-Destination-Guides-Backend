@@ -30,7 +30,7 @@ router.use("/comments", CommentRoutes);
 router.use("/media", CloudinaryUploadFileRoutes);
 
 // payments
-router.use("/payments", PaymentRoutes);
+router.use("/subscriptions", PaymentRoutes);
 
 // insights
 router.use("/insights", InsightsRoutes);

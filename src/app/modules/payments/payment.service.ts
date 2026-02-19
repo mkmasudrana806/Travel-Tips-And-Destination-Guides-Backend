@@ -1,29 +1,82 @@
 import { Payment } from "./payment.model";
-import { verifyPayment } from "./payment.utils";
+import { initiatePayment, verifyPayment } from "./payment.utils";
 import mongoose from "mongoose";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
 import { TJwtPayload } from "../../interface/JwtPayload";
+import { TPayment } from "./payment.interface";
+
+/**
+ * -------------------- get Premium content Access ----------------------
+ *
+ * Uubscribe premium content (monthly/yearly). Access premium post content
+ * @param user user jwt payload
+ * @param payload boolean payload
+ */
+const getSubscription = async (userId: string, payload: TPayment) => {
+  // check if user exist
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
+  }
+
+  // payment data
+  const tnxId = `tnx-${Date.now()}`;
+  const paymentData: Partial<TPayment> = {
+    userId: new mongoose.Types.ObjectId(userId),
+    username: user.name,
+    email: user.email,
+    amount: payload.amount,
+    subscriptionType: payload.subscriptionType,
+    transactionId: tnxId,
+  };
+
+  // set subscription expires date
+  const expiredDate = new Date();
+  if (paymentData.subscriptionType === "monthly") {
+    expiredDate.setDate(expiredDate.getDate() + 30);
+  } else if (paymentData.subscriptionType === "yearly") {
+    expiredDate.setDate(expiredDate.getDate() + 365);
+  }
+  paymentData.expiresIn = expiredDate as unknown as Date;
+
+  //  save payment info to DB
+  const result = await Payment.create(paymentData);
+  if (!result) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Faild to create payment",
+    );
+  }
+
+  const successUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
+
+  const faildUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
+
+  //  initiate amarPay session and return session url
+  const session = await initiatePayment(paymentData, successUrl, faildUrl);
+  return session;
+};
 
 // --------------- upgrade user to premiumAccess and payment status to "completed"
 const upgradeUserToPremiumIntoDB = async (
   tnxId: string,
   userId: string,
-  status: string
+  status: string,
 ) => {
   if (status === "failed") {
     // update payment status
     const paymentStatus = await Payment.findOneAndUpdate(
       { transactionId: tnxId },
       { status: "failed" },
-      { runValidators: true }
+      { runValidators: true },
     );
 
     if (!paymentStatus) {
       throw new AppError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to update payment status"
+        "Faild to update payment status",
       );
     }
     return;
@@ -42,13 +95,13 @@ const upgradeUserToPremiumIntoDB = async (
       const paymentStatus = await Payment.findOneAndUpdate(
         { transactionId: tnxId },
         { status: "completed" },
-        { runValidators: true, session }
+        { runValidators: true, session },
       );
 
       if (!paymentStatus) {
         throw new AppError(
           httpStatus.INTERNAL_SERVER_ERROR,
-          "Faild to update payment status"
+          "Faild to update payment status",
         );
       }
 
@@ -56,12 +109,12 @@ const upgradeUserToPremiumIntoDB = async (
       const userPremiumAccess = await User.findByIdAndUpdate(
         userId,
         { premiumAccess: true },
-        { session }
+        { session },
       );
       if (!userPremiumAccess) {
         throw new AppError(
           httpStatus.INTERNAL_SERVER_ERROR,
-          "Failed to update user premiumAccess"
+          "Failed to update user premiumAccess",
         );
       }
       await session.commitTransaction();
@@ -71,7 +124,7 @@ const upgradeUserToPremiumIntoDB = async (
       await session.endSession();
       throw new AppError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to upgrade payment"
+        "Faild to upgrade payment",
       );
     }
   }
@@ -81,20 +134,20 @@ const upgradeUserToPremiumIntoDB = async (
 const upgradeUserToVerifiedIntoDB = async (
   tnxId: string,
   userId: string,
-  status: string
+  status: string,
 ) => {
   if (status === "failed") {
     // update payment status
     const paymentStatus = await Payment.findOneAndUpdate(
       { transactionId: tnxId },
       { status: "failed" },
-      { runValidators: true }
+      { runValidators: true },
     );
 
     if (!paymentStatus) {
       throw new AppError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to update payment status"
+        "Faild to update payment status",
       );
     }
     return;
@@ -113,13 +166,13 @@ const upgradeUserToVerifiedIntoDB = async (
       const paymentStatus = await Payment.findOneAndUpdate(
         { transactionId: tnxId },
         { status: "completed" },
-        { runValidators: true, session }
+        { runValidators: true, session },
       );
 
       if (!paymentStatus) {
         throw new AppError(
           httpStatus.INTERNAL_SERVER_ERROR,
-          "Faild to update payment status"
+          "Faild to update payment status",
         );
       }
 
@@ -127,12 +180,12 @@ const upgradeUserToVerifiedIntoDB = async (
       const userPremiumAccess = await User.findByIdAndUpdate(
         userId,
         { isVerified: true },
-        { session }
+        { session },
       );
       if (!userPremiumAccess) {
         throw new AppError(
           httpStatus.INTERNAL_SERVER_ERROR,
-          "Failed to update user premiumAccess"
+          "Failed to update user premiumAccess",
         );
       }
 
@@ -143,7 +196,7 @@ const upgradeUserToVerifiedIntoDB = async (
       await session.endSession();
       throw new AppError(
         httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to upgrade payment"
+        "Faild to upgrade payment",
       );
     }
   }
@@ -164,7 +217,7 @@ const userPaymentsHistoryFromDB = async (userData: TJwtPayload) => {
 // update payments status
 const updatePaymentStatusIntoDB = async (
   id: string,
-  payload: { status: string }
+  payload: { status: string },
 ) => {
   const result = await Payment.findByIdAndUpdate(id, payload, {
     new: true,
@@ -175,6 +228,7 @@ const updatePaymentStatusIntoDB = async (
 };
 
 export const PaymentServices = {
+  getSubscription,
   upgradeUserToPremiumIntoDB,
   upgradeUserToVerifiedIntoDB,
   allPaymentsHistoryFromDB,

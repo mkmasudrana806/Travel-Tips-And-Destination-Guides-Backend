@@ -124,8 +124,9 @@ const changeUserRole = asyncHanlder(async (req, res) => {
 });
 
 // ------------------- make user verified -------------------
-const makeUserVerified = asyncHanlder(async (req, res) => {
-  const result = await UserServices.makeUserVerifiedIntoDB(req.user, req.body);
+const getVerified = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const result = await UserServices.getVerified(userId, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -135,20 +136,6 @@ const makeUserVerified = asyncHanlder(async (req, res) => {
   });
 });
 
-// ------------------- make user premium access -------------------
-const makeUserPremiumAccess = asyncHanlder(async (req, res) => {
-  const result = await UserServices.makeUserPremiumAccessIntoDB(
-    req.user,
-    req.body,
-  );
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "amarPay session is initiated successfully",
-    data: result,
-  });
-});
 
 export const UserControllers = {
   createAnUser,
@@ -160,6 +147,5 @@ export const UserControllers = {
   updateUser,
   changeUserStatus,
   changeUserRole,
-  makeUserVerified,
-  makeUserPremiumAccess,
+  getVerified,
 };

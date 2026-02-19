@@ -6,7 +6,7 @@ export type TPayment = {
   username: string;
   email: string;
   amount: number;
-  date: Date;
+  paymentDate: Date;
   expiresIn: Date;
   status: "pending" | "completed" | "failed";
   subscriptionType: "monthly" | "yearly";

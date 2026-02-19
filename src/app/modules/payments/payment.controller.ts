@@ -3,6 +3,20 @@ import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { PaymentServices } from "./payment.service";
 
+// ------------------- get premium content access -------------------
+const getSubscription = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const payload = req.body;
+  const result = await PaymentServices.getSubscription(userId, payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "amarPay session is initiated successfully",
+    data: result,
+  });
+});
+
 // -------------  upgrade user to premiumAccess
 const upgradeUserToPremium = asyncHanlder(async (req, res) => {
   const { tnxId, userId, status } = req?.query;
@@ -12,7 +26,7 @@ const upgradeUserToPremium = asyncHanlder(async (req, res) => {
   await PaymentServices.upgradeUserToPremiumIntoDB(
     tnxId as string,
     userId as string,
-    status as string
+    status as string,
   );
 
   res.send(`<h1>Payment ${status}</h1>`);
@@ -27,7 +41,7 @@ const upgradeUserToVerified = asyncHanlder(async (req, res) => {
   await PaymentServices.upgradeUserToVerifiedIntoDB(
     tnxId as string,
     userId as string,
-    status as string
+    status as string,
   );
 
   res.send(`<h1>Payment ${status}</h1>`);
@@ -61,7 +75,7 @@ const userPaymentHistory = asyncHanlder(async (req, res) => {
 const updatePaymentStatus = asyncHanlder(async (req, res) => {
   const result = await PaymentServices.updatePaymentStatusIntoDB(
     req.params.id,
-    req.body
+    req.body,
   );
 
   sendResponse(res, {
@@ -73,6 +87,7 @@ const updatePaymentStatus = asyncHanlder(async (req, res) => {
 });
 
 export const PaymentControllers = {
+  getSubscription,
   upgradeUserToPremium,
   upgradeUserToVerified,
   allPaymentHistory,

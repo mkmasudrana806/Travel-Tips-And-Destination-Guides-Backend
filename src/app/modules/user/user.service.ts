@@ -10,8 +10,8 @@ import { TPayment } from "../payments/payment.interface";
 import { Payment } from "../payments/payment.model";
 import { initiatePayment } from "../payments/payment.utils";
 import mongoose, { Date } from "mongoose";
-import Post from "../post/post.model";
 import { TJwtPayload } from "../../interface/JwtPayload";
+import Post from "../post/post.model";
 
 /**
  * ----------------------- Create an user----------------------
@@ -207,138 +207,53 @@ const changeUserRoleIntoDB = async (
 };
 
 /**
- * -------------------- make user verified ----------------------
- * @param user user jwt payload
+ * -------------------- get verified ----------------------
+ *
+ * If users aquired more than 5000 followers and
+ * any post has more than 100 upvotes, they can apply for verification badge
+ *
+ * @param userId userId of the user, who want to get verified
  * @param payload boolean payload
  */
-const makeUserVerifiedIntoDB = async (user: TJwtPayload, payload: TPayment) => {
-  // Find one post where the author is the user and upvotes array is non-empty
-  const isPostFound = await Post.findOne({
-    author: user?.userId,
-    isDeleted: false,
-    upvotes: { $exists: true, $not: { $size: 0 } },
-  });
+const getVerified = async (
+  userId: string,
+  payload: { isVerified: boolean },
+) => {
+  const user = await User.findById(userId).select("name email followerCount");
 
-  // If a post with upvotes is found, set isUpvoteOk to true
-  const isUpvoteOk = !!isPostFound;
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
 
-  if (!isUpvoteOk) {
+  // check if user has more than 5000 followers
+  if (user.followerCount < 5000) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
-      "At least one upvote required to verfied profile!",
+      "You are not eligible for verification. you should meet 5000 followers",
     );
   }
 
-  // payment data
-  const tnxId = `tnx-${Date.now()}`;
-  const paymentData: Partial<TPayment> = {
-    userId: new mongoose.Types.ObjectId(user.userId),
-    // username: user?.name,
-    // email: user?.email,
-    amount: payload.amount,
-    subscriptionType: payload.subscriptionType,
-    transactionId: tnxId,
-  };
+  // check if user has any post more than 100 votes
+  const postfound = await Post.findOne({
+    author: userId,
+    upvoteCount: {
+      $gt: 100,
+    },
+    isDeleted: false,
+  });
 
-  // set subscription expires date
-  const expiredDate = new Date();
-  if (paymentData.subscriptionType === "monthly") {
-    expiredDate.setDate(expiredDate.getDate() + 30);
-  } else if (paymentData.subscriptionType === "yearly") {
-    expiredDate.setDate(expiredDate.getDate() + 365);
-  }
-  paymentData.expiresIn = expiredDate as unknown as Date;
-
-  //  save payment info to DB
-  const result = await Payment.create(paymentData);
-  if (!result) {
+  if (!postfound) {
     throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Faild to create payment",
+      httpStatus.BAD_REQUEST,
+      "You are not eligible for verification. you should have at least 100 up votes in any post",
     );
   }
 
-  const successUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
-
-  const faildUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/user-verified?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
-
-  //  initiate amarPay session and return session url
-  const session = await initiatePayment(paymentData, successUrl, faildUrl);
-  return session;
+  // update verification flag
+  const result = await User.findByIdAndUpdate(userId, payload);
+  return result;
 };
 
-/**
- * -------------------- make User Premium Access ----------------------
- * @param user user jwt payload
- * @param payload boolean payload
- */
-const makeUserPremiumAccessIntoDB = async (
-  user: TJwtPayload,
-  payload: TPayment,
-) => {
-  // payment data
-  const tnxId = `tnx-${Date.now()}`;
-  const paymentData: Partial<TPayment> = {
-    userId: new mongoose.Types.ObjectId(user.userId),
-    // username: user?.name,
-    // email: user?.email,
-    amount: payload.amount,
-    subscriptionType: payload.subscriptionType,
-    transactionId: tnxId,
-  };
-
-  // set subscription expires date
-  const expiredDate = new Date();
-  if (paymentData.subscriptionType === "monthly") {
-    expiredDate.setDate(expiredDate.getDate() + 30);
-  } else if (paymentData.subscriptionType === "yearly") {
-    expiredDate.setDate(expiredDate.getDate() + 365);
-  }
-  paymentData.expiresIn = expiredDate as unknown as Date;
-
-  //  save payment info to DB
-  const result = await Payment.create(paymentData);
-  if (!result) {
-    throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Faild to create payment",
-    );
-  }
-
-  const successUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=success`;
-
-  const faildUrl = `https://travel-tips-and-destination-guides-backend.vercel.app/api/payments/upgrade-user?tnxId=${paymentData.transactionId}&userId=${paymentData.userId}&status=failed`;
-
-  //  initiate amarPay session and return session url
-  const session = await initiatePayment(paymentData, successUrl, faildUrl);
-  return session;
-};
-
-// -------------------- get user flowers and unfollowers --------------------
-/**
- * @param followers followers array of user IDs
- * @param followings followings array of user IDs
- * @returns return followerLists and followingLists
- */
-const getUserFlowersUnflollowersFromDB = async (payload: {
-  followers: string[];
-  followings: string[];
-}) => {
-  let followerLists;
-  let followingLists;
-  if (payload?.followers?.length > 0) {
-    followerLists = await User.find({
-      _id: { $in: payload?.followers },
-    }).select("_id name email profilePicture");
-  }
-
-  if (payload?.followings) {
-    followingLists = await User.find({
-      _id: { $in: payload?.followings },
-    }).select("_id name email profilePicture");
-  }
-  return { followerLists, followingLists };
-};
 
 export const UserServices = {
   createAnUserIntoDB,
@@ -350,7 +265,5 @@ export const UserServices = {
   updateUserIntoDB,
   changeUserStatusIntoDB,
   changeUserRoleIntoDB,
-  makeUserVerifiedIntoDB,
-  makeUserPremiumAccessIntoDB,
-  getUserFlowersUnflollowersFromDB,
+  getVerified,
 };

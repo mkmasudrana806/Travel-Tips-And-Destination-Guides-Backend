@@ -1,13 +1,8 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import { UserControllers } from "./user.controller";
 import validateRequestData from "../../middlewares/validateRequest";
 import { UserValidations } from "./user.validation";
 import auth from "../../middlewares/auth";
-import { PaymentValidations } from "../payments/payment.validation";
-import { CloudinaryMulterUpload } from "../../config/multer.config";
-import AppError from "../../utils/AppError";
-import httpStatus from "http-status";
-import { MediaValidationSchema } from "../media/media.validation";
 const router = express.Router();
 
 // create an user
@@ -53,20 +48,12 @@ router.patch(
   UserControllers.changeUserRole,
 );
 
-// make an user verified
-router.post(
-  "/user-verified",
+// get verified profile
+router.patch(
+  "/verification",
   auth("user"),
-  validateRequestData(PaymentValidations.paymentValidationSchema),
-  UserControllers.makeUserVerified,
-);
-
-// give an user premium access
-router.post(
-  "/premium-access",
-  auth("user"),
-  validateRequestData(PaymentValidations.paymentValidationSchema),
-  UserControllers.makeUserPremiumAccess,
+  validateRequestData(UserValidations.makeUserVerifiedSchema),
+  UserControllers.getVerified,
 );
 
 export const UserRoutes = router;

@@ -56,24 +56,28 @@ const changeUserRoleSchema = z.object({
     .strict(),
 });
 
-// make user verified schema
+// ger verification
 const makeUserVerifiedSchema = z.object({
-  body: z.object({
-    isVerified: z.boolean({
-      required_error: "isVerified is required",
-      invalid_type_error: "isVerified value should be boolean",
-    }),
-  }),
+  body: z
+    .object({
+      isVerified: z.boolean({
+        required_error: "isVerified is required",
+        invalid_type_error: "isVerified value should be boolean",
+      }),
+    })
+    .strict(),
 });
 
 // make user premium access schema
 const makeUserPremiumAccessSchema = z.object({
-  body: z.object({
-    premiumAccess: z.boolean({
-      required_error: "premiumAccess is required",
-      invalid_type_error: "premiumAccess value should be boolean",
-    }),
-  }),
+  body: z
+    .object({
+      premiumAccess: z.boolean({
+        required_error: "premiumAccess is required",
+        invalid_type_error: "premiumAccess value should be boolean",
+      }),
+    })
+    .strict(),
 });
 
 export const UserValidations = {
