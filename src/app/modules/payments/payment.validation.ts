@@ -12,11 +12,10 @@ const getSubscriptionSchema = z.object({
 
 // on sucess payment, update the status
 const onPaymentSuccessSchema = z.object({
-  body: z
-    .object({
-      cus_email: z.string({ required_error: "Customer email is required" }),
-      mer_txnid: z.string({ required_error: "Transaction ID is required" }),
-    }),
+  body: z.object({
+    cus_email: z.string({ required_error: "Customer email is required" }),
+    mer_txnid: z.string({ required_error: "Transaction ID is required" }),
+  }),
 });
 
 // update payment status

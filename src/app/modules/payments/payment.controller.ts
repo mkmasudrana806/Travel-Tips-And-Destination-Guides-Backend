@@ -49,56 +49,28 @@ const onPaymentCancelled = asyncHanlder(async (req, res) => {
   });
 });
 
-// -------------  upgrade user to verified
-const upgradeUserToVerified = asyncHanlder(async (req, res) => {
-  const { tnxId, userId, status } = req?.query;
-
-  // double check if payment success in amarpay then update payment status and user premiumAccess status
-
-  await PaymentServices.upgradeUserToVerifiedIntoDB(
-    tnxId as string,
-    userId as string,
-    status as string,
-  );
-
-  res.send(`<h1>Payment ${status}</h1>`);
-});
-
 // get all payments history
 const allPaymentHistory = asyncHanlder(async (req, res) => {
-  const result = await PaymentServices.allPaymentsHistoryFromDB();
+  const query = req.query;
+  const { data, meta } = await PaymentServices.allPaymentsHistoryFromDB(query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "payments history retrieved successfull",
-    data: result,
+    data: data,
   });
 });
 
-// get user payment history
-const userPaymentHistory = asyncHanlder(async (req, res) => {
-  const result = await PaymentServices.userPaymentsHistoryFromDB(req.user);
+// ----------- get my payment history -----------
+const myPaymentHistory = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const result = await PaymentServices.myPaymentsHistory(userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "User payments history retrieved successfull",
-    data: result,
-  });
-});
-
-// update payment status
-const updatePaymentStatus = asyncHanlder(async (req, res) => {
-  const result = await PaymentServices.updatePaymentStatusIntoDB(
-    req.params.id,
-    req.body,
-  );
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "Payment status updated successfull",
+    message: "My payments history retrieved successfull",
     data: result,
   });
 });
@@ -108,8 +80,6 @@ export const PaymentControllers = {
   onPaymentSuccess,
   onPaymentFailed,
   onPaymentCancelled,
-  upgradeUserToVerified,
+  myPaymentHistory,
   allPaymentHistory,
-  userPaymentHistory,
-  updatePaymentStatus,
 };

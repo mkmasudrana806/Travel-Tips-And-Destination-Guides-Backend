@@ -36,24 +36,10 @@ router.post(
   PaymentControllers.onPaymentCancelled,
 );
 
-router.post("/user-verified", PaymentControllers.upgradeUserToVerified);
+// get my payments history
+router.get("/me", auth("user"), PaymentControllers.myPaymentHistory);
 
 // get all payments history
 router.get("/", auth("admin"), PaymentControllers.allPaymentHistory);
-
-// get user payments history
-router.get(
-  "/my-payments-history",
-  auth("user"),
-  PaymentControllers.userPaymentHistory,
-);
-
-// update payment status
-router.post(
-  "/:id",
-  auth("admin"),
-  validateRequestData(PaymentValidations.updatePaymentStatusSchema),
-  PaymentControllers.updatePaymentStatus,
-);
 
 export const PaymentRoutes = router;

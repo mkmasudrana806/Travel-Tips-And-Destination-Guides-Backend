@@ -4,7 +4,7 @@ import { TPayment } from "./payment.interface";
 // mongoose payment schema
 const paymentSchema = new Schema<TPayment>(
   {
-    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     username: { type: String, required: true },
     email: { type: String, required: true },
     amount: { type: Number, required: true },
@@ -34,5 +34,9 @@ const paymentSchema = new Schema<TPayment>(
   },
   { timestamps: true },
 );
+
+paymentSchema.index({ user: 1, paymentDate: -1 });
+paymentSchema.index({ transactionId: 1 });
+paymentSchema.index({ status: 1, expiresAt: 1 });
 
 export const Payment = model("Payment", paymentSchema);

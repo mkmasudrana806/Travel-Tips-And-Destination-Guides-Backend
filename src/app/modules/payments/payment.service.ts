@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import { User } from "../user/user.model";
-import { TJwtPayload } from "../../interface/JwtPayload";
 import { TPayment } from "./payment.interface";
 import config from "../../config";
 
@@ -45,7 +44,7 @@ const getSubscriptionSession = async (userId: string, payload: TPayment) => {
   // payment data
   const tnxId = `tnx-${Date.now()}`;
   const paymentData: Partial<TPayment> = {
-    userId: new mongoose.Types.ObjectId(userId),
+    user: new mongoose.Types.ObjectId(userId),
     username: user.name,
     email: user.email,
     amount: payload.amount,
@@ -235,100 +234,75 @@ const onPaymentCancelled = async (userEmail: string, txnId: string) => {
   }
 };
 
-// --------------- upgrade user to verified
-const upgradeUserToVerifiedIntoDB = async (
-  tnxId: string,
-  userId: string,
-  status: string,
-) => {
-  if (status === "failed") {
-    // update payment status
-    const paymentStatus = await Payment.findOneAndUpdate(
-      { transactionId: tnxId },
-      { status: "failed" },
-      { runValidators: true },
-    );
-
-    if (!paymentStatus) {
-      throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to update payment status",
-      );
-    }
-    return;
-  }
-  // first verify payment in amarpay database
-  const isPaidtoAmarpay = await verifyPayment(tnxId);
-
-  // now update payment status and user premiumAccess
-  if (isPaidtoAmarpay && isPaidtoAmarpay.pay_status === "Successful") {
-    const session = await mongoose.startSession();
-    try {
-      // start transaction
-      session.startTransaction();
-
-      // update payment status
-      const paymentStatus = await Payment.findOneAndUpdate(
-        { transactionId: tnxId },
-        { status: "completed" },
-        { runValidators: true, session },
-      );
-
-      if (!paymentStatus) {
-        throw new AppError(
-          httpStatus.INTERNAL_SERVER_ERROR,
-          "Faild to update payment status",
-        );
-      }
-
-      // update user premiumAccess
-      const userPremiumAccess = await User.findByIdAndUpdate(
-        userId,
-        { isVerified: true },
-        { session },
-      );
-      if (!userPremiumAccess) {
-        throw new AppError(
-          httpStatus.INTERNAL_SERVER_ERROR,
-          "Failed to update user premiumAccess",
-        );
-      }
-
-      await session.commitTransaction();
-      await session.endSession();
-    } catch (error) {
-      await session.abortTransaction();
-      await session.endSession();
-      throw new AppError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        "Faild to upgrade payment",
-      );
-    }
-  }
-};
-
 // get all payments history
-const allPaymentsHistoryFromDB = async () => {
-  const result = await Payment.find({});
-  return result;
+const allPaymentsHistoryFromDB = async (query: Record<string, unknown>) => {
+  const {
+    page = 1,
+    limit = 20,
+    email,
+    status,
+    transactionId,
+    paymentDate,
+    sortBy = "paymentDate",
+    sortOrder = "desc",
+  } = query;
+
+  const filter: any = {};
+
+  // email search (partial match)
+  if (email) {
+    filter.email = { $regex: email, $options: "i" };
+  }
+
+  // status filter
+  if (status) {
+    filter.status = status;
+  }
+
+  // transactionId search
+  if (transactionId) {
+    filter.transactionId = {
+      $regex: transactionId,
+      $options: "i",
+    };
+  }
+
+  // date range filter
+  if (paymentDate) {
+      filter.paymentDate.$lte = new Date(paymentDate as string);
+  }
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  const sortCondition: any = {
+    [sortBy as string]: sortOrder === "asc" ? 1 : -1,
+  };
+
+  const [data, total] = await Promise.all([
+    Payment.find(filter).sort(sortCondition).skip(skip).limit(Number(limit)),
+    Payment.countDocuments(filter),
+  ]);
+
+  return {
+    meta: {
+      page: Number(page),
+      limit: Number(limit),
+      total
+    },
+    data,
+  };
 };
 
-// get user payments history
-const userPaymentsHistoryFromDB = async (userData: TJwtPayload) => {
-  const result = await Payment.find({ userId: userData.userId });
-  return result;
-};
-
-// update payments status
-const updatePaymentStatusIntoDB = async (
-  id: string,
-  payload: { status: string },
-) => {
-  const result = await Payment.findByIdAndUpdate(id, payload, {
-    new: true,
-    runValidators: true,
-  });
-
+/**
+ * ----------- get my payments history -----------
+ *
+ * @param userId userId who want to see his all payment history
+ * @returns latest 20 payments history of the user
+ */
+const myPaymentsHistory = async (userId: string) => {
+  const result = await Payment.find({ user: userId })
+    .sort({ paymentDate: -1 })
+    .limit(20);
   return result;
 };
 
@@ -337,8 +311,6 @@ export const PaymentServices = {
   onPaymentSuccess,
   onPaymentFailed,
   onPaymentCancelled,
-  upgradeUserToVerifiedIntoDB,
   allPaymentsHistoryFromDB,
-  userPaymentsHistoryFromDB,
-  updatePaymentStatusIntoDB,
+  myPaymentsHistory,
 };

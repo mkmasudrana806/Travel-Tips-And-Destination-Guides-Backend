@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 // Payment type
 export type TPayment = {
-  userId: Types.ObjectId;
+  user: Types.ObjectId;
   username: string;
   email: string;
   amount: number;
