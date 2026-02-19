@@ -10,7 +10,7 @@ import { Media } from "../media/media.model";
  * @param file uploaded image file info
  * @return return uploaded image url and unique id
  */
-const saveImageInfoInDB = async (file: TfileUpload, userId: string) => {
+const uploadFileToCloudinary = async (file: TfileUpload, userId: string) => {
   const mediaEntry = await Media.create({
     url: file.path,
     user: userId,
@@ -21,5 +21,5 @@ const saveImageInfoInDB = async (file: TfileUpload, userId: string) => {
 };
 
 export const uploadFilesServices = {
-  saveImageInfoInDB,
+  uploadFileToCloudinary,
 };

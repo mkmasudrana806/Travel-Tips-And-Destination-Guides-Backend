@@ -129,33 +129,39 @@ const updateUserIntoDB = async (userId: string, payload: Partial<TUser>) => {
 
 /**
  * -------------------- change user status ----------------------
- * @param id user id
+ *
+ * @param userId userId need to change his status (user-> admin or vice versa)
  * @param payload user status payload
  * @validatios check if the user exists,not deleted. only admin can change user status
  * @validations main admin can't change own status
  * @returns return updated user status
  */
 const changeUserStatusIntoDB = async (
-  id: string,
+  userId: string,
   payload: { status: string },
 ) => {
-  // check if user exists, not deleted
-  const user = await User.findOne({ _id: id });
+  // check if user exists, not deleted or blocked
+  const user = await User.findById(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
   }
   if (user.isDeleted) {
     throw new AppError(httpStatus.FORBIDDEN, "User is already deleted!");
   }
-  // check the user is not main admin
-  if (user.email === "admin@gmail.com") {
+  if (user.status === "blocked") {
+    throw new AppError(httpStatus.FORBIDDEN, "User is already blocked!");
+  }
+
+  // check the user is not main admin. others admin except this email can change their status
+  // the main admin can change others admin status. as only main admin belong to this email
+  if (user.email === "admin@gmail.com" && user.role === "admin") {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "You are main admin, can't change your status",
+      "You can't change main admin status",
     );
   }
 
-  const result = await User.findByIdAndUpdate(id, payload, {
+  const result = await User.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
   });
@@ -164,32 +170,36 @@ const changeUserStatusIntoDB = async (
 
 /**
  * -------------------- change user role ----------------------
- * @param id user id
- * @param payload user role payload
- * @validatios check if the user exists,not deleted. only admin can change user role
+ *
+ * @param userId userId to change his role (user -> admin or vice versa)
+ * @param payload user new role
  * @note admin can not change own role. admin can change only user role
- *  @validations main admin can't change own status
  * @returns return updated user data
  */
-const changeUserRoleIntoDB = async (id: string, payload: { role: string }) => {
+const changeUserRoleIntoDB = async (
+  userId: string,
+  payload: { role: string },
+) => {
   // check if user exists, not deleted. find user that has role as user
-  const user = await User.findOne({ _id: id });
+  const user = await User.findById(userId);
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User is not found!");
   }
   if (user.isDeleted) {
     throw new AppError(httpStatus.FORBIDDEN, "User is already deleted!");
   }
-
-  // check the user is not main admin
-  if (user.email === "admin@gmail.com") {
+  if (user.status === "blocked") {
+    throw new AppError(httpStatus.FORBIDDEN, "User is already blocked!");
+  }
+  // check the user is not main admin. main admin can change others admin/users role.
+  if (user.email === "admin@gmail.com" && user.role === "admin") {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "You are main admin, can't change role!",
+      "You can't change main admin role!",
     );
   }
 
-  await User.findByIdAndUpdate(id, payload, {
+  await User.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
   });

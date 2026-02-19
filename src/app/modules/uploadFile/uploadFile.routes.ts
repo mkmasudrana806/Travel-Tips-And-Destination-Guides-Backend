@@ -11,8 +11,8 @@ const router = express.Router();
 
 // ------- upload single image to cloudinary ----------
 router.post(
-  "/upload-image",
-  auth("user"),
+  "/",
+  auth("user", "admin"),
   CloudinaryMulterUpload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     if (req.file) {
@@ -23,7 +23,7 @@ router.post(
       throw new AppError(httpStatus.BAD_REQUEST, "Failed to upload file!");
     }
   },
-  uploadFiles.uploadImageCloudinary,
+  uploadFiles.uploadFileToCloudinary,
 );
 
 export const CloudinaryUploadFileRoutes = router;

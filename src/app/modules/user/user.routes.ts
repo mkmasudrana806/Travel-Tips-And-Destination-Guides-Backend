@@ -37,26 +37,9 @@ router.put(
   UserControllers.updateUser,
 );
 
-// update my profile picture
-router.patch(
-  "/update-profile-picture",
-  auth("user"),
-  CloudinaryMulterUpload.single("file"),
-  (req: Request, res: Response, next: NextFunction) => {
-    if (req.file) {
-      req.body = req.file;
-      validateRequestData(MediaValidationSchema);
-      next();
-    } else {
-      throw new AppError(httpStatus.BAD_REQUEST, "Failed to upload file!");
-    }
-  },
-  UserControllers.updateProfilePicture,
-);
-
 // change an user status
 router.patch(
-  "/toggle-user-status/:id",
+  "/:userId/status",
   auth("admin"),
   validateRequestData(UserValidations.changeUserStatusSchema),
   UserControllers.changeUserStatus,
@@ -64,7 +47,7 @@ router.patch(
 
 // change an user role
 router.patch(
-  "/toggle-user-role/:id",
+  "/:userId/role",
   auth("admin"),
   validateRequestData(UserValidations.changeUserRoleSchema),
   UserControllers.changeUserRole,

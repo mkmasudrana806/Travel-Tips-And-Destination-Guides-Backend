@@ -72,10 +72,6 @@ userSchema.post("find", function (docs) {
   });
 });
 
-// ----------- hide password to client response -----------
-userSchema.post("findOne", function (doc) {
-  doc.password = "";
-});
 
 // ----------- hide password to client response -----------
 userSchema.post("findOneAndUpdate", function (doc) {

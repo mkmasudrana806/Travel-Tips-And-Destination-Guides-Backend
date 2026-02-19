@@ -27,7 +27,7 @@ router.use("/posts", PostRoutes);
 router.use("/comments", CommentRoutes);
 
 // upload image to cloudinary
-router.use("/uploads", CloudinaryUploadFileRoutes);
+router.use("/media", CloudinaryUploadFileRoutes);
 
 // payments
 router.use("/payments", PaymentRoutes);

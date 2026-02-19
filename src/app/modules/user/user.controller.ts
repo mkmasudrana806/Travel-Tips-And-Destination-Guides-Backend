@@ -97,10 +97,9 @@ const updateUser = asyncHanlder(async (req, res) => {
 
 // ------------------- change user status -------------------
 const changeUserStatus = asyncHanlder(async (req, res) => {
-  const result = await UserServices.changeUserStatusIntoDB(
-    req.params.id,
-    req.body,
-  );
+  const userId = req.params.userId;
+  const payload = req.body;
+  const result = await UserServices.changeUserStatusIntoDB(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -112,10 +111,9 @@ const changeUserStatus = asyncHanlder(async (req, res) => {
 
 // ------------------- change user role -------------------
 const changeUserRole = asyncHanlder(async (req, res) => {
-  const result = await UserServices.changeUserRoleIntoDB(
-    req.params.id,
-    req.body,
-  );
+  const userId = req.params.userId;
+  const payload = req.body;
+  const result = await UserServices.changeUserRoleIntoDB(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

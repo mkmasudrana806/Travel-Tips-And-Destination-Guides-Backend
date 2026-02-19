@@ -36,20 +36,24 @@ const updateUserValidationsSchema = z.object({
 
 // change user status schema
 const changeUserStatusSchema = z.object({
-  body: z.object({
-    status: z.enum(["active", "blocked"], {
-      required_error: "User status is required",
-    }),
-  }),
+  body: z
+    .object({
+      status: z.enum(["active", "blocked"], {
+        required_error: "User status is required",
+      }),
+    })
+    .strict(),
 });
 
 // change user role schema
 const changeUserRoleSchema = z.object({
-  body: z.object({
-    role: z.enum(["user", "admin"], {
-      required_error: "User role is required",
-    }),
-  }),
+  body: z
+    .object({
+      role: z.enum(["user", "admin"], {
+        required_error: "User role is required",
+      }),
+    })
+    .strict(),
 });
 
 // make user verified schema
