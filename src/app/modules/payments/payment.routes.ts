@@ -21,7 +21,11 @@ router.post(
 );
 
 // on payment failed
-// router.post("/failed", PaymentControllers.onPaymentFailed);
+router.post(
+  "/failed",
+  validateRequestData(PaymentValidations.onPaymentSuccessSchema),
+  PaymentControllers.onPaymentFailed,
+);
 
 router.post("/user-verified", PaymentControllers.upgradeUserToVerified);
 

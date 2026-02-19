@@ -91,7 +91,12 @@ const getSubscriptionSession = async (userId: string, payload: TPayment) => {
   return session;
 };
 
-// ---------------  "
+/**
+ * --------------- on payment success------------------
+ *
+ * @param userEmail user email who paid
+ * @param txnId transaction Id of the payment
+ */
 const onPaymentSuccess = async (userEmail: string, txnId: string) => {
   // check transaction id and user email exist in database with pending status
   const payment = await Payment.findOne({
@@ -115,7 +120,7 @@ const onPaymentSuccess = async (userEmail: string, txnId: string) => {
       session.startTransaction();
       // update payment status
       const paymentStatus = await Payment.findOneAndUpdate(
-        { transactionId: txnId, email: userEmail },
+        { transactionId: txnId, email: userEmail, status: "pending" },
         { status: "completed" },
         { runValidators: true, session },
       );
@@ -147,6 +152,44 @@ const onPaymentSuccess = async (userEmail: string, txnId: string) => {
       throw new AppError(
         httpStatus.INTERNAL_SERVER_ERROR,
         "Faild to upgrade payment",
+      );
+    }
+  }
+};
+
+/**
+ * --------------- on payment failed------------------
+ *
+ * @param userEmail user email who's payment is failed
+ * @param txnId transaction Id of the failed payment
+ */
+const onPaymentFailed = async (userEmail: string, txnId: string) => {
+  // check transaction id and user email exist in database with pending status
+  const payment = await Payment.findOne({
+    transactionId: txnId,
+    email: userEmail,
+    status: "pending",
+  });
+
+  if (!payment) {
+    throw new AppError(httpStatus.FORBIDDEN, "Payment data is not available");
+  }
+
+  // first verify payment in amarpay database
+  const isPaidtoAmarpay = await verifyPayment(txnId);
+
+  if (isPaidtoAmarpay && isPaidtoAmarpay.pay_status === "Failed") {
+    // update payment status to failed
+    const paymentStatus = await Payment.findOneAndUpdate(
+      { transactionId: txnId, email: userEmail, status: "pending" },
+      { status: "failed" },
+      { runValidators: true },
+    );
+
+    if (!paymentStatus) {
+      throw new AppError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Faild to update payment status",
       );
     }
   }
@@ -252,6 +295,7 @@ const updatePaymentStatusIntoDB = async (
 export const PaymentServices = {
   getSubscriptionSession,
   onPaymentSuccess,
+  onPaymentFailed,
   upgradeUserToVerifiedIntoDB,
   allPaymentsHistoryFromDB,
   userPaymentsHistoryFromDB,

@@ -29,15 +29,11 @@ const onPaymentSuccess = asyncHanlder(async (req, res) => {
 
 // ------------- on payment failed -------------
 const onPaymentFailed = asyncHanlder(async (req, res) => {
-  console.log("payment failed callback url hit", req.body);
+  const { cus_email, mer_txnid } = req.body;
+  await PaymentServices.onPaymentFailed(cus_email, mer_txnid);
 
-  // await PaymentServices.onPaymentFailed(
-  //   tnxId as string,
-  //   userId as string,
-  //   status as string,
-  // );
-
-  res.send(`<h1>Payment failed</h1>`);
+  // after updating payment status as failed. now redirect user to the frontend
+  res.redirect(`${config.frontend_url}/payments/failed?txnId=${mer_txnid}`);
 });
 
 // -------------  upgrade user to verified
