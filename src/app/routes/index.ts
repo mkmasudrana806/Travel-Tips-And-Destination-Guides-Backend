@@ -48,7 +48,7 @@ router.use("/saved-post", SavedPostRoutes);
 router.use("/travel-plans", TravelPlanRoutes);
 
 // travel request
-router.use("/travel-request", TravelRequestRoutes);
+router.use("/travel-requests", TravelRequestRoutes);
 
 // notifications
 router.use("/notifications", NotificationsRoutes);

@@ -7,7 +7,7 @@ const router = express.Router();
 
 // create a travel request
 router.post(
-  "/plans/:planId/request",
+  "/",
   auth("user"),
   validateRequestData(TravelRequestValidation.createTravelRequest),
   TravelRequestController.createTravelRequest,

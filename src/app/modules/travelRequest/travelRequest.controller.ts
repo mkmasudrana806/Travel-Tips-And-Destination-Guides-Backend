@@ -6,12 +6,12 @@ import { TravelRequestService } from "./travelRequest.service";
 // ---------------- create a travel request ---------------
 const createTravelRequest = asyncHanlder(async (req, res) => {
   const requesterId = req.user.userId;
-  const travelPlanId = req.params.planId;
-  const data = req.body;
+  const travelPlanId = req.body.planId;
+  const requestNote = req.body.requestNote;
   const result = await TravelRequestService.createTravelRequest(
     travelPlanId,
     requesterId,
-    data,
+    requestNote,
   );
 
   sendResponse(res, {

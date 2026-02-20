@@ -19,7 +19,7 @@ import { NotificationType } from "../notifications/notifications.interface";
 const createTravelRequest = async (
   planId: string,
   requesterId: string,
-  payload: Partial<TTravelRequest>,
+  payload: string,
 ) => {
   const plan = await TravelPlan.findById(planId).populate("user", "name");
 
@@ -38,11 +38,8 @@ const createTravelRequest = async (
   const request = await TravelRequest.create({
     travelPlan: planId,
     requester: requesterId,
-    ...payload,
+    requestNote: payload,
   });
-
-  // fetch user name
-  const user = await User.findById(requesterId).select("name");
 
   try {
     // create notification
