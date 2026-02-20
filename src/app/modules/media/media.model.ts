@@ -23,4 +23,8 @@ const mediaSchema = new Schema<TMedia>(
   },
 );
 
+// create index for isUsed field to optimize cron job query
+// this index help to quickly find unused media files for cleanup
+mediaSchema.index({ isUsed: 1 });
+
 export const Media = model<TMedia>("Media", mediaSchema);

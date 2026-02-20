@@ -4,7 +4,7 @@ import { TfileUpload } from "../../interface/fileUploadType";
 import asyncHanlder from "../../utils/asyncHandler";
 import { uploadFilesServices } from "./uploadFile.service";
 
-// ------------------- create an user -------------------
+// -------------- upload a media(image) and upload metadata to DB ---------------
 const uploadFileToCloudinary = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const file = req.body;

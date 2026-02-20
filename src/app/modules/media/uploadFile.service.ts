@@ -1,8 +1,4 @@
-import AppError from "../../utils/AppError";
-import httpStatus from "http-status";
 import { TfileUpload } from "../../interface/fileUploadType";
-import config from "../../config";
-import sendImageToCloudinary from "../../utils/sendImageToCloudinary";
 import { Media } from "../media/media.model";
 
 /**

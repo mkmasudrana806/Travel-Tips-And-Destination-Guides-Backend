@@ -1,6 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
 import { uploadFiles } from "./uploadFile.controller";
-import { upload } from "../../utils/upload";
 import { CloudinaryMulterUpload } from "../../config/multer.config";
 import auth from "../../middlewares/auth";
 import AppError from "../../utils/AppError";
@@ -26,4 +25,4 @@ router.post(
   uploadFiles.uploadFileToCloudinary,
 );
 
-export const CloudinaryUploadFileRoutes = router;
+export const MediaUploadRoutes = router;
