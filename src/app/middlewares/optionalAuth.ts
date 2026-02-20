@@ -16,9 +16,15 @@ const optionalAuth = () => {
   return asyncHanlder(
     async (req: Request, res: Response, next: NextFunction) => {
       const token = req.headers.authorization;
-
+      const optionalReqData = {
+        userId: "",
+        role: "guest",
+        iat: 0,
+      };
       // if no token then treat as guest
       if (!token) {
+        req.user = optionalReqData;
+        req.user = optionalReqData;
         return next();
       }
 
@@ -30,6 +36,7 @@ const optionalAuth = () => {
         ) as TJwtPayload;
       } catch (error) {
         // if invalid token then ignore and continue as guest
+        req.user = optionalReqData;
         return next();
       }
 
@@ -39,18 +46,17 @@ const optionalAuth = () => {
 
       // if user not found or blocked then treat as guest
       if (!user || user.status === "blocked" || user.isDeleted) {
+        req.user = optionalReqData;
         return next();
       }
 
       // check if token issued before password change
       if (
         user.passwordChangedAt &&
-        User.isJWTIssuedBeforePasswordChange(
-          user.passwordChangedAt,
-          iat,
-        )
+        User.isJWTIssuedBeforePasswordChange(user.passwordChangedAt, iat)
       ) {
         // no problem, we treat it as guest user
+        req.user = optionalReqData;
         return next();
       }
 
