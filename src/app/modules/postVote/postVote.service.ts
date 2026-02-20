@@ -136,23 +136,62 @@ const toggleVote = async (
 
 /**
  * ------------- all voters lists with user info of a post ----------------
- * based on a post, return all voter info
+ * 
+ * based on postId, return all voters list with user info.
+ * also filter with vote type (upvote/downvote) and paginate with limit and page
  *
  * @param postId postId to return total votes
- * @param query limit and page for paginate
+ * @param query limit, page and type (upvote/downvote)
  * @returns aggregated user list with name and profile picture
  */
 const postVoterLists = async (
   postId: string,
   query: Record<string, unknown>,
 ) => {
-  const votesBuild = new QueryBuilder(
-    PostVote.find({ post: postId }).populate("user", "name profilePicture"),
-    query,
-  ).paginate();
+  const { page = 1, limit = 10, type } = query;
+  const skip = (Number(page) - 1) * Number(limit);
+  const filter: Record<string, VoteType> = {};
 
-  const result = await votesBuild.modelQuery;
-  return result;
+  if (type === "upvote") {
+    filter.type = VoteType.UPVOTE;
+  } else if (type === "downvote") {
+    filter.type = VoteType.DOWNVOTE;
+  }
+
+  const data = await PostVote.aggregate([
+    { $match: { post: new mongoose.Types.ObjectId(postId), ...filter } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    { $unwind: "$user" },
+    {
+      $project: {
+        _id: 0,
+        "user._id": 1,
+        "user.name": 1,
+        "user.profilePicture": 1,
+        type: 1,
+      },
+    },
+    { $skip: skip },
+    { $limit: Number(limit) },
+    { $sort: { createdAt: -1 } },
+  ]);
+
+  const totalVotes = await PostVote.countDocuments({ post: postId, ...filter });
+  return {
+    data,
+    meta: {
+      page,
+      limit,
+      totalVotes,
+    },
+  };
 };
 
 /**

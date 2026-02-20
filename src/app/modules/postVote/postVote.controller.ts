@@ -22,13 +22,14 @@ const votePost = asyncHanlder(async (req, res) => {
 const postVoterLists = asyncHanlder(async (req, res) => {
   const postId = req.params.postId;
   const query = req.query;
-  const result = await PostVoteServices.postVoterLists(postId, query);
+  const { data, meta } = await PostVoteServices.postVoterLists(postId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Total votes of post retrived successfull",
-    data: result,
+    data,
+    meta,
   });
 });
 

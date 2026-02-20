@@ -13,12 +13,8 @@ router.post(
   PostVoteController.votePost,
 );
 
-// votes (voters list of a post)
-router.get(
-  "/posts/:postId/votes",
-  auth("user"),
-  PostVoteController.postVoterLists,
-);
+// votes (voters list of a post) (type=upvote/downvote)
+router.get("/posts/:postId/votes", PostVoteController.postVoterLists);
 
 // list of posts i votes
 router.get("/my-votes", auth("user"), PostVoteController.listsOfPostsIVote);
