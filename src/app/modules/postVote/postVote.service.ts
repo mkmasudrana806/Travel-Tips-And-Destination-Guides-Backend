@@ -136,7 +136,7 @@ const toggleVote = async (
 
 /**
  * ------------- all voters lists with user info of a post ----------------
- * 
+ *
  * based on postId, return all voters list with user info.
  * also filter with vote type (upvote/downvote) and paginate with limit and page
  *
@@ -215,29 +215,8 @@ const listOfPostsIVote = async (
   return result;
 };
 
-/**
- * ------------- my vote status of a post ----------------
- * check my status to a post that i vote or not
- *
- * @param postId id of the post, want to check vote status with an user
- * @param userId user who vote or not a post
- * @returns // { "hasVoted": true, "type": "upvote" | "downvote" | null }
- */
-const myVoteStatus = async (post: string, user: string) => {
-  const result = await PostVote.findOne({ post, user });
-
-  let status: TStatusVote = { hasVoted: false, type: null };
-  if (result) {
-    status.hasVoted = true;
-    status.type = result.type;
-  }
-
-  return status;
-};
-
 export const PostVoteServices = {
   toggleVote,
   postVoterLists,
   listOfPostsIVote,
-  myVoteStatus,
 };

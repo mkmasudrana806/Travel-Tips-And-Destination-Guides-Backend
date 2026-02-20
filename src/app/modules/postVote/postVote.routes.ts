@@ -17,13 +17,10 @@ router.post(
 router.get("/posts/:postId/votes", PostVoteController.postVoterLists);
 
 // list of posts i votes
-router.get("/my-votes", auth("user"), PostVoteController.listsOfPostsIVote);
-
-// my vote status of a post
 router.get(
-  "/posts/:postId/my-status",
+  "/users/me/votes",
   auth("user"),
-  PostVoteController.myVoteStatus,
+  PostVoteController.listsOfPostsIVote,
 );
 
 export const PostVoteRoutes = router;
