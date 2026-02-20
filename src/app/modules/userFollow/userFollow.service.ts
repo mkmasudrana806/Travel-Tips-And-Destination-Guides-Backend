@@ -91,6 +91,7 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
     }
 
     await session.commitTransaction();
+    await session.endSession();
     return result;
   } catch (error) {
     await session.abortTransaction();
