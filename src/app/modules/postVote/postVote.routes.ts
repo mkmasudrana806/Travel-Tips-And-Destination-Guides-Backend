@@ -7,7 +7,7 @@ const router = express.Router();
 
 // upvote/downvote to a post
 router.post(
-  "/posts/:postId/vote",
+  "/posts/:postId/votes",
   auth("user"),
   validateRequestData(PostVoteValidations.postVoteValidation),
   PostVoteController.votePost,

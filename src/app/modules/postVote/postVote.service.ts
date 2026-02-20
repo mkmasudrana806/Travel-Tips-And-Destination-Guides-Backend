@@ -9,10 +9,16 @@ import { NotificationService } from "../notifications/notifications.service";
 
 /**
  * ------------ vote to a post (upvote/downvote) -----------------
+ * Actions: upvote/downvote a post, remove existing vote, update existing vote
+ * Rules:
  * one person can only one vote. existing vote update. new vote created
+ * case 1: existing upvote and new upvote -> remove existing upvote or vice versa
+ * case 2: existing upvote and new downvote -> update existing vote to downvote or vice versa
+ * case 3: no existing vote and new upvote/downvote -> create new vote
+ * case 4: if upvote, create notification to post author
  *
- * @param post post to vote (up/down)
  * @param user who want to vote
+ * @param post post to vote (up/down)
  * @param newVoteType vote type (upvote/downvote)
  * @returns a message of new/existing vote
  */
@@ -22,6 +28,12 @@ const toggleVote = async (
   post: string,
   newVoteType: VoteType,
 ) => {
+  // returned data
+  let voteState = {
+    message: "",
+    voteType: newVoteType,
+  };
+
   const existingPost = await Post.findById(post);
   if (!existingPost) {
     throw new AppError(httpStatus.NOT_FOUND, "Post not found!");
@@ -52,6 +64,8 @@ const toggleVote = async (
           { $inc: updateField },
           { new: true, session },
         );
+
+        voteState.message = "Vote removed";
       } else {
         // case 2: user switch upvote -> downvote or vice versa
         // so new type assign to existing type
@@ -69,6 +83,8 @@ const toggleVote = async (
           { $inc: updateFields },
           { new: true, session },
         );
+
+        voteState.message = "Vote updated";
       }
 
       // create notification if upvote
@@ -105,8 +121,12 @@ const toggleVote = async (
         });
       }
     }
+
+    voteState.message = voteState.message || "Vote added";
     // commit the transaction
     await session.commitTransaction();
+    await session.endSession();
+    return voteState;
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
