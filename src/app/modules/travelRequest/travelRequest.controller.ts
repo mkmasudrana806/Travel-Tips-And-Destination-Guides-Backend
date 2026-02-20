@@ -27,9 +27,11 @@ const createTravelRequest = asyncHanlder(async (req, res) => {
 const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const planId = req.params.planId;
+  const query = req.query;
   const result = await TravelRequestService.getAllRequestsForPlan(
     planId,
     userId,
+    query,
   );
 
   sendResponse(res, {

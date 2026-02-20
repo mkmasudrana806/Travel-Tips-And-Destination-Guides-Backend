@@ -66,7 +66,15 @@ const createTravelRequest = async (
  * @param planId travel plan id to get all its request
  * @param userId the owner of that travel plan
  */
-const getAllRequestsForPlan = async (planId: string, userId: string) => {
+const getAllRequestsForPlan = async (
+  planId: string,
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const page = parseInt(query.page as string) || 1;
+  const limit = parseInt(query.limit as string) || 10;
+  const skip = (page - 1) * limit;
+
   const plan = await TravelPlan.findById(planId);
   if (!plan) {
     throw new AppError(httpStatus.NOT_FOUND, "Travel plan not found");
@@ -79,7 +87,9 @@ const getAllRequestsForPlan = async (planId: string, userId: string) => {
     travelPlan: planId,
   })
     .populate("requester", "name profilePicture")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
   return requests;
 };
