@@ -3,6 +3,7 @@ import auth from "../../middlewares/auth";
 import { TravelPlanValidation } from "./travelPlan.validation";
 import { TravelPlanController } from "./travelPlan.controller";
 import validateRequestData from "../../middlewares/validateRequest";
+import { PlanRequestRoutes } from "../travelRequest/travelRequest.route";
 const router = express.Router();
 
 // create a travel plan
@@ -30,8 +31,10 @@ router.patch(
   TravelPlanController.updateTravelPlan,
 );
 
-
 // delete a travel plan
 router.delete("/:planId", auth("user"), TravelPlanController.deleteTravelPlan);
+
+// --------- travel request nested routes ------------
+router.use("/:planId/requests", PlanRequestRoutes);
 
 export const TravelPlanRoutes = router;

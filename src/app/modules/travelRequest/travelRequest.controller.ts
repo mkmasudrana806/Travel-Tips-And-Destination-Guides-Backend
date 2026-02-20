@@ -5,9 +5,10 @@ import { TravelRequestService } from "./travelRequest.service";
 
 // ---------------- create a travel request ---------------
 const createTravelRequest = asyncHanlder(async (req, res) => {
+  const travelPlanId = req.params.planId;
   const requesterId = req.user.userId;
-  const travelPlanId = req.body.planId;
   const requestNote = req.body.requestNote;
+  console.log(requesterId, travelPlanId, requestNote);
   const result = await TravelRequestService.createTravelRequest(
     travelPlanId,
     requesterId,

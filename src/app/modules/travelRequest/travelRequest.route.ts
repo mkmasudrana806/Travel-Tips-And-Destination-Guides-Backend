@@ -4,18 +4,20 @@ import validateRequestData from "../../middlewares/validateRequest";
 import { TravelRequestController } from "./travelRequest.controller";
 import { TravelRequestValidation } from "./travelRequest.validation";
 const router = express.Router();
+const routerPlan = express.Router({ mergeParams: true });
 
+// routerPlan = "/travel-plans/:planId/requests"
 // create a travel request
-router.post(
+routerPlan.post(
   "/",
   auth("user"),
   validateRequestData(TravelRequestValidation.createTravelRequest),
   TravelRequestController.createTravelRequest,
 );
 
-// get all request for a plan
-router.get(
-  "/plans/:planId/requests",
+// get all requests for a plan
+routerPlan.get(
+  "/",
   auth("user"),
   TravelRequestController.getAllRequestsForPlan,
 );
@@ -35,4 +37,8 @@ router.get(
   TravelRequestController.getTravelRequestsForAnUser,
 );
 
+// route for plan request
 export const TravelRequestRoutes = router;
+
+// nested routes for travel plan
+export const PlanRequestRoutes = routerPlan;
