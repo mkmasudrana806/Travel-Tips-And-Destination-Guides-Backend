@@ -31,6 +31,7 @@ const savePost = async (userId: string, postId: string) => {
 
 /**
  *  ------------ delete a saved travel post ------------
+ *
  * @param userId who want to delete saved post
  * @param postId post need to be unsaved/deleted
  * @returns true
@@ -51,11 +52,16 @@ const deleteSavedPost = async (userId: string, postId: string) => {
  * @param query limit and page
  * @returns all saved post based on query
  */
-const getAllSavedPosts = async (userId: string, query: TSavedPostQuery) => {
-  const { limit = 10, page = 1 } = query; // by default limit 10
+const getAllSavedPosts = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const page = parseInt(query.page as string) || 1;
+  const limit = parseInt(query.limit as string) || 10;
+
   const skip = (page - 1) * limit;
 
-  const result = await SavedPost.find({ user: userId })
+  const data = await SavedPost.find({ user: userId })
     .sort({ createdAt: 1 })
     .skip(skip)
     .limit(limit)
@@ -68,7 +74,7 @@ const getAllSavedPosts = async (userId: string, query: TSavedPostQuery) => {
     });
   const total = await SavedPost.countDocuments({ user: userId });
   const meta = { total, page, limit };
-  return { result, meta };
+  return { data, meta };
 };
 
 export const SavedPostService = {

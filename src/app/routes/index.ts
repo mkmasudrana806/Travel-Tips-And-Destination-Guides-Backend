@@ -42,7 +42,7 @@ router.use("/", PostVoteRoutes);
 router.use("/users", UserFollowRoutes);
 
 // saved travel post
-router.use("/saved-post", SavedPostRoutes);
+router.use("/saved-posts", SavedPostRoutes);
 
 // travel plans
 router.use("/travel-plans", TravelPlanRoutes);

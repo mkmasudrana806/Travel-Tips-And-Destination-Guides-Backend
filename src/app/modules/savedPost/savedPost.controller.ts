@@ -35,19 +35,18 @@ const deleteSavedPost = asyncHanlder(async (req, res) => {
 // -------------- get all saved posts ---------------
 const getAllSavedPosts = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
-  const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 10;
-  
-  const result = await SavedPostService.getAllSavedPosts(userId, {
-    page,
-    limit,
-  });
+
+  const { data, meta } = await SavedPostService.getAllSavedPosts(
+    userId,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "All post retrived successfull",
-    data: result,
+    data: data,
+    meta: data,
   });
 });
 
