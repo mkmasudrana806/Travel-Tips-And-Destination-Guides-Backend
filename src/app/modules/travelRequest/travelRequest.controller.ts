@@ -42,21 +42,21 @@ const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
   });
 });
 
-// ------------- accept/reject a travel partner request -------------------
-const acceptRejectTravelRequest = asyncHanlder(async (req, res) => {
+// ------------- update partner's request (accepted/rejected) -------------------
+const updateTravelRequestStatus = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const requestId = req.params.requestId;
-  const data = req.body;
-  const result = await TravelRequestService.acceptRejectTravelRequest(
+  const payload = req.body;
+  const result = await TravelRequestService.updateTravelRequestStatus(
     userId,
     requestId,
-    data,
+    payload,
   );
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: `Partner request is ${data.status}`,
+    message: `Partner request is ${result.status}`,
     data: result,
   });
 });
@@ -77,6 +77,6 @@ const getTravelRequestsForAnUser = asyncHanlder(async (req, res) => {
 export const TravelRequestController = {
   createTravelRequest,
   getAllRequestsForPlan,
-  acceptRejectTravelRequest,
+  updateTravelRequestStatus,
   getTravelRequestsForAnUser,
 };

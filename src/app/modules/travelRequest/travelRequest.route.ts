@@ -22,12 +22,12 @@ routerPlan.get(
   TravelRequestController.getAllRequestsForPlan,
 );
 
-// accept or reject a partner request
+// update a travel request (accepted/rejected)
 router.patch(
-  "/:requestId/accept-reject",
+  "/:requestId",
   auth("user"),
   validateRequestData(TravelRequestValidation.acceptRejectPartnerRequest),
-  TravelRequestController.acceptRejectTravelRequest,
+  TravelRequestController.updateTravelRequestStatus,
 );
 
 // get my all requested travel plan

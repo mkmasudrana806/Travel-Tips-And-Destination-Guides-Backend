@@ -95,14 +95,14 @@ const getAllRequestsForPlan = async (
 };
 
 /**
- * --------- aceept/reject travel request ------------
+ * --------- update partner's travel request (aceept/reject) ------------
  *
- * @param requestId which request to be accepted
+ * @param requestId which request to be accepted/rejected
  * @param authorId author who want to accept a request
  * @param payload new status
  * @returns updated travelRequest data
  */
-const acceptRejectTravelRequest = async (
+const updateTravelRequestStatus = async (
   authorId: string,
   requestId: string,
   payload: Partial<TTravelRequest>,
@@ -190,6 +190,6 @@ const getTravelRequestsForAnUser = async (requesterId: string) => {
 export const TravelRequestService = {
   createTravelRequest,
   getAllRequestsForPlan,
-  acceptRejectTravelRequest,
+  updateTravelRequestStatus,
   getTravelRequestsForAnUser,
 };
