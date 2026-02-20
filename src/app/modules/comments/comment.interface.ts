@@ -5,6 +5,9 @@ export type TComment = {
   post: Types.ObjectId;
   user: Types.ObjectId;
   comment: string;
+  parentComment?: Types.ObjectId | null;
+  depth: number;
+  replyCount: number;
   createdAt: Date;
   updatedAt: Date;
 };

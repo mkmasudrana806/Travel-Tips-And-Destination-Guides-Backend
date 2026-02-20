@@ -18,10 +18,24 @@ const commentSchema = new Schema<TComment>(
       type: String,
       required: true,
     },
+    parentComment: {
+      type: Schema.Types.ObjectId,
+      ref: "Comment",
+      default: null,
+    },
+    depth: {
+      type: Number,
+      default: 0,
+    },
+    replyCount: {
+      type: Number,
+      default: 0,
+    },
   },
+
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Comment = model<TComment>("Comment", commentSchema);
