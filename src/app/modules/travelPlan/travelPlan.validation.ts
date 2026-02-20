@@ -8,6 +8,7 @@ const travelPlanBodySchema = z.object({
   minBudget: z.number(),
   maxBudget: z.number(),
   contact: z.string(),
+  status: z.enum(["closed"]), // only open -> closed allowed for update
   note: z.string().max(200, "Maximum 200 characters are allowed"),
 });
 
@@ -18,7 +19,7 @@ const travelPlanCreate = z.object({
 
 // update travel
 const updateTravelPlan = z.object({
-  body: travelPlanBodySchema.partial(),
+  body: travelPlanBodySchema.partial().strict(),
 });
 
 export const TravelPlanValidation = {

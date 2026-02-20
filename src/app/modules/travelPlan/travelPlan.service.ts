@@ -18,7 +18,7 @@ const createTravelPlan = async (
 ) => {
   payload.user = new mongoose.Types.ObjectId(userId);
 
-  // travel days calculate and validate
+  // travel days calculate and validated based on startDate and endDate
   payload.travelDays = getTravelDays(payload.startDate, payload.endDate);
 
   // budget validation
@@ -44,11 +44,35 @@ const createTravelPlan = async (
  * @returns single plan data
  */
 const getSingleTravelPlan = async (planId: string) => {
-  const result = await TravelPlan.findOne({ _id: planId }).populate(
+  const result = await TravelPlan.findById(planId).populate(
     "user",
     "name profilePicture",
   );
   return result;
+};
+
+/**
+ * ----------- get all travel plans (public route) --------------
+ *
+ * dynamically return all travel plans based on user queries
+ *
+ * @param query different user queries params
+ * @return return filtered all travel plans
+ */
+const getAllTravelPlansFiltered = async (query: Record<string, unknown>) => {
+  const filter = buildTravelPlanFilter(query);
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const result = await TravelPlan.find(filter)
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await TravelPlan.find(filter).countDocuments();
+  const meta = { page, limit, total };
+  return { meta, result };
 };
 
 /**
@@ -81,7 +105,7 @@ const updateTravelPlan = async (
   payload: Partial<TTravelPlan>,
 ) => {
   // update travels days
-  if (payload.startDate) {
+  if (payload.startDate && payload.endDate) {
     payload.travelDays = getTravelDays(payload.startDate, payload.endDate);
   }
 
@@ -99,7 +123,7 @@ const updateTravelPlan = async (
 
   // only open travel plan should update
   const result = await TravelPlan.findOneAndUpdate(
-    { _id: planId, user: userId },
+    { _id: planId, user: userId, status: "open" },
     payload,
     {
       new: true,
@@ -107,24 +131,11 @@ const updateTravelPlan = async (
     },
   );
 
-  return result;
-};
-
-/**
- * ------------- close a travel plan ----------------
- *
- * @param userId user want to close the plan
- * @param planId plan id which to be closed
- * @returns closed plan data
- */
-const closeTravelPlan = async (userId: string, planId: string) => {
-  const result = await TravelPlan.findOneAndUpdate(
-    { _id: planId, user: userId, status: "open" },
-    { status: "close" },
-  );
-
   if (!result) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Travel plan is already closed");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Travel plan not found or already closed!",
+    );
   }
   return result;
 };
@@ -144,36 +155,11 @@ const deleteTravelPlan = async (userId: string, planId: string) => {
   return result;
 };
 
-//
-/**
- * ----------- get all travel plans (public route) --------------
- * dynamically return all travel plans based on user queries
- *
- * @param query different user queries params
- * @return return filtered all travel plans
- */
-const getAllTravelPlansFiltered = async (query: Record<string, unknown>) => {
-  const filter = buildTravelPlanFilter(query);
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 10;
-  const skip = (page - 1) * limit;
-
-  const result = await TravelPlan.find(filter)
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit);
-
-  const total = await TravelPlan.find(filter).countDocuments();
-  const meta = { page, limit, total };
-  return { meta, result };
-};
-
 export const TravelPlanService = {
   createTravelPlan,
+  getAllTravelPlansFiltered,
   getSingleTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
-  closeTravelPlan,
   deleteTravelPlan,
-  getAllTravelPlansFiltered,
 };

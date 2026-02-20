@@ -59,19 +59,6 @@ const updateTravelPlan = asyncHanlder(async (req, res) => {
   });
 });
 
-// ---------------- clsoe my travel plan ---------------
-const closeTravelPlan = asyncHanlder(async (req, res) => {
-  const userId = req.user.userId;
-  const planId = req.params.planId;
-  const result = await TravelPlanService.closeTravelPlan(userId, planId);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.CREATED,
-    message: "travel plan closed sucessfull",
-    data: result,
-  });
-});
 
 // ---------------- delete my travel plan ---------------
 const deleteTravelPlan = asyncHanlder(async (req, res) => {
@@ -107,7 +94,6 @@ export const TravelPlanController = {
   getSingleTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
-  closeTravelPlan,
   deleteTravelPlan,
   getAllTravelPlansFiltered,
 };

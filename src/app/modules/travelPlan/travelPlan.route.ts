@@ -13,11 +13,14 @@ router.post(
   TravelPlanController.createTravelPlan,
 );
 
-// get single travel plan
-router.get("/details/:planId", TravelPlanController.getSingleTravelPlan);
+// all travel plans
+router.get("/", TravelPlanController.getAllTravelPlansFiltered);
 
 // get my all travel plans
 router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
+
+// get single travel plan
+router.get("/:planId", TravelPlanController.getSingleTravelPlan);
 
 // update travel plan
 router.patch(
@@ -27,17 +30,8 @@ router.patch(
   TravelPlanController.updateTravelPlan,
 );
 
-// close a travel paln
-router.patch(
-  "/:planId/close",
-  auth("user"),
-  TravelPlanController.closeTravelPlan,
-);
 
 // delete a travel plan
 router.delete("/:planId", auth("user"), TravelPlanController.deleteTravelPlan);
-
-// all travel plans
-router.get("/", TravelPlanController.getAllTravelPlansFiltered);
 
 export const TravelPlanRoutes = router;

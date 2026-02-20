@@ -35,7 +35,7 @@ const travelPlanSchema = new Schema<TTravelPlan>(
     },
     status: {
       type: String,
-      enum: ["open", "close"],
+      enum: ["open", "closed"],
       default: "open",
     },
   },
