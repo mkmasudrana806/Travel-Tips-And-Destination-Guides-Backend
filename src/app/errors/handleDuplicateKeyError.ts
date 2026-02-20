@@ -10,8 +10,8 @@ const handleDuplicateKeyError = (err: any): TGenericErrorResponse => {
   const extracted_message = match && match[1];
   let errorSources: TErrorSources = [
     {
-      path: "",
-      message: `${extracted_message} is already exists`,
+      path: err?.name || "DuplicateKeyError",
+      message: `${extracted_message || "Data"} is already exists`,
     },
   ];
 
