@@ -4,8 +4,12 @@ import UserFollow from "./userFollow.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
-import { getFollowSuggestions, getPublicSuggestions } from "./userFollow.utils";
+import {
+  getPersonalizedProfileSuggestions,
+  getPublicProfileSuggestions,
+} from "./userFollow.utils";
 import { NotificationService } from "../notifications/notifications.service";
+import { query } from "express";
 
 /**
  * ------------- follow/unfollow an user ----------------
@@ -225,38 +229,63 @@ const getMutualFriends = async (viewerId: string, targetUserId: string) => {
 };
 
 /**
- * ------------ get follow suggestion with fallback for new user ------------
+ * ------------ get profile suggestion with fallback (new user) ------------
  * it handle three cases: non logged-in, logged in but new user and old user who follow people.
  * case 1: if user is not logged in, then suggest public profile based on followers counts
  * case 2: new user and logged in, show public profile who's followers counts and newly user
  * case 3: old user, show recommended users based on mutual friends
  *
- * @param userId user to show follow recommendation
+ * @param userId user to show profile recommendations
  * @param page by default 1
  * @param limit by default 10
- * @returns lists of recommended profile
+ * @returns lists of recommended users profile
  */
 
-const getFollowSuggestionsWithFallback = async (
-  userId: any,
-  page = 1,
-  limit = 10,
+const getProfileSuggestions = async (
+  userId: string,
+  query: Record<string, string>,
 ) => {
+  let { page = 1, limit = 10 } = query;
+  page = Number(page);
+  limit = Number(limit);
+
   // public is not logged in, blocked, token not valid. means guest user
   if (!userId) {
-    return getPublicSuggestions(page, limit);
+    return getPublicProfileSuggestions(page, limit);
   }
 
   // personalized suggestion when user logged in.
-  const suggestions = await getFollowSuggestions(userId, page, limit);
-  if (suggestions.data.length > 0) {
+  const suggestions = await getPersonalizedProfileSuggestions(
+    userId,
+    page,
+    limit,
+  );
+
+  // for the logged in user. i will apply 3 cases logic to show profile suggestion.
+  // as personalized suggestion is zero. so show public profile suggestion.
+  if (suggestions.data.length === 0) {
+    return getPublicProfileSuggestions(page, limit);
+  }
+  // as personalized not zero but less than limit. so return personalized + public profile suggestion as fallback to fill the gap.
+  else if (suggestions.data.length > 0 && suggestions.data.length < limit) {
+    const remainingLimit = limit - suggestions.data.length;
+    const publicSuggestions = await getPublicProfileSuggestions(
+      page,
+      remainingLimit,
+    );
+    return {
+      meta: {
+        total: suggestions.meta.total + publicSuggestions.meta.total,
+        page,
+        limit,
+      },
+      data: [...suggestions.data, ...publicSuggestions.data],
+    };
+  }
+  // as personalized not zero and more than limit. so return personalized profile suggestion
+  else {
     return suggestions;
   }
-
-  console.log("suggestion: ", suggestions);
-
-  // if personalized suggestion not found, then return some users as fallback
-  return getPublicSuggestions(page, limit);
 };
 
 export const UserFollowService = {
@@ -264,5 +293,5 @@ export const UserFollowService = {
   getFollowers,
   getFollowings,
   getMutualFriends,
-  getFollowSuggestionsWithFallback,
+  getProfileSuggestions,
 };

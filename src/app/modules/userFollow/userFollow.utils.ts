@@ -13,7 +13,7 @@ import { User } from "../user/user.model";
  * @param limit limits to 10 by default
  * @returns lists of users profile
  */
-export const getFollowSuggestions = async (
+export const getPersonalizedProfileSuggestions = async (
   userId: string,
   page = 1,
   limit = 10,
@@ -142,7 +142,6 @@ export const getFollowSuggestions = async (
   };
 };
 
-
 /**
  * ------------ profile suggestion for public user -----------
  * user is not logged in. so no personalized suggestion
@@ -151,7 +150,7 @@ export const getFollowSuggestions = async (
  * @param limit by default 10
  * @returns lists of profile based on followers count
  */
-export const getPublicSuggestions = async (page = 1, limit = 10) => {
+export const getPublicProfileSuggestions = async (page = 1, limit = 10) => {
   const skip = (page - 1) * limit;
 
   const users = await User.find({})

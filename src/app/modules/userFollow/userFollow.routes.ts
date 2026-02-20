@@ -28,7 +28,7 @@ router.get(
 router.get(
   "/profile/suggestions",
   optionalAuth(),
-  UserFollowController.getFollowSuggestionsWithFallback,
+  UserFollowController.getProfileSuggestions,
 );
 
 export const UserFollowRoutes = router;
