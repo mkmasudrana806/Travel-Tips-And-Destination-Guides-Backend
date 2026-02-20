@@ -21,7 +21,7 @@ const createTravelRequest = async (
   requesterId: string,
   payload: string,
 ) => {
-  const plan = await TravelPlan.findById(planId).populate("user", "name");
+  const plan = await TravelPlan.findById(planId);
 
   if (!plan) {
     throw new AppError(httpStatus.NOT_FOUND, "Travel plan not found");
