@@ -9,20 +9,20 @@ export type NotificationType =
   | "post_upvote"
   | "new_follower";
 
+// resource name I mean module name
+export type TResourceType =
+  | "User"
+  | "Post"
+  | "Comment"
+  | "TravelPlan"
+  | "TravelRequest";
+
 // notification
 export type TNotification = {
   recipient: Types.ObjectId;
   sender: Types.ObjectId;
   type: NotificationType;
-  resourceType: string;
+  resourceType: TResourceType;
   resourceId: Types.ObjectId;
   isRead: boolean;
-};
-
-export type CreateNotificationPayload = {
-  recipient: Types.ObjectId;
-  sender: Types.ObjectId;
-  type: NotificationType;
-  resourceType: string;
-  resourceId: Types.ObjectId;
 };

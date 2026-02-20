@@ -89,7 +89,7 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
         recipient: new mongoose.Types.ObjectId(targetUser),
         sender: new mongoose.Types.ObjectId(currentUser),
         type: "new_follower",
-        resourceType: "Post",
+        resourceType: "User",
         resourceId: new mongoose.Types.ObjectId(currentUser),
       });
     }

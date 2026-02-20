@@ -29,6 +29,7 @@ const notificationSchema = new Schema<TNotification>(
     },
     resourceType: {
       type: String,
+      enum: ["User", "Post", "Comment", "TravelPlan", "TravelRequest"],
       required: true,
     },
     resourceId: {

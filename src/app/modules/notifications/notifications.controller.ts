@@ -7,7 +7,7 @@ import { NotificationService } from "./notifications.service";
 const getMyNotifications = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const query = req.query;
-  const { result, meta } = await NotificationService.getMyNotifications(
+  const { data, meta } = await NotificationService.getMyNotifications(
     userId,
     query,
   );
@@ -16,7 +16,7 @@ const getMyNotifications = asyncHanlder(async (req, res) => {
     statusCode: httpStatus.OK,
     success: true,
     message: "All notifications retrived successfully",
-    data: result,
+    data: data,
     meta: meta,
   });
 });

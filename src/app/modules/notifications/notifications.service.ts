@@ -1,4 +1,4 @@
-import { CreateNotificationPayload } from "./notifications.interface";
+import { TNotification } from "./notifications.interface";
 import Notification from "./notifications.model";
 
 /**
@@ -7,7 +7,7 @@ import Notification from "./notifications.model";
  * @param payload payload contain notification meta data
  * @returns newly created notification data
  */
-const createNotification = async (payload: CreateNotificationPayload) => {
+const createNotification = async (payload: Omit<TNotification, "isRead">) => {
   const result = Notification.create({
     recipient: payload.recipient,
     sender: payload.sender,
@@ -48,7 +48,7 @@ const getMyNotifications = async (
       limit,
       total: limit,
     },
-    result: notifications,
+    data: notifications,
   };
 };
 
@@ -64,6 +64,7 @@ const markAsRead = async (notificationId: string, userId: string) => {
     {
       _id: notificationId,
       recipient: userId,
+      isRead: false,
     },
     { isRead: true },
     { new: true },
