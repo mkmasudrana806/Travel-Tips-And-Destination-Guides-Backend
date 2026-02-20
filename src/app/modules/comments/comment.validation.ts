@@ -13,6 +13,10 @@ const createACommentSchema = z.object({
       required_error: "Comment is required",
       invalid_type_error: "Comment should be string",
     }),
+    parentComment: z
+      .string()
+      .optional()
+      .nullable(),
   }),
 });
 

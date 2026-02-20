@@ -2,30 +2,26 @@ import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
 import { TComment } from "./comment.interface";
 import { Comment } from "./comment.model";
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose from "mongoose";
 
 import { NotificationService } from "../notifications/notifications.service";
 import Post from "../post/post.model";
-import { TJwtPayload } from "../../interface/JwtPayload";
 
 // -------------- create a comment into db --------------
-const createACommentIntoDB = async (
-  userData: TJwtPayload,
-  payload: TComment,
-) => {
+const createACommentIntoDB = async (userId: string, payload: TComment) => {
+  // check post exists or not
   const post = await Post.findById(payload.post).populate("author", "_id");
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
   }
-
-  payload.user = new mongoose.Types.ObjectId(userData.userId);
+  payload.user = new mongoose.Types.ObjectId(userId);
   // TODO: check postId, if post exists
   const result = await Comment.create(payload);
 
   // create notification on comment
   await NotificationService.createNotification({
     recipient: post.author._id,
-    sender: new mongoose.Types.ObjectId(userData.userId),
+    sender: new mongoose.Types.ObjectId(userId),
     type: "post_comment",
     resourceType: "Post",
     resourceId: payload.post,

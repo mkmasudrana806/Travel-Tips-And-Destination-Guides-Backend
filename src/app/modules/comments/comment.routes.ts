@@ -7,10 +7,10 @@ const router = express.Router();
 
 // create a Comment
 router.post(
-  "/create-comment",
+  "/",
   auth("user"),
   validateRequestData(CommentValidations.createACommentSchema),
-  CommentControllers.createAComment
+  CommentControllers.createAComment,
 );
 
 // get all comments
@@ -30,7 +30,7 @@ router.patch(
   "/:id",
   // auth("user"),
   validateRequestData(CommentValidations.updateACommentSchema),
-  CommentControllers.updateAComment
+  CommentControllers.updateAComment,
 );
 
 export const CommentRoutes = router;

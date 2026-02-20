@@ -5,7 +5,9 @@ import { CommentServices } from "./comment.service";
 
 // ------------------- create a comment -------------------
 const createAComment = asyncHanlder(async (req, res) => {
-  const result = await CommentServices.createACommentIntoDB(req.user, req.body);
+  const userId = req.user.userId;
+  const payload = req.body;
+  const result = await CommentServices.createACommentIntoDB(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -42,7 +44,7 @@ const getAllCommentsForPosts = asyncHanlder(async (req, res) => {
 // --------------- get all comments of a post -------------------
 const getAllCommentsOfPost = asyncHanlder(async (req, res) => {
   const result = await CommentServices.getAllCommentsOfPostFromDB(
-    req.params?.postId
+    req.params?.postId,
   );
 
   sendResponse(res, {
