@@ -19,8 +19,8 @@ router.get("/:userId/followings", UserFollowController.getFollowings);
 
 // get mutual friends between two user
 router.get(
-  "/:targetUserId/mutual-friends",
-  auth("user"),
+  "/:targetUserId/mutual",
+  optionalAuth(),
   UserFollowController.getMutualFriends,
 );
 

@@ -159,12 +159,17 @@ const getFollowings = async (
  * ------------ get mutual connection between two user -----------
  * user A: who views user B profile. now show mutual friends between them.
  * means both A and B followed by common users.
+ * current user: who view target user profile. target user: whoes profile is being viewed
  *
- * @param viewerId who views a user profile
- * @param targetUserId the id of the user, who profiled will be viewed
+ * @param viewerId who views an user profile (optional, if not logged in, then show empty list as mutual friend)
+ * @param targetUserId whoes profile is being viewed
  * @returns the mutal friends lists and counts
  */
 const getMutualFriends = async (viewerId: string, targetUserId: string) => {
+  // if viewer is not logged in or viewer is the target user himself.
+  // return empty list as mutual friend because mutual friend only exist between two different user.
+  if (!viewerId || viewerId === targetUserId) return [];
+
   const viewerObjectId = new Types.ObjectId(viewerId);
   const targetObjectId = new Types.ObjectId(targetUserId);
 
@@ -213,7 +218,7 @@ const getMutualFriends = async (viewerId: string, targetUserId: string) => {
         profilePicture: "$userProfile.profilePicture",
       },
     },
-    { $limit: 5 },
+    { $limit: 50 },
   ]);
 
   return mutuals;
