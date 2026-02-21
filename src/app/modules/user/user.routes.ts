@@ -3,6 +3,7 @@ import { UserControllers } from "./user.controller";
 import validateRequestData from "../../middlewares/validateRequest";
 import { UserValidations } from "./user.validation";
 import auth from "../../middlewares/auth";
+import optionalAuth from "../../middlewares/optionalAuth";
 const router = express.Router();
 
 // create an user
@@ -19,7 +20,7 @@ router.get("/", auth("admin"), UserControllers.getAllUsers);
 router.get("/me", auth("user"), UserControllers.getMe);
 
 // get a user profile
-router.get("/:userId", UserControllers.getSingleUser);
+router.get("/:userId", optionalAuth(), UserControllers.getSingleUser);
 
 // delete an user account
 router.delete("/:userId", auth("admin"), UserControllers.deleteUser);

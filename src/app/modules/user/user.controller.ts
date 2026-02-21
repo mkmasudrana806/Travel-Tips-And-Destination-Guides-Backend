@@ -58,7 +58,9 @@ const getMe = asyncHanlder(async (req, res) => {
 // ------------------- get a user profile -------------------
 const getSingleUser = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
-  const result = await UserServices.getSingleUser(userId);
+  const viewerId = req.user.userId;
+
+  const result = await UserServices.getSingleUser(userId, viewerId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

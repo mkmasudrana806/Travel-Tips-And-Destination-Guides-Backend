@@ -1,4 +1,4 @@
-import {  searchableFields } from "./user.constant";
+import { searchableFields } from "./user.constant";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 import AppError from "../../utils/AppError";
@@ -7,6 +7,7 @@ import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { TfileUpload } from "../../interface/fileUploadType";
 import { TJwtPayload } from "../../interface/JwtPayload";
 import Post from "../post/post.model";
+import UserFollow from "../userFollow/userFollow.model";
 
 /**
  * ----------------------- Create an user----------------------
@@ -31,10 +32,7 @@ const createAnUser = async (payload: TUser) => {
  * @param file image file to upload
  * @returns return newly created user
  */
-const updateProfilePicture = async (
-  userId: string,
-  file: TfileUpload,
-) => {
+const updateProfilePicture = async (userId: string, file: TfileUpload) => {
   // update to database
   const result = await User.findByIdAndUpdate(userId, {
     profilePicture: file.path,
@@ -79,16 +77,36 @@ const getMe = async (user: TJwtPayload) => {
 /**
  * ----------------- get single user -----------------
  *
- * @param id mongoose id of the user
- * return a user data
+ * @param userId who's profile to be viewed
+ * @param viewerId who is veiwing user profile (logged-in or not)
+ * @return a user data with info
  */
-const getSingleUser = async (userId: string) => {
-  const result = await User.findOne({
-    _id: userId,
-    isDeleted: false,
-    status: "active",
-  });
-  return result;
+const getSingleUser = async (userId: string, viewerId: string | null) => {
+  // determine ownership
+  let isSelf = userId === viewerId;
+
+  // paralelly fetching both info conditionally
+  const [user, follows] = await Promise.all([
+    User.findOne({
+      _id: userId,
+      isDeleted: false,
+      status: "active",
+    })
+      .select("-password")
+      .lean(),
+
+    viewerId && !isSelf
+      ? await UserFollow.exists({
+          follower: viewerId,
+          following: userId,
+        })
+      : null,
+  ]);
+
+  if (!user) throw new AppError(httpStatus.NOT_FOUND, "user not found");
+
+  // return profile data with viewer context
+  return { ...user, isFollowing: !!follows, isSelf };
 };
 
 /**
@@ -171,10 +189,7 @@ const changeUserStatus = async (
  * @note admin can not change own role. admin can change only user role
  * @returns return updated user data
  */
-const changeUserRole = async (
-  userId: string,
-  payload: { role: string },
-) => {
+const changeUserRole = async (userId: string, payload: { role: string }) => {
   // check if user exists, not deleted. find user that has role as user
   const user = await User.findById(userId);
   if (!user) {
@@ -248,7 +263,6 @@ const getVerified = async (
   const result = await User.findByIdAndUpdate(userId, payload);
   return result;
 };
-
 
 export const UserServices = {
   createAnUser,
