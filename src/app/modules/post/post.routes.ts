@@ -3,6 +3,7 @@ import auth from "../../middlewares/auth";
 import { PostControllers } from "./post.controller";
 import { PostValidtions } from "./post.validation";
 import validateRequestData from "../../middlewares/validateRequest";
+import optionalAuth from "../../middlewares/optionalAuth";
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.get("/", PostControllers.getAllTravelPosts);
 router.get("/me", auth("user"), PostControllers.getMyPosts);
 
 // get single post
-router.get("/:postId", PostControllers.getSinglePost);
+router.get("/:postId", optionalAuth(), PostControllers.getSinglePost);
 
 // update a post
 router.patch(

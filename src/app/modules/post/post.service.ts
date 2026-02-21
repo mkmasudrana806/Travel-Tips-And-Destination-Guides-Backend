@@ -8,6 +8,7 @@ import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { Media } from "../media/media.model";
 import * as cheerio from "cheerio";
 import { TJwtPayload } from "../../interface/JwtPayload";
+import PostVote from "../postVote/postVote.model";
 
 /**
  * ------------- Create a new post ----------------
@@ -167,15 +168,28 @@ const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
  * --------------- Get single post -------------
  *
  * @param postId post id to get details
- * @returns return single post
+ * @param viewerId who is viewing the post details
+ * @returns post data with viewer states
  */
-const getSinglePost = async (postId: string) => {
-  const post = await Post.findOne({ _id: postId, isDeleted: false }).populate({
-    path: "author",
-    select: "_id name email isVerified profilePicture premiumAccess",
-  });
+const getSinglePost = async (postId: string, viewerId: string) => {
+  const [post, postVote] = await Promise.all([
+    Post.findOne({ _id: postId, isDeleted: false })
+      .populate({
+        path: "author",
+        select: "_id name isVerified profilePicture",
+      })
+      .lean(),
+    viewerId ? PostVote.findOne({ post: postId, user: viewerId }).lean() : null,
+  ]);
+
   if (!post) throw new Error("Post not found");
-  return post;
+
+  // is owner
+  const isOwner = viewerId === post.author.toString();
+  
+  // isVoted
+  const isVoted = { status: !!postVote, voteType: postVote?.type || null };
+  return { ...post, isVoted, isOwner };
 };
 
 /**

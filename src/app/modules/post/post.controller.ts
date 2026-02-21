@@ -49,7 +49,8 @@ const getMyPosts = asyncHanlder(async (req, res) => {
 // -------------- get single post ----------------
 const getSinglePost = asyncHanlder(async (req, res) => {
   const postId = req.params.postId;
-  const result = await PostServices.getSinglePost(postId);
+  const viewerId = req.user.userId;
+  const result = await PostServices.getSinglePost(postId, viewerId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
