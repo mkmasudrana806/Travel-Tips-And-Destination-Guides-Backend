@@ -185,31 +185,38 @@ const getAllCommentsFromDB = async (
   };
 };
 
-// -------------- get all comments for all posts  --------------
-const getAllCommentsForPostsFromDB = async (postIds: string[]) => {
-  const objectIds = postIds.map((id) => new mongoose.Types.ObjectId(id));
-  const commentsCount = await Comment.aggregate([
-    {
-      $match: { post: { $in: objectIds } },
-    },
-    {
-      $group: {
-        _id: "$post",
-        count: { $sum: 1 },
-      },
-    },
-  ]);
+/**
+ * -------------- get all replies of a comment --------------
+ *
+ * @param parentCommentId comment id to retrieve all replies
+ * @param query page and limit
+ */
+const getRepliesOfComment = async (
+  parentCommentId: string,
+  query: Record<string, unknown>,
+) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
 
-  return commentsCount;
-};
+  const replies = await Comment.find({
+    parentComment: parentCommentId,
+  })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
-// -------------- get all comments of a post --------------
-const getAllCommentsOfPostFromDB = async (postId: string) => {
-  const result = await Comment.find({ post: postId }).populate({
-    path: "user",
-    select: "_id name email isVerified profilePicture premiumAccess",
+  const totalReplies = await Comment.countDocuments({
+    parentComment: parentCommentId,
   });
-  return result;
+  const hasNextPage = page * limit < totalReplies;
+
+  return {
+    replies,
+    page,
+    limit,
+    hasNextPage,
+  };
 };
 
 // -------------- delete a comment --------------
@@ -241,8 +248,7 @@ const updateACommentIntoDB = async (payload: Partial<TComment>) => {
 export const CommentServices = {
   createACommentIntoDB,
   getAllCommentsFromDB,
-  getAllCommentsForPostsFromDB,
-  getAllCommentsOfPostFromDB,
+  getRepliesOfComment,
   deleteACommentIntoDB,
   updateACommentIntoDB,
 };

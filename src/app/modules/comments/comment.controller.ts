@@ -31,28 +31,16 @@ const getAllComments = asyncHanlder(async (req, res) => {
   });
 });
 
-// --------------- get all comments counts for all posts -------------------
-const getAllCommentsForPosts = asyncHanlder(async (req, res) => {
-  const result = await CommentServices.getAllCommentsForPostsFromDB(req.body);
+// --------------- get replies of a comment -------------------
+const getRepliesOfComment = asyncHanlder(async (req, res) => {
+  const commentId = req.params.commentId;
+  const query = req.query;
+  const result = await CommentServices.getRepliesOfComment(commentId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Comments counts for posts retrieved successfull",
-    data: result,
-  });
-});
-
-// --------------- get all comments of a post -------------------
-const getAllCommentsOfPost = asyncHanlder(async (req, res) => {
-  const result = await CommentServices.getAllCommentsOfPostFromDB(
-    req.params?.postId,
-  );
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: "All Comments of a post retrieved successfull",
+    message: "Replies of a comment retrieved successfull",
     data: result,
   });
 });
@@ -90,8 +78,7 @@ const updateAComment = asyncHanlder(async (req, res) => {
 export const CommentControllers = {
   createAComment,
   getAllComments,
-  getAllCommentsForPosts,
-  getAllCommentsOfPost,
+  getRepliesOfComment,
   deleteAComment,
   updateAComment,
 };

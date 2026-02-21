@@ -13,18 +13,15 @@ router.post(
   CommentControllers.createAComment,
 );
 
-// get all comments (paginated)
+// get all comments (paginated) only root comments with depth 1 replies (latest 3 replies)
 router.get(
   "/",
   validateRequestData(CommentValidations.getCommentsOfPost),
   CommentControllers.getAllComments,
 );
 
-// get all comments counts for all posts
-router.post("/counts", CommentControllers.getAllCommentsForPosts);
-
-// get all comments of a post
-router.get("/:postId", CommentControllers.getAllCommentsOfPost);
+// get replies of a comment
+router.get("/:commentId/replies", CommentControllers.getRepliesOfComment);
 
 // delete a comment
 router.delete("/:id", auth("user"), CommentControllers.deleteAComment);
