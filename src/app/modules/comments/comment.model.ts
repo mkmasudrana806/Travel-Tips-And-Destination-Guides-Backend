@@ -14,7 +14,7 @@ const commentSchema = new Schema<TComment>(
       ref: "Post",
       required: true,
     },
-    comment: {
+    content: {
       type: String,
       required: true,
     },

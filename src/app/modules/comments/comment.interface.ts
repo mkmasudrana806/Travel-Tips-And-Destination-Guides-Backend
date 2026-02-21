@@ -4,7 +4,7 @@ export type TComment = {
   _id: Types.ObjectId;
   post: Types.ObjectId;
   user: Types.ObjectId;
-  comment: string;
+  content: string;
   parentComment?: Types.ObjectId | null;
   depth: number;
   replyCount: number;

@@ -3,31 +3,89 @@ import AppError from "../../utils/AppError";
 import { TComment } from "./comment.interface";
 import { Comment } from "./comment.model";
 import mongoose from "mongoose";
-
 import { NotificationService } from "../notifications/notifications.service";
 import Post from "../post/post.model";
 
-// -------------- create a comment into db --------------
+/**
+ * -------------- create a comment into db --------------
+ *
+ * @param userId user who want to comment
+ * @param payload payload for comment
+ * @returns new comment data
+ */
 const createACommentIntoDB = async (userId: string, payload: TComment) => {
+  const { content, parentComment } = payload;
+
   // check post exists or not
   const post = await Post.findById(payload.post).populate("author", "_id");
   if (!post) {
     throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
   }
   payload.user = new mongoose.Types.ObjectId(userId);
-  // TODO: check postId, if post exists
-  const result = await Comment.create(payload);
 
-  // create notification on comment
-  await NotificationService.createNotification({
-    recipient: post.author._id,
-    sender: new mongoose.Types.ObjectId(userId),
-    type: "post_comment",
-    resourceType: "Post",
-    resourceId: payload.post,
-  });
+  // scalable way to comment
+  const MAX_DEPTH = 3; // maximum depth for replies
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  return result;
+  try {
+    let depth = 0;
+
+    // check if replying to a comment
+    if (parentComment) {
+      const parent = await Comment.findById(parentComment).session(session);
+
+      if (!parent) {
+        throw new Error("Parent comment not found");
+      }
+      if (parent.depth >= MAX_DEPTH) {
+        throw new Error("Maximum reply depth exceeded");
+      }
+
+      depth = parent.depth + 1;
+
+      // increment reply count atomically
+      await Comment.findByIdAndUpdate(
+        parentComment,
+        { $inc: { replyCount: 1 } },
+        { session },
+      );
+    }
+
+    const newComment = await Comment.create(
+      [
+        {
+          post: post,
+          user: userId,
+          content,
+          parentComment: parentComment || null,
+          depth,
+        },
+      ],
+      { session },
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    // create notification on comment
+    await NotificationService.createNotification({
+      recipient: post.author._id,
+      sender: new mongoose.Types.ObjectId(userId),
+      type: "post_comment",
+      resourceType: "Post",
+      resourceId: payload.post,
+    });
+
+    return newComment[0];
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Failed to create comment",
+    );
+  }
 };
 
 // -------------- get all comments   --------------
@@ -82,7 +140,7 @@ const deleteACommentIntoDB = async (user: string, commentId: string) => {
 const updateACommentIntoDB = async (payload: Partial<TComment>) => {
   const result = await Comment.findOneAndUpdate(
     { _id: payload?._id, post: payload?.post },
-    { comment: payload?.comment },
+    { comment: payload?.content },
     { new: true, runValidators: true },
   );
 

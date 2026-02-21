@@ -9,9 +9,9 @@ const createACommentSchema = z.object({
       .refine((value) => Types.ObjectId.isValid(value), {
         message: "Invalid postId, it should be mongoose _id",
       }),
-    comment: z.string({
-      required_error: "Comment is required",
-      invalid_type_error: "Comment should be string",
+    content: z.string({
+      required_error: "Content is required",
+      invalid_type_error: "Content should be string",
     }),
     parentComment: z
       .string()
