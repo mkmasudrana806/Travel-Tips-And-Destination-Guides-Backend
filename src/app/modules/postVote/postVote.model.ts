@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 import { TPostVote } from "./postVote.interface";
 
 // store upvote/downvote separately 

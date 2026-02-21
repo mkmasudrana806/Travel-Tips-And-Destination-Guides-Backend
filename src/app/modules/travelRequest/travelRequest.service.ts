@@ -4,8 +4,7 @@ import TravelPlan from "../travelPlan/travelPlan.model";
 import TravelRequest from "./travelRequest.model";
 import { TTravelRequest } from "./travelRequest.interface";
 import { NotificationService } from "../notifications/notifications.service";
-import mongoose, { Schema, Types } from "mongoose";
-import { User } from "../user/user.model";
+import mongoose  from "mongoose";
 import { NotificationType } from "../notifications/notifications.interface";
 
 /**

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import Post from "../post/post.model";
-import { TStatusVote, VoteType } from "./postVote.interface";
+import { VoteType } from "./postVote.interface";
 import PostVote from "./postVote.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";

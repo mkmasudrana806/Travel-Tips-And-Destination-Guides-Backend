@@ -235,7 +235,7 @@ const onPaymentCancelled = async (userEmail: string, txnId: string) => {
 };
 
 // get all payments history
-const allPaymentsHistoryFromDB = async (query: Record<string, unknown>) => {
+const allPaymentsHistory = async (query: Record<string, unknown>) => {
   const {
     page = 1,
     limit = 20,
@@ -311,6 +311,6 @@ export const PaymentServices = {
   onPaymentSuccess,
   onPaymentFailed,
   onPaymentCancelled,
-  allPaymentsHistoryFromDB,
+  allPaymentsHistory,
   myPaymentsHistory,
 };

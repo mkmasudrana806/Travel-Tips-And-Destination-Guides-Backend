@@ -52,7 +52,7 @@ const onPaymentCancelled = asyncHanlder(async (req, res) => {
 // get all payments history
 const allPaymentHistory = asyncHanlder(async (req, res) => {
   const query = req.query;
-  const { data, meta } = await PaymentServices.allPaymentsHistoryFromDB(query);
+  const { data, meta } = await PaymentServices.allPaymentsHistory(query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

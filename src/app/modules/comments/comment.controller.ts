@@ -7,7 +7,7 @@ import { CommentServices } from "./comment.service";
 const createAComment = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const payload = req.body;
-  const result = await CommentServices.createACommentIntoDB(userId, payload);
+  const result = await CommentServices.createAComment(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -21,7 +21,7 @@ const createAComment = asyncHanlder(async (req, res) => {
 const getAllComments = asyncHanlder(async (req, res) => {
   const query = req.query;
   const postId = req.body.post;
-  const result = await CommentServices.getAllCommentsFromDB(postId, query);
+  const result = await CommentServices.getAllComments(postId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -49,7 +49,7 @@ const getRepliesOfComment = asyncHanlder(async (req, res) => {
 const deleteAComment = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const commentId = req.params.commentId;
-  const result = await CommentServices.deleteACommentIntoDB(commentId, userId);
+  const result = await CommentServices.deleteAComment(commentId, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -64,7 +64,7 @@ const updateAComment = asyncHanlder(async (req, res) => {
   const commentId = req.params.commentId;
   const userId = req.user.userId;
   const payload = req.body;
-  const result = await CommentServices.updateACommentIntoDB(
+  const result = await CommentServices.updateAComment(
     commentId,
     userId,
     payload,

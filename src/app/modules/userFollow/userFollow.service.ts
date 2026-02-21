@@ -1,4 +1,4 @@
-import mongoose, { PipelineStage, Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { User } from "../user/user.model";
 import UserFollow from "./userFollow.model";
 import AppError from "../../utils/AppError";
@@ -9,7 +9,6 @@ import {
   getPublicProfileSuggestions,
 } from "./userFollow.utils";
 import { NotificationService } from "../notifications/notifications.service";
-import { query } from "express";
 
 /**
  * ------------- follow/unfollow an user ----------------

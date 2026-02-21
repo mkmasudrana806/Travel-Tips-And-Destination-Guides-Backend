@@ -5,8 +5,8 @@ import sendResponse from "../../utils/sendResponse";
 
 // ------------------- create an user -------------------
 const createAnUser = asyncHanlder(async (req, res) => {
-  const data = req.body;
-  const result = await UserServices.createAnUserIntoDB(req.body);
+  const payload = req.body;
+  const result = await UserServices.createAnUser(payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -20,7 +20,7 @@ const createAnUser = asyncHanlder(async (req, res) => {
 const updateProfilePicture = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const file = req.body;
-  const result = await UserServices.updateProfilePictureIntoDB(userId, file);
+  const result = await UserServices.updateProfilePicture(userId, file);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -32,7 +32,7 @@ const updateProfilePicture = asyncHanlder(async (req, res) => {
 
 // ------------------- get all users -------------------
 const getAllUsers = asyncHanlder(async (req, res) => {
-  const { meta, result } = await UserServices.getAllUsersFromDB(req.query);
+  const { meta, result } = await UserServices.getAllUsers(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -58,7 +58,7 @@ const getMe = asyncHanlder(async (req, res) => {
 // ------------------- get a user profile -------------------
 const getSingleUser = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
-  const result = await UserServices.getSingleUserFromDB(userId);
+  const result = await UserServices.getSingleUser(userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -71,7 +71,7 @@ const getSingleUser = asyncHanlder(async (req, res) => {
 // ------------------- delete an user -------------------
 const deleteUser = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
-  const result = await UserServices.deleteUserFromDB(userId);
+  const result = await UserServices.deleteUser(userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -85,7 +85,7 @@ const deleteUser = asyncHanlder(async (req, res) => {
 const updateUser = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const payload = req.body;
-  const result = await UserServices.updateUserIntoDB(userId, payload);
+  const result = await UserServices.updateUser(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -99,7 +99,7 @@ const updateUser = asyncHanlder(async (req, res) => {
 const changeUserStatus = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const payload = req.body;
-  const result = await UserServices.changeUserStatusIntoDB(userId, payload);
+  const result = await UserServices.changeUserStatus(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -113,7 +113,7 @@ const changeUserStatus = asyncHanlder(async (req, res) => {
 const changeUserRole = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const payload = req.body;
-  const result = await UserServices.changeUserRoleIntoDB(userId, payload);
+  const result = await UserServices.changeUserRole(userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -135,7 +135,6 @@ const getVerified = asyncHanlder(async (req, res) => {
     data: result,
   });
 });
-
 
 export const UserControllers = {
   createAnUser,

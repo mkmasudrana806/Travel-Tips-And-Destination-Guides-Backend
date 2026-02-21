@@ -13,7 +13,7 @@ import Post from "../post/post.model";
  * @param payload payload for comment
  * @returns new comment data
  */
-const createACommentIntoDB = async (userId: string, payload: TComment) => {
+const createAComment = async (userId: string, payload: TComment) => {
   const { content, parentComment, post } = payload;
 
   // check post exists or not
@@ -101,7 +101,7 @@ const createACommentIntoDB = async (userId: string, payload: TComment) => {
  * @param query page, limit, sort
  * @returns paginated comments and its chil comments
  */
-const getAllCommentsFromDB = async (
+const getAllComments = async (
   postId: string,
   query: Record<string, unknown>,
 ) => {
@@ -220,7 +220,7 @@ const getRepliesOfComment = async (
 };
 
 // -------------- delete a comment --------------
-const deleteACommentIntoDB = async (commentId: string, userId: string) => {
+const deleteAComment = async (commentId: string, userId: string) => {
   const result = await Comment.findOneAndUpdate(
     {
       _id: commentId,
@@ -241,7 +241,7 @@ const deleteACommentIntoDB = async (commentId: string, userId: string) => {
 };
 
 // -------------- update a comment --------------
-const updateACommentIntoDB = async (
+const updateAComment = async (
   commentId: string,
   userId: string,
   payload: Partial<TComment>,
@@ -262,9 +262,9 @@ const updateACommentIntoDB = async (
 };
 
 export const CommentServices = {
-  createACommentIntoDB,
-  getAllCommentsFromDB,
+  createAComment,
+  getAllComments,
   getRepliesOfComment,
-  deleteACommentIntoDB,
-  updateACommentIntoDB,
+  deleteAComment,
+  updateAComment,
 };

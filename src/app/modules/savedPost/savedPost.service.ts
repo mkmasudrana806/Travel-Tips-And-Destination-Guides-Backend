@@ -1,7 +1,6 @@
 import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
 import SavedPost from "./savedPost.model";
-import { TSavedPostQuery } from "./savedPost.interface";
 
 /**
  * ------------ saved a travel post ------------

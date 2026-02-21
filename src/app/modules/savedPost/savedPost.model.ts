@@ -1,4 +1,4 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema  } from "mongoose";
 import { TSavedPost } from "./savedPost.interface";
 
 const savedPostSchema = new Schema<TSavedPost>(

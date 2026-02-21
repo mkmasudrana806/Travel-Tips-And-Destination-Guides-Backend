@@ -7,7 +7,7 @@ import { AuthServices } from "./auth.service";
 const loginUser = asyncHanlder(async (req, res) => {
   const loginInfo = req.body;
   const { accessToken, refreshToken } =
-    await AuthServices.loginUserIntoDB(loginInfo);
+    await AuthServices.loginUser(loginInfo);
 
   // set refresh token to cookie
   res.cookie("refreshToken", refreshToken, {
@@ -53,7 +53,7 @@ const forgotPassword = asyncHanlder(async (req, res) => {
 // ---------------------- reset password -----------------------
 const resetPassword = asyncHanlder(async (req, res) => {
   const { email, userId, newPassword, token } = req.body;
-  const result = await AuthServices.resetPasswordIntoDB(
+  const result = await AuthServices.resetPassword(
     userId,
     email,
     newPassword,

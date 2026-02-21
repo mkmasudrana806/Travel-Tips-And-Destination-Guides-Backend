@@ -15,7 +15,7 @@ import { TJwtPayload } from "../../interface/JwtPayload";
  * @validations check if the user exists, not deleted or blocked and password is correct
  * @returns return access token
  */
-const loginUserIntoDB = async (payload: TLoginUser) => {
+const loginUser = async (payload: TLoginUser) => {
   const user = await User.findOne({ email: payload.email });
   // check if user exists, not deleted or blocked
   if (!user) {
@@ -141,7 +141,7 @@ const forgotPassword = async (email: string) => {
  * @param token token from mail inbox
  * @returns return updated user data
  */
-const resetPasswordIntoDB = async (
+const resetPassword = async (
   userId: string,
   email: string,
   newPassword: string,
@@ -249,9 +249,9 @@ const refreshTokenSetup = async (token: string) => {
 };
 
 export const AuthServices = {
-  loginUserIntoDB,
+  loginUser,
   changeUserPassword,
   forgotPassword,
-  resetPasswordIntoDB,
+  resetPassword,
   refreshTokenSetup,
 };

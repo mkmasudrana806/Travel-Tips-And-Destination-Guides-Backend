@@ -1,6 +1,5 @@
 import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
-import { TfileUpload } from "../../interface/fileUploadType";
 import asyncHanlder from "../../utils/asyncHandler";
 import { uploadFilesServices } from "./uploadFile.service";
 

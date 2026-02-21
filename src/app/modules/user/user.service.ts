@@ -1,15 +1,10 @@
-import makeAllowedFieldData from "../../utils/allowedFieldUpdatedData";
-import { allowedFieldsToUpdate, searchableFields } from "./user.constant";
+import {  searchableFields } from "./user.constant";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { TfileUpload } from "../../interface/fileUploadType";
-import { TPayment } from "../payments/payment.interface";
-import { Payment } from "../payments/payment.model";
-import { initiatePayment } from "../payments/payment.utils";
-import mongoose, { Date } from "mongoose";
 import { TJwtPayload } from "../../interface/JwtPayload";
 import Post from "../post/post.model";
 
@@ -19,7 +14,7 @@ import Post from "../post/post.model";
  * @param payload new user data
  * @returns return newly created user
  */
-const createAnUserIntoDB = async (payload: TUser) => {
+const createAnUser = async (payload: TUser) => {
   // check if the user already exists
   const user = await User.findOne({ email: payload.email });
   if (user) {
@@ -36,7 +31,7 @@ const createAnUserIntoDB = async (payload: TUser) => {
  * @param file image file to upload
  * @returns return newly created user
  */
-const updateProfilePictureIntoDB = async (
+const updateProfilePicture = async (
   userId: string,
   file: TfileUpload,
 ) => {
@@ -53,7 +48,7 @@ const updateProfilePictureIntoDB = async (
  *
  * @return return all users
  */
-const getAllUsersFromDB = async (query: Record<string, any>) => {
+const getAllUsers = async (query: Record<string, any>) => {
   const userQuery = new QueryBuilder(User.find({ isDeleted: false }), query)
     .search(searchableFields)
     .filter()
@@ -87,7 +82,7 @@ const getMe = async (user: TJwtPayload) => {
  * @param id mongoose id of the user
  * return a user data
  */
-const getSingleUserFromDB = async (userId: string) => {
+const getSingleUser = async (userId: string) => {
   const result = await User.findOne({
     _id: userId,
     isDeleted: false,
@@ -102,7 +97,7 @@ const getSingleUserFromDB = async (userId: string) => {
  * @param userId userId to delete
  * @returns return deleted user data
  */
-const deleteUserFromDB = async (userId: string) => {
+const deleteUser = async (userId: string) => {
   const result = await User.findByIdAndUpdate(
     userId,
     { isDeleted: true },
@@ -119,7 +114,7 @@ const deleteUserFromDB = async (userId: string) => {
  * @featurs admin can change own and user data. user can change own data only
  * @returns return updated user data
  */
-const updateUserIntoDB = async (userId: string, payload: Partial<TUser>) => {
+const updateUser = async (userId: string, payload: Partial<TUser>) => {
   const result = await User.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
@@ -136,7 +131,7 @@ const updateUserIntoDB = async (userId: string, payload: Partial<TUser>) => {
  * @validations main admin can't change own status
  * @returns return updated user status
  */
-const changeUserStatusIntoDB = async (
+const changeUserStatus = async (
   userId: string,
   payload: { status: string },
 ) => {
@@ -176,7 +171,7 @@ const changeUserStatusIntoDB = async (
  * @note admin can not change own role. admin can change only user role
  * @returns return updated user data
  */
-const changeUserRoleIntoDB = async (
+const changeUserRole = async (
   userId: string,
   payload: { role: string },
 ) => {
@@ -256,14 +251,14 @@ const getVerified = async (
 
 
 export const UserServices = {
-  createAnUserIntoDB,
-  updateProfilePictureIntoDB,
-  getAllUsersFromDB,
+  createAnUser,
+  updateProfilePicture,
+  getAllUsers,
   getMe,
-  getSingleUserFromDB,
-  deleteUserFromDB,
-  updateUserIntoDB,
-  changeUserStatusIntoDB,
-  changeUserRoleIntoDB,
+  getSingleUser,
+  deleteUser,
+  updateUser,
+  changeUserStatus,
+  changeUserRole,
   getVerified,
 };
