@@ -13,11 +13,17 @@ const createACommentSchema = z.object({
       required_error: "Content is required",
       invalid_type_error: "Content should be string",
     }),
-    parentComment: z
-      .string()
-      .optional()
-      .nullable(),
+    parentComment: z.string().optional().nullable(),
   }),
+});
+
+// get all comments schema
+const getCommentsOfPost = z.object({
+  body: z
+    .object({
+      post: z.string(),
+    })
+    .strict(),
 });
 
 // update a comment schema
@@ -32,5 +38,6 @@ const updateACommentSchema = z.object({
 
 export const CommentValidations = {
   createACommentSchema,
+  getCommentsOfPost,
   updateACommentSchema,
 };

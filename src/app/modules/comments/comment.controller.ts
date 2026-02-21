@@ -17,9 +17,11 @@ const createAComment = asyncHanlder(async (req, res) => {
   });
 });
 
-// --------------- get all comments -------------------
+// --------------- get all comments for a post (paginated) -------------------
 const getAllComments = asyncHanlder(async (req, res) => {
-  const result = await CommentServices.getAllCommentsFromDB();
+  const query = req.query;
+  const postId = req.body.post;
+  const result = await CommentServices.getAllCommentsFromDB(postId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

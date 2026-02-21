@@ -13,8 +13,12 @@ router.post(
   CommentControllers.createAComment,
 );
 
-// get all comments
-router.get("/", CommentControllers.getAllComments);
+// get all comments (paginated)
+router.get(
+  "/",
+  validateRequestData(CommentValidations.getCommentsOfPost),
+  CommentControllers.getAllComments,
+);
 
 // get all comments counts for all posts
 router.post("/counts", CommentControllers.getAllCommentsForPosts);
