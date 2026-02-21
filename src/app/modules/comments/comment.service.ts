@@ -27,7 +27,7 @@ const createACommentIntoDB = async (userId: string, payload: TComment) => {
   payload.user = new mongoose.Types.ObjectId(userId);
 
   // scalable way to comment
-  const MAX_DEPTH = 3; // maximum depth for replies
+  const MAX_DEPTH = 2; // maximum depth for replies
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -93,7 +93,9 @@ const createACommentIntoDB = async (userId: string, payload: TComment) => {
 
 /**
  * -------------- get all comments (replies more than 3 are discarded)  --------------
- * Comments are paginated based on root comments. if a root node has more than 3 replies, then only 3 replies are sent with root comment. and rest are discarded. in UI we can show load more like load 20+ comments whic will load all comments of that root comment.if less than 3 replies, then all replies are sent with root comment. later we will make another api route to fetch all comments of a root comment with pagination.
+ * Rule 1: all root comments paginated with page and limit. by default newest first.
+ * Rule 2: if root comment has replies >=3, only 3 replies are returned. else all returns.
+ * and show load more 12+ comments. we have antoher api to fetch more replies for that root comment with controlled way.
  *
  * @param postId post to views all comments
  * @param query page, limit, sort
@@ -104,15 +106,14 @@ const getAllCommentsFromDB = async (
   query: Record<string, unknown>,
 ) => {
   // i allowed maximum 3 replies to load with root comment.
-  // remaining comments of that root comment can be loaded by separate api route with pagination when only user want to see all comments. it is by design and intentionally i do it.
   const MAX_REPLY_COUNT = 3;
 
-  // pagination and sorting
+  // pagination
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 20;
   const skip = (page - 1) * limit;
 
-  // fetch root comments (paginated)
+  // fetch root comments
   const rootComments = await Comment.find({
     post: postId,
     parentComment: null,
@@ -122,22 +123,10 @@ const getAllCommentsFromDB = async (
     .limit(limit)
     .lean();
 
-  // fetch replies for root comments if reply count is <= 3. else [] (in UI we can show load more like load 20+ comments. when clicked, by separate api call, all comments of that root comment will be loaded with pagination further)
-  const rootIdsToLoadReplies = rootComments
-    .filter((r) => r.replyCount <= MAX_REPLY_COUNT)
-    .map((r) => r._id);
+  const rootIds = rootComments.map((r) => r._id);
 
-  let replies: any[] = [];
-
-  if (rootIdsToLoadReplies.length > 0) {
-    replies = await Comment.find({
-      parentComment: { $in: rootIdsToLoadReplies },
-    })
-      .sort({ createdAt: 1 })
-      .lean();
-  }
-
-  if (rootIdsToLoadReplies.length === 0) {
+  // if no comments. return empty array
+  if (rootIds.length === 0) {
     return {
       comments: [],
       page,
@@ -146,21 +135,40 @@ const getAllCommentsFromDB = async (
     };
   }
 
-  const replyMap = new Map<string, any[]>();
+  // fetch all depth 1 comments for those root comments
+  const replies: TComment[] = await Comment.find({
+    parentComment: { $in: rootIds },
+    depth: 1,
+  })
+    .sort({ createdAt: 1 })
+    .lean();
+
+  // group replies by parentComment id
+  const replyMap = new Map<string, TComment[]>();
 
   for (const reply of replies) {
-    const key = reply.parentComment.toString();
-    if (!replyMap.has(key)) {
-      replyMap.set(key, []);
+    const parentId = reply.parentComment!.toString();
+    if (!replyMap.has(parentId)) {
+      replyMap.set(parentId, []);
     }
-    replyMap.get(key)!.push(reply);
+    replyMap.get(parentId)!.push(reply);
   }
 
-  const structured = rootComments.map((root) => ({
-    ...root,
-    replies:
-      root.replyCount <= 3 ? replyMap.get(root._id.toString()) || [] : [],
-  }));
+  // limit replies those parent comment has more than 3 replies and add hasMoreReplies flag to show load more on UI. we handle those by another api. this is by design and intetional to avoid heavy data load and response time.
+  const structured = rootComments.map((root) => {
+    const allReplies = replyMap.get(root._id.toString()) || [];
+
+    const limitedReplies =
+      root.replyCount > MAX_REPLY_COUNT
+        ? allReplies.slice(0, MAX_REPLY_COUNT)
+        : allReplies;
+
+    return {
+      ...root,
+      replies: limitedReplies,
+      hasMoreReplies: root.replyCount > MAX_REPLY_COUNT,
+    };
+  });
 
   // determine next page existence
   const totalRoots = await Comment.countDocuments({
@@ -169,7 +177,6 @@ const getAllCommentsFromDB = async (
   });
 
   const hasNextPage = page * limit < totalRoots;
-
   return {
     comments: structured,
     page,
