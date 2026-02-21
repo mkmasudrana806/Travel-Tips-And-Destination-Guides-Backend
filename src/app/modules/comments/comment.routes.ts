@@ -24,7 +24,7 @@ router.get(
 router.get("/:commentId/replies", CommentControllers.getRepliesOfComment);
 
 // delete a comment
-router.delete("/:id", auth("user"), CommentControllers.deleteAComment);
+router.delete("/:commentId", auth("user"), CommentControllers.deleteAComment);
 
 // update a comment
 router.patch(

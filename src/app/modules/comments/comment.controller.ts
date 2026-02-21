@@ -47,9 +47,9 @@ const getRepliesOfComment = asyncHanlder(async (req, res) => {
 
 // ------------------- delete a comment -------------------
 const deleteAComment = asyncHanlder(async (req, res) => {
-  const userId = req.user?.userId;
-  const commentId = req.params?.id;
-  const result = await CommentServices.deleteACommentIntoDB(userId, commentId);
+  const userId = req.user.userId;
+  const commentId = req.params.commentId;
+  const result = await CommentServices.deleteACommentIntoDB(commentId, userId);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -64,7 +64,11 @@ const updateAComment = asyncHanlder(async (req, res) => {
   const commentId = req.params.commentId;
   const userId = req.user.userId;
   const payload = req.body;
-  const result = await CommentServices.updateACommentIntoDB(commentId, userId, payload);
+  const result = await CommentServices.updateACommentIntoDB(
+    commentId,
+    userId,
+    payload,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

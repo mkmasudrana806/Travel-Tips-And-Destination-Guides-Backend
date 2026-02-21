@@ -220,13 +220,22 @@ const getRepliesOfComment = async (
 };
 
 // -------------- delete a comment --------------
-const deleteACommentIntoDB = async (user: string, commentId: string) => {
-  const result = await Comment.findOneAndDelete({
-    _id: commentId,
-    user,
-  });
+const deleteACommentIntoDB = async (commentId: string, userId: string) => {
+  const result = await Comment.findOneAndUpdate(
+    {
+      _id: commentId,
+      user: userId,
+      isDeleted: false,
+    },
+    {
+      isDeleted: true,
+    },
+  );
   if (!result) {
-    throw new AppError(httpStatus.BAD_REQUEST, "No comment to delete");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Comment not found or unauthorized",
+    );
   }
   return true;
 };
