@@ -185,8 +185,8 @@ const getSinglePost = async (postId: string, viewerId: string) => {
   if (!post) throw new Error("Post not found");
 
   // is owner
-  const isOwner = viewerId === post.author.toString();
-  
+  const isOwner = viewerId === post.author._id.toString();
+
   // isVoted
   const isVoted = { status: !!postVote, voteType: postVote?.type || null };
   return { ...post, isVoted, isOwner };
