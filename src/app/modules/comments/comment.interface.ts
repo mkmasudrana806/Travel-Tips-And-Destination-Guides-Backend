@@ -8,6 +8,8 @@ export type TComment = {
   parentComment?: Types.ObjectId | null;
   depth: number;
   replyCount: number;
+  isDeleted: boolean;
+  isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

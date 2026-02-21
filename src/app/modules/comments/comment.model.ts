@@ -31,6 +31,14 @@ const commentSchema = new Schema<TComment>(
       type: Number,
       default: 0,
     },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isEdited: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   {
