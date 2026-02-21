@@ -232,15 +232,22 @@ const deleteACommentIntoDB = async (user: string, commentId: string) => {
 };
 
 // -------------- update a comment --------------
-const updateACommentIntoDB = async (payload: Partial<TComment>) => {
+const updateACommentIntoDB = async (
+  commentId: string,
+  userId: string,
+  payload: Partial<TComment>,
+) => {
   const result = await Comment.findOneAndUpdate(
-    { _id: payload?._id, post: payload?.post },
-    { comment: payload?.content },
+    { _id: commentId, user: userId },
+    { comment: payload.content, isEdited: true },
     { new: true, runValidators: true },
   );
 
   if (!result) {
-    throw new AppError(httpStatus.BAD_REQUEST, "No comment to update!");
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Comment not found or unauthorized!",
+    );
   }
   return result;
 };

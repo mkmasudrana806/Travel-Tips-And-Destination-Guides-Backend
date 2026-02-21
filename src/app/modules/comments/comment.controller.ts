@@ -61,11 +61,10 @@ const deleteAComment = asyncHanlder(async (req, res) => {
 
 // ------------------- update a comment -------------------
 const updateAComment = asyncHanlder(async (req, res) => {
-  const _id = req.params?.id;
-  const result = await CommentServices.updateACommentIntoDB({
-    _id,
-    ...req.body,
-  });
+  const commentId = req.params.commentId;
+  const userId = req.user.userId;
+  const payload = req.body;
+  const result = await CommentServices.updateACommentIntoDB(commentId, userId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

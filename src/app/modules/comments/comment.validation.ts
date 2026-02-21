@@ -28,12 +28,14 @@ const getCommentsOfPost = z.object({
 
 // update a comment schema
 const updateACommentSchema = z.object({
-  body: z.object({
-    comment: z.string({
-      required_error: "Comment is required",
-      invalid_type_error: "Comment should be string",
-    }),
-  }),
+  body: z
+    .object({
+      content: z.string({
+        required_error: "Comment content is required",
+        invalid_type_error: "Comment content should be string",
+      }),
+    })
+    .strict(),
 });
 
 export const CommentValidations = {
