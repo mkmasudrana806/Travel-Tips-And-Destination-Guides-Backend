@@ -4,6 +4,7 @@ import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import { buildTravelPlanFilter, getTravelDays } from "./travelPlan.utils";
+import TravelRequest from "../travelRequest/travelRequest.model";
 
 /**
  * ------------- create a travel plan -------------
@@ -43,16 +44,40 @@ const createTravelPlan = async (
  * @param planId single plan id to view
  * @returns single plan data
  */
-const getSingleTravelPlan = async (planId: string) => {
-  const result = await TravelPlan.findById(planId).populate(
-    "user",
-    "name profilePicture",
-  );
-  return result;
+const getSingleTravelPlan = async (planId: string, viewerId: string) => {
+  const [plan, travelRequest] = await Promise.all([
+    TravelPlan.findById(planId).populate("user", "name profilePicture").lean(),
+    viewerId
+      ? TravelRequest.exists({
+          travelPlan: planId,
+          requester: viewerId,
+        })
+      : null,
+  ]);
+
+  if (!plan) {
+    throw new AppError(httpStatus.NOT_FOUND, "Travle plan is not found!");
+  }
+
+  // check is Owner
+  const isOwner = plan.user._id.toString() === viewerId;
+  // if not owner, so participant (either loged or not. no matter)
+  const isParticipant = isOwner ? false : true;
+  // has requested
+  const hasRequested = !!travelRequest;
+
+  // return plan data with viewer meta data
+  return { ...plan, isOwner, isParticipant, hasRequested };
 };
 
 /**
+ * 
+ 
+if(!plan){
+throw new AppError(httpStatus.NOT_FOUND, "Travle plan is not found!")}
  * ----------- get all travel plans (public route) --------------
+
+
  *
  * dynamically return all travel plans based on user queries
  *

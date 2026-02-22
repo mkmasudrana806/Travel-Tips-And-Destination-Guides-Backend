@@ -19,8 +19,9 @@ const createTravelPlan = asyncHanlder(async (req, res) => {
 
 // ---------------- get single travel plan details ---------------
 const getSingleTravelPlan = asyncHanlder(async (req, res) => {
+  const viewerId = req.user.userId;
   const planId = req.params.planId;
-  const result = await TravelPlanService.getSingleTravelPlan(planId);
+  const result = await TravelPlanService.getSingleTravelPlan(planId, viewerId);
 
   sendResponse(res, {
     success: true,
@@ -58,7 +59,6 @@ const updateTravelPlan = asyncHanlder(async (req, res) => {
     data: result,
   });
 });
-
 
 // ---------------- delete my travel plan ---------------
 const deleteTravelPlan = asyncHanlder(async (req, res) => {

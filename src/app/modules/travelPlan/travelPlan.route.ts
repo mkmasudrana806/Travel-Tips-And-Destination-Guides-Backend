@@ -4,6 +4,7 @@ import { TravelPlanValidation } from "./travelPlan.validation";
 import { TravelPlanController } from "./travelPlan.controller";
 import validateRequestData from "../../middlewares/validateRequest";
 import { PlanRequestRoutes } from "../travelRequest/travelRequest.route";
+import optionalAuth from "../../middlewares/optionalAuth";
 const router = express.Router();
 
 // create a travel plan
@@ -21,7 +22,7 @@ router.get("/", TravelPlanController.getAllTravelPlansFiltered);
 router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
 
 // get single travel plan
-router.get("/:planId", TravelPlanController.getSingleTravelPlan);
+router.get("/:planId", optionalAuth(), TravelPlanController.getSingleTravelPlan);
 
 // update travel plan
 router.patch(
