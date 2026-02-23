@@ -4,7 +4,6 @@ import { AuthRoutes } from "../modules/auth/auth.rotues";
 import { CommentRoutes } from "../modules/comments/comment.routes";
 import { PostRoutes } from "../modules/post/post.routes";
 import { PaymentRoutes } from "../modules/payments/payment.routes";
-import { InsightsRoutes } from "../modules/insights/insights.routes";
 import { PostVoteRoutes } from "../modules/postVote/postVote.routes";
 import { UserFollowRoutes } from "../modules/userFollow/userFollow.routes";
 import { SavedPostRoutes } from "../modules/savedPost/savedPost.route";
@@ -31,9 +30,6 @@ router.use("/media", MediaUploadRoutes);
 
 // payments
 router.use("/subscriptions", PaymentRoutes);
-
-// insights
-router.use("/insights", InsightsRoutes);
 
 // post vote
 router.use("/", PostVoteRoutes);
