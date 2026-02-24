@@ -30,6 +30,14 @@ router.patch(
   TravelRequestController.updateTravelRequestStatus,
 );
 
+// cancel a travel request
+router.patch(
+  "/:requestId",
+  auth("user"),
+  validateRequestData(TravelRequestValidation.acceptRejectPartnerRequest),
+  TravelRequestController.cancelTravelRequest,
+);
+
 // get my all requested travel plan
 router.get(
   "/me",

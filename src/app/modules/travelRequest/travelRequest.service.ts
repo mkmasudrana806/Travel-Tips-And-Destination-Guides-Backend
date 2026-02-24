@@ -4,7 +4,7 @@ import TravelPlan from "../travelPlan/travelPlan.model";
 import TravelRequest from "./travelRequest.model";
 import { TTravelRequest } from "./travelRequest.interface";
 import { NotificationService } from "../notifications/notifications.service";
-import mongoose  from "mongoose";
+import mongoose from "mongoose";
 import { NotificationType } from "../notifications/notifications.interface";
 
 /**
@@ -165,6 +165,51 @@ const updateTravelRequestStatus = async (
 };
 
 /**
+ * ------------ cancel travel request by user ------------------
+ *
+ * @param userId who want to cancelled his travel request
+ * @param requestId the travel request user want to cancel
+ * @param payload status
+ */
+const cancelTravelRequest = async (
+  userId: string,
+  requestId: string,
+  payload: Partial<TTravelRequest>,
+) => {
+  // status transition
+  const statusTransition: Record<string, string[]> = {
+    pending: ["calcelled"],
+  };
+
+  const travelRequest = await TravelRequest.findById(requestId);
+
+  if (!travelRequest) {
+    throw new AppError(httpStatus.NOT_FOUND, "Travel Request is not found");
+  }
+  // check if he is the owner of this travelRequest
+  if (userId !== travelRequest.requester.toString()) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Unauthorized access!");
+  }
+
+  if (!payload.status) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Status is not provided");
+  }
+
+  // check only allowed transition
+  const allowedTransition: string[] = statusTransition[travelRequest.status];
+  if (!allowedTransition || !allowedTransition.includes(payload.status)) {
+    throw new AppError(
+      FORBIDDEN,
+      `Cannot change status from ${travelRequest.status} to ${payload.status}`,
+    );
+  }
+  travelRequest.status = payload.status;
+  await travelRequest.save();
+
+  return "Cancelled sucessfull!";
+};
+
+/**
  * ----------- get all requested trip for an user (user side) --------------
  *
  * @param requesterId requester id, who want to see the status of requested travel plan
@@ -190,5 +235,6 @@ export const TravelRequestService = {
   createTravelRequest,
   getAllRequestsForPlan,
   updateTravelRequestStatus,
+  cancelTravelRequest,
   getTravelRequestsForAnUser,
 };

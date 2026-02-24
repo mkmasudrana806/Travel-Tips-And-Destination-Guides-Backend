@@ -61,6 +61,25 @@ const updateTravelRequestStatus = asyncHanlder(async (req, res) => {
   });
 });
 
+// ------------- update partner's request (accepted/rejected) -------------------
+const cancelTravelRequest = asyncHanlder(async (req, res) => {
+  const userId = req.user.userId;
+  const requestId = req.params.requestId;
+  const payload = req.body;
+  const result = await TravelRequestService.cancelTravelRequest(
+    userId,
+    requestId,
+    payload,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Request cancelled Sucessfull",
+    data: result,
+  });
+});
+
 // ------------- accept/reject a travel partner request -------------------
 const getTravelRequestsForAnUser = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
@@ -78,5 +97,6 @@ export const TravelRequestController = {
   createTravelRequest,
   getAllRequestsForPlan,
   updateTravelRequestStatus,
+  cancelTravelRequest,
   getTravelRequestsForAnUser,
 };

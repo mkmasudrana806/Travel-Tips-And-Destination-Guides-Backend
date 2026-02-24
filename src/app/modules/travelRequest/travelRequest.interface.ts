@@ -4,5 +4,5 @@ export type TTravelRequest = {
   travelPlan: Types.ObjectId;
   requester: Types.ObjectId;
   requestNote: String;
-  status: "pending" | "accepted" | "rejected";
+  status: "pending" | "cancelled" | "accepted" | "rejected";
 };

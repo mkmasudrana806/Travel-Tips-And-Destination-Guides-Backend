@@ -22,7 +22,7 @@ const travelRequestSchema = new Schema<TTravelRequest>(
     },
     status: {
       type: String,
-      enum: ["pending", "accepted", "rejected"],
+      enum: ["pending", "cancelled", "accepted", "rejected"],
       default: "pending",
       index: true,
     },
