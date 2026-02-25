@@ -8,8 +8,8 @@ const createTravelRequest = z.object({
     .strict(),
 });
 
-// accept or reject partner request
-const acceptRejectPartnerRequest = z.object({
+// update partner request (accepted or rejected by travelPlan owner)
+const updatePartnerRequest = z.object({
   body: z
     .object({
       status: z.enum(["accepted", "rejected"]),
@@ -17,7 +17,17 @@ const acceptRejectPartnerRequest = z.object({
     .strict(),
 });
 
+// cancel travel request by requester
+const cancelTravelRequest = z.object({
+  body: z
+    .object({
+      status: z.enum(["cancelled"]),
+    })
+    .strict(),
+});
+
 export const TravelRequestValidation = {
   createTravelRequest,
-  acceptRejectPartnerRequest,
+  updatePartnerRequest,
+  cancelTravelRequest,
 };

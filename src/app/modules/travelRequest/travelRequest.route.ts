@@ -26,15 +26,15 @@ routerPlan.get(
 router.patch(
   "/:requestId",
   auth("user"),
-  validateRequestData(TravelRequestValidation.acceptRejectPartnerRequest),
+  validateRequestData(TravelRequestValidation.updatePartnerRequest),
   TravelRequestController.updateTravelRequestStatus,
 );
 
 // cancel a travel request
-router.patch(
+router.put(
   "/:requestId",
   auth("user"),
-  validateRequestData(TravelRequestValidation.acceptRejectPartnerRequest),
+  validateRequestData(TravelRequestValidation.cancelTravelRequest),
   TravelRequestController.cancelTravelRequest,
 );
 
