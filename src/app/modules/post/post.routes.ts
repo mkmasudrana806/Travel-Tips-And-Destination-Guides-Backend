@@ -4,6 +4,7 @@ import { PostControllers } from "./post.controller";
 import { PostValidtions } from "./post.validation";
 import validateRequestData from "../../middlewares/validateRequest";
 import optionalAuth from "../../middlewares/optionalAuth";
+import { PostShareRoutes } from "../postShare/postShare.route";
 
 const router = express.Router();
 
@@ -34,5 +35,8 @@ router.patch(
 
 // delete a post
 router.delete("/:postId", auth("user", "admin"), PostControllers.deletePost);
+
+// route to its child 'PostShare' routes
+router.use("/:postId/shares", PostShareRoutes);
 
 export const PostRoutes = router;
