@@ -7,6 +7,7 @@ export type NotificationType =
   | "request_rejected"
   | "post_comment"
   | "post_upvote"
+  | "post_share"
   | "new_follower";
 
 // resource name I mean module name

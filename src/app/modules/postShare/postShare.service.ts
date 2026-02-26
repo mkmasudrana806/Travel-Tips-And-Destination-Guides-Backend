@@ -1,4 +1,7 @@
+import httpStatus from "http-status";
+import AppError from "../../utils/AppError";
 import { NotificationService } from "../notifications/notifications.service";
+import Post from "../post/post.model";
 import { TPostShare } from "./postShare.interface";
 import { PostShare } from "./postShare.model";
 import { Schema, Types } from "mongoose";
@@ -16,12 +19,26 @@ const sharePost = async (
   userId: string,
   payload: Partial<TPostShare>,
 ) => {
+  // check post exists
+  const post = await Post.findById(postId).select("author").lean();
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
+  }
+
   const share = await PostShare.create({
-    post: new Types.ObjectId(postId),
-    user: new Types.ObjectId(userId),
+    post: post._id,
+    user: post.author,
     caption: payload.caption,
   });
 
+  // add notification
+  await NotificationService.createNotification({
+    recipient: post.author,
+    sender: new Types.ObjectId(userId),
+    type: "post_share",
+    resourceType: "Post",
+    resourceId: post._id,
+  });
   return share;
 };
 

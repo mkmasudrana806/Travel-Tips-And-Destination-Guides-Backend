@@ -9,7 +9,7 @@ const sharePost = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const postId = req.params.postId;
   const data = req.body;
-  const result = await PostShareService.sharePost(userId, postId, data);
+  const result = await PostShareService.sharePost(postId, userId, data);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

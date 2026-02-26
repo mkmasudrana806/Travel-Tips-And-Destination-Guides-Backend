@@ -7,6 +7,7 @@ const notificationTypes = [
   "request_rejected",
   "post_comment",
   "post_upvote",
+  "post_share",
   "new_follower",
 ];
 
