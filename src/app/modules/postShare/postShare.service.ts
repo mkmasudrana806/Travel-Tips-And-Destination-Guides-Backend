@@ -42,6 +42,58 @@ const sharePost = async (
   return share;
 };
 
+/**
+ * ------------ delete a shared post
+ *
+ * @param userId who want to deleted shared post
+ * @param sharedPostId which shared post need to delete
+ * @returns status
+ */
+const deleteSharedPost = async (userId: string, sharedPostId: string) => {
+  const deletedPost = await PostShare.findOneAndDelete({
+    _id: sharedPostId,
+    user: userId,
+  }).lean();
+  if (!deletedPost) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Already deleted or not found!");
+  }
+
+  return { isDeleted: true };
+};
+
+/**
+ *
+ * @param postId post to shows all shares
+ * @param query page, limit by default
+ * @returns paginated shared posts
+ */
+const getSharedPosts = async (
+  postId: string,
+  query: Record<string, unknown>,
+) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const data = await PostShare.find({ post: postId })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .populate("post")
+    .populate("user", "name profilePicture");
+  const total = await PostShare.countDocuments();
+
+  return {
+    data,
+    meta: {
+      page,
+      limit,
+      total,
+    },
+  };
+};
 export const PostShareService = {
   sharePost,
+  deleteSharedPost,
+  getSharedPosts,
 };

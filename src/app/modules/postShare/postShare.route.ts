@@ -16,4 +16,14 @@ router.post(
   PostShareController.sharePost,
 );
 
+// delete a shared post
+router.delete(
+  "/:sharedPostId",
+  auth("user"),
+  PostShareController.deleteSharedPost,
+);
+
+// get all shares of a post
+router.get("/", PostShareController.getSharedPosts);
+
 export const PostShareRoutes = router;
