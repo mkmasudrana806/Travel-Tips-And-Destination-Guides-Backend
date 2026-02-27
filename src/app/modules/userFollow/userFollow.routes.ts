@@ -2,33 +2,20 @@ import express from "express";
 import { UserFollowController } from "./userFollow.controller";
 import auth from "../../middlewares/auth";
 import optionalAuth from "../../middlewares/optionalAuth";
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 // follow/unfollow toggle
-router.post(
-  "/:targetUserId/follow",
-  auth("user"),
-  UserFollowController.toggleFollow,
-);
+router.post("/follow", auth("user"), UserFollowController.toggleFollow);
 
 // get followers lists of an user
-router.get("/:userId/followers", UserFollowController.getFollowers);
+router.get("/followers", UserFollowController.getFollowers);
 
 // get followings lists of an user
-router.get("/:userId/followings", UserFollowController.getFollowings);
+router.get("/followings", UserFollowController.getFollowings);
 
 // get mutual friends between two user
-router.get(
-  "/:targetUserId/mutual",
-  optionalAuth(),
-  UserFollowController.getMutualFriends,
-);
+router.get("/mutual", optionalAuth(), UserFollowController.getMutualFriends);
 
-// get profile suggestion
-router.get(
-  "/profile/suggestions",
-  optionalAuth(),
-  UserFollowController.getProfileSuggestions,
-);
+
 
 export const UserFollowRoutes = router;

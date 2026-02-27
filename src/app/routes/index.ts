@@ -34,9 +34,6 @@ router.use("/media", MediaUploadRoutes);
 // payments
 router.use("/subscriptions", PaymentRoutes);
 
-// user follow/unfowllow
-router.use("/users", UserFollowRoutes);
-
 // saved travel post
 router.use("/saved-posts", SavedRoutes);
 

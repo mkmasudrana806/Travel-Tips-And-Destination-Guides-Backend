@@ -9,6 +9,7 @@ import {
   getPublicProfileSuggestions,
 } from "./userFollow.utils";
 import { NotificationService } from "../notifications/notifications.service";
+import { boolean } from "zod";
 
 /**
  * ------------- follow/unfollow an user ----------------
@@ -22,7 +23,8 @@ import { NotificationService } from "../notifications/notifications.service";
 const toggleFollow = async (currentUser: string, targetUser: string) => {
   if (targetUser === currentUser) throw new Error("You cannot follow yourself");
 
-  let result: boolean;
+  let result: { isFollow: boolean } = { isFollow: false };
+
   // start transaction
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -53,7 +55,7 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
         { $inc: { followerCount: -1 } },
         { session },
       );
-      result = false;
+      result.isFollow = false;
     } else {
       // as no follow data. so we create new userFollow record
       await UserFollow.create(
@@ -81,7 +83,7 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
         { $inc: { followerCount: 1 } },
         { session },
       );
-      result = true;
+      result.isFollow = true;
 
       // create notification when follow
       await NotificationService.createNotification({

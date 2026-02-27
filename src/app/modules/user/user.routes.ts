@@ -4,6 +4,8 @@ import validateRequestData from "../../middlewares/validateRequest";
 import { UserValidations } from "./user.validation";
 import auth from "../../middlewares/auth";
 import optionalAuth from "../../middlewares/optionalAuth";
+import { UserFollowRoutes } from "../userFollow/userFollow.routes";
+import { UserFollowController } from "../userFollow/userFollow.controller";
 const router = express.Router();
 
 // create an user
@@ -55,6 +57,16 @@ router.patch(
   auth("user"),
   validateRequestData(UserValidations.makeUserVerifiedSchema),
   UserControllers.getVerified,
+);
+
+// for userFollows children
+router.use("/:userId", UserFollowRoutes);
+
+// get profile suggestion
+router.get(
+  "/profile/suggestions",
+  optionalAuth(),
+  UserFollowController.getProfileSuggestions,
 );
 
 export const UserRoutes = router;

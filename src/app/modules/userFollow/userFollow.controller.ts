@@ -6,7 +6,7 @@ import { UserFollowService } from "./userFollow.service";
 // ------------------- my vote stutus of a post -------------------
 const toggleFollow = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
-  const targetUserId = req.params.targetUserId;
+  const targetUserId = req.params.userId;
   const result = await UserFollowService.toggleFollow(userId, targetUserId);
 
   sendResponse(res, {
@@ -50,7 +50,7 @@ const getFollowings = asyncHanlder(async (req, res) => {
 // ------------------- get mutual friends between two users -------------------
 const getMutualFriends = asyncHanlder(async (req, res) => {
   const viewerId = req.user.userId;
-  const targetUserId = req.params.targetUserId;
+  const targetUserId = req.params.userId;
   const result = await UserFollowService.getMutualFriends(
     viewerId,
     targetUserId,
