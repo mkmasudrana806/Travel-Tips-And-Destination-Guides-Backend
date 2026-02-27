@@ -20,7 +20,7 @@ router.post(
 );
 
 // get all posts with filter, pagination and sorting
-router.get("/", PostControllers.getAllTravelPosts);
+router.get("/", optionalAuth(), PostControllers.getAllTravelPosts);
 
 // get my posts
 router.get("/me", auth("user"), PostControllers.getMyPosts);

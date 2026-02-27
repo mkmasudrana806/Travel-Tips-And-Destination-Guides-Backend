@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
-import TPost, { TPostCreate, TPostViewerContext } from "./post.interface";
+import TPost, {
+  TAllPostsResponse,
+  TPostCreate,
+  TPostViewerContext,
+} from "./post.interface";
 import Post from "./post.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
@@ -58,7 +62,10 @@ const createPost = async (userId: string, payload: TPostCreate) => {
  * @param query query params like country, location, limit, page, travel type etc
  * @returns returned filtered travel post based on query with pagination
  */
-const getAllTravelPosts = async (query: any) => {
+const getAllTravelPosts = async (
+  viewerId: string,
+  query: Record<string, unknown>,
+) => {
   const {
     location,
     category,
@@ -67,10 +74,12 @@ const getAllTravelPosts = async (query: any) => {
     maxCost,
     days,
     travelType,
-    page = 1,
-    limit = 10,
     sort = "latest",
   } = query;
+
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+  const skip = (page - 1) * limit;
 
   // make a query object
   const filter: any = {
@@ -118,25 +127,101 @@ const getAllTravelPosts = async (query: any) => {
     sortOption = { upvoteCount: -1 };
   }
 
-  const skip = (Number(page) - 1) * Number(limit);
-
   const posts = await Post.find(filter)
     .sort(sortOption)
     .skip(skip)
-    .limit(Number(limit))
+    .limit(limit)
     .populate("author", "name profilePicture");
 
   // create meta data
   const total = await Post.countDocuments(filter);
   const meta = {
     total,
-    page: Number(page),
-    limit: Number(limit),
+    page: page,
+    limit: limit,
   };
 
+  // if user not logged in, means no viewerId
+  let data: TAllPostsResponse[];
+  if (!viewerId) {
+    data = posts.map((post) => ({
+      data: post,
+      viewerContext: {
+        voteType: "none",
+        isOwner: false,
+        isSaved: false,
+        isFollowingAuthor: false,
+      },
+    }));
+
+    return {
+      meta,
+      data,
+    };
+  }
+
+  // for logged in user. return viewerContext
+  /*
+  voteType: "upvote" | "downvote" | "none";
+  isOwner: boolean;
+  isSaved: boolean;
+  isFollowingAuthor: boolean;
+  */
+  const postIds = posts.map((post) => post._id);
+  const authorIds = posts.map((post) => post.author._id);
+
+  // bulk fetch viewer interactions in parallel
+  const [votes, savedPosts, follows] = await Promise.all([
+    PostVote.find({ user: viewerId, post: { $in: postIds } })
+      .select("post type")
+      .lean(),
+    SavedPost.find({
+      user: viewerId,
+      post: { $in: postIds },
+    })
+      .select("post")
+      .lean(),
+    UserFollow.find({
+      follower: viewerId,
+      following: { $in: authorIds },
+    })
+      .select("following")
+      .lean(),
+  ]);
+
+  // convert to map and set to lookup faster
+  const voteMap = new Map(votes.map((v) => [v.post.toString(), v.type]));
+  const savedSet = new Set(savedPosts.map((s) => s.post.toString()));
+  const followSet = new Set(follows.map((f) => f.following.toString()));
+
+  // now attached viewer context for all context
+  data = posts.map((post) => {
+    const postId = post._id.toString();
+    const authorId = post.author._id.toString();
+    // owner check
+    const isOwner = authorId === viewerId;
+    // if found then vote type else none fallback
+    const voteType = (voteMap.get(postId) as "upvote" | "downvote") ?? "none";
+    // if found then set true else false
+    const isSaved = savedSet.has(postId);
+    // similarly folling check
+    const isFollowingAuthor = followSet.has(authorId);
+
+    return {
+      data: post,
+      viewerContext: {
+        voteType,
+        isOwner,
+        isSaved,
+        isFollowingAuthor,
+      },
+    };
+  });
+
+  // return posts with viewer context for logged in user
   return {
-    data: posts,
     meta,
+    data,
   };
 };
 

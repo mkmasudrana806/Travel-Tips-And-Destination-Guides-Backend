@@ -19,8 +19,9 @@ const createPost = asyncHanlder(async (req, res) => {
 
 // --------------- get all travel posts ----------------
 const getAllTravelPosts = asyncHanlder(async (req, res) => {
+  const viewerId = req.user.userId;
   const query = req.query;
-  const { data, meta } = await PostServices.getAllTravelPosts(query);
+  const { data, meta } = await PostServices.getAllTravelPosts(viewerId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

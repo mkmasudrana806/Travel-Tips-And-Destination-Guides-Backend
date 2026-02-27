@@ -27,4 +27,10 @@ export type TPostViewerContext = {
   isFollowingAuthor: boolean;
 };
 
+// viewer context individually for each post
+export type TAllPostsResponse = {
+  data: TPost;
+  viewerContext: TPostViewerContext;
+};
+
 export default TPost;
