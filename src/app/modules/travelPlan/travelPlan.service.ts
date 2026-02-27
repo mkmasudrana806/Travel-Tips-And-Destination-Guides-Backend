@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import {
   TAllPlansResponse,
   TTravelPlan,
-  TViewerContext,
+  TViewerContextTravelPlan,
 } from "./travelPlan.interface";
 import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
@@ -72,7 +72,10 @@ const getSingleTravelPlan = async (planId: string, viewerId?: string) => {
   const requestStatus = isOwner ? "none" : (travelRequest?.status ?? "none");
 
   // return plan data with viewer meta data
-  const viewerContext = { isOwner, requestStatus };
+  const viewerContext: TViewerContextTravelPlan = {
+    isOwner,
+    requestStatus,
+  };
   return { data: plan, viewerContext };
 };
 
@@ -115,8 +118,7 @@ const getAllTravelPlans = async (
         data: plan,
         viewerContext: {
           isOwner: false,
-          isParticipant: true,
-          hasRequested: false,
+          requestStatus: "none",
         },
       };
     });
@@ -133,24 +135,24 @@ const getAllTravelPlans = async (
     travelPlan: { $in: planIds },
     requester: viewerId,
   })
-    .select("travelPlan")
+    .select("travelPlan status")
     .lean();
 
   // create a set to fast lookup to check hasRequested
-  const requestPlanSet = new Set(
-    requests.map((req) => req.travelPlan.toString()),
+  const requestStatusMap = new Map(
+    requests.map((req) => [req.travelPlan.toString(), req.status]),
   );
-
   // make data formatted for logged in user
   data = plans.map((plan) => {
     const isOwner = plan.user._id.toString() === viewerId;
-    const hasRequested = requestPlanSet.has(plan._id.toString());
+    const requestStatus = isOwner
+      ? "none"
+      : (requestStatusMap.get(plan._id.toString()) ?? "none");
     return {
       data: plan,
       viewerContext: {
         isOwner,
-        hasRequested,
-        isParticipant: !isOwner,
+        requestStatus: requestStatus,
       },
     };
   });

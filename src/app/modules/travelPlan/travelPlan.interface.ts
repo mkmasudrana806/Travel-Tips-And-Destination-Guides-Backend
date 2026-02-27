@@ -18,12 +18,11 @@ export type TTravelPlan = {
 };
 
 // viewer context and response type
-export type TViewerContext = {
+export type TViewerContextTravelPlan = {
   isOwner: boolean;
-  isParticipant: boolean;
-  hasRequested: boolean;
+  requestStatus: "none" | "pending" | "cancelled" | "accepted" | "rejected";
 };
 export type TAllPlansResponse = {
   data: TTravelPlan;
-  viewerContext: TViewerContext;
+  viewerContext: TViewerContextTravelPlan;
 };
