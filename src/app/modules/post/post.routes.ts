@@ -5,6 +5,7 @@ import { PostValidtions } from "./post.validation";
 import validateRequestData from "../../middlewares/validateRequest";
 import optionalAuth from "../../middlewares/optionalAuth";
 import { PostShareRoutes } from "../postShare/postShare.route";
+import { PostVoteRoutes } from "../postVote/postVote.routes";
 
 const router = express.Router();
 
@@ -38,5 +39,8 @@ router.delete("/:postId", auth("user", "admin"), PostControllers.deletePost);
 
 // route to its child 'PostShare' routes
 router.use("/:postId/shares", PostShareRoutes);
+
+// middleware for 'votes' child route
+router.use("/:postid/votes", PostVoteRoutes);
 
 export const PostRoutes = router;
