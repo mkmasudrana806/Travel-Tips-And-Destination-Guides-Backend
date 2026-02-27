@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import TPost, { TPostCreate } from "./post.interface";
+import TPost, { TPostCreate, TPostViewerContext } from "./post.interface";
 import Post from "./post.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
@@ -9,6 +9,8 @@ import { Media } from "../media/media.model";
 import * as cheerio from "cheerio";
 import { TJwtPayload } from "../../interface/JwtPayload";
 import PostVote from "../postVote/postVote.model";
+import SavedPost from "../savedPost/savedPost.model";
+import UserFollow from "../userFollow/userFollow.model";
 
 /**
  * ------------- Create a new post ----------------
@@ -172,25 +174,50 @@ const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
  * @returns post data with viewer states
  */
 const getSinglePost = async (postId: string, viewerId: string) => {
-  const [post, postVote] = await Promise.all([
-    Post.findOne({ _id: postId, isDeleted: false })
-      .populate({
-        path: "author",
-        select: "_id name isVerified profilePicture",
-      })
-      .lean(),
+  // check if post found
+  const post = await Post.findOne({ _id: postId, isDeleted: false })
+    .populate({
+      path: "author",
+      select: "_id name isVerified profilePicture",
+    })
+    .lean();
+  if (!post) throw new Error("Post not found");
+
+  // fetch postVote, savedPost, and userFollow status
+  const [postVote, savedPost, userFollow] = await Promise.all([
     viewerId ? PostVote.findOne({ post: postId, user: viewerId }).lean() : null,
+    viewerId ? SavedPost.exists({ post: postId, user: viewerId }).lean() : null,
+    viewerId
+      ? UserFollow.exists({
+          follower: viewerId,
+          following: post.author._id,
+        }).lean()
+      : null,
   ]);
 
-  if (!post) throw new Error("Post not found");
+  /*
+  voteType: "upvote" | "downvote" | "none"; done
+  isOwner: boolean; done
+  isSaved: boolean;
+  isFollowingAuthor: boolean;
+  */
 
   // is owner
   const isOwner = viewerId === post.author._id.toString();
+  // vote type
+  const voteType = postVote?.type ?? "none";
+  // is post saved
+  const isSaved = savedPost ? true : false;
+  // is following author
+  const isFollowingAuthor = userFollow ? true : false;
 
-  // isVoted
-  const isVoted = { status: !!postVote, voteType: postVote?.type || null };
-  const viewerContext = { isVoted, isOwner };
-  
+  const viewerContext: TPostViewerContext = {
+    voteType,
+    isOwner,
+    isSaved,
+    isFollowingAuthor,
+  };
+
   return { data: post, viewerContext };
 };
 

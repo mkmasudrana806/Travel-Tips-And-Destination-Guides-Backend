@@ -19,4 +19,12 @@ type TPost = {
 
 export type TPostCreate = TPost & { bannerId: string; contentIds: string[] };
 
+// viewer context for single post view
+export type TPostViewerContext = {
+  voteType: "upvote" | "downvote" | "none";
+  isOwner: boolean;
+  isSaved: boolean;
+  isFollowingAuthor: boolean;
+};
+
 export default TPost;
