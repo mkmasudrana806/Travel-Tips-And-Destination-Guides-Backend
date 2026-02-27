@@ -10,21 +10,25 @@ import Post from "../post/post.model";
  * -------------- create a comment into db --------------
  *
  * @param userId user who want to comment
+ * @param postId post to comment
  * @param payload payload for comment
  * @returns new comment data
  */
-const createAComment = async (userId: string, payload: TComment) => {
-  const { content, parentComment, post } = payload;
+const createAComment = async (
+  userId: string,
+  postId: string,
+  payload: Partial<TComment>,
+) => {
+  const { content, parentComment } = payload;
 
   // check post exists or not
-  const existsPost = await Post.findById(payload.post).populate(
-    "author",
-    "_id",
-  );
+  const existsPost = await Post.findById(postId)
+    .populate("author", "_id")
+    .lean();
   if (!existsPost) {
     throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
   }
-  payload.user = new mongoose.Types.ObjectId(userId);
+  payload.user = existsPost.author._id;
 
   // scalable way to comment
   const MAX_DEPTH = 2; // maximum depth for replies
@@ -58,7 +62,7 @@ const createAComment = async (userId: string, payload: TComment) => {
     const newComment = await Comment.create(
       [
         {
-          post: post,
+          post: postId,
           user: userId,
           content,
           parentComment: parentComment || null,
@@ -77,7 +81,7 @@ const createAComment = async (userId: string, payload: TComment) => {
       sender: new mongoose.Types.ObjectId(userId),
       type: "post_comment",
       resourceType: "Post",
-      resourceId: payload.post,
+      resourceId: existsPost._id,
     });
 
     return newComment[0];

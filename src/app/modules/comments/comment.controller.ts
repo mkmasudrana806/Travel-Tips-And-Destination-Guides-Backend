@@ -6,8 +6,9 @@ import { CommentServices } from "./comment.service";
 // ------------------- create a comment -------------------
 const createAComment = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
+  const postId = req.params.postId;
   const payload = req.body;
-  const result = await CommentServices.createAComment(userId, payload);
+  const result = await CommentServices.createAComment(userId, postId, payload);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -20,7 +21,7 @@ const createAComment = asyncHanlder(async (req, res) => {
 // --------------- get all comments for a post (paginated) -------------------
 const getAllComments = asyncHanlder(async (req, res) => {
   const query = req.query;
-  const postId = req.body.post;
+  const postId = req.params.postId;
   const result = await CommentServices.getAllComments(postId, query);
 
   sendResponse(res, {

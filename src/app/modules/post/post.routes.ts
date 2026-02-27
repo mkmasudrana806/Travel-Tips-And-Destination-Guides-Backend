@@ -7,6 +7,7 @@ import optionalAuth from "../../middlewares/optionalAuth";
 import { PostShareRoutes } from "../postShare/postShare.route";
 import { PostVoteRoutes } from "../postVote/postVote.routes";
 import { SavedPostRoutes } from "../savedPost/savedPost.route";
+import { PostCommentsRoutes } from "../comments/comment.routes";
 
 const router = express.Router();
 
@@ -46,5 +47,8 @@ router.use("/:postid/votes", PostVoteRoutes);
 
 // for '/saved-posts' children
 router.use("/:postId/saved-posts", SavedPostRoutes);
+
+// post's comments router
+router.use("/:postId/comments", PostCommentsRoutes);
 
 export const PostRoutes = router;
