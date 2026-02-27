@@ -5,7 +5,7 @@ import { CommentRoutes } from "../modules/comments/comment.routes";
 import { PostRoutes } from "../modules/post/post.routes";
 import { PaymentRoutes } from "../modules/payments/payment.routes";
 import { UserFollowRoutes } from "../modules/userFollow/userFollow.routes";
-import { SavedPostRoutes } from "../modules/savedPost/savedPost.route";
+import { SavedRoutes } from "../modules/savedPost/savedPost.route";
 import { TravelPlanRoutes } from "../modules/travelPlan/travelPlan.route";
 import { TravelRequestRoutes } from "../modules/travelRequest/travelRequest.route";
 import { NotificationsRoutes } from "../modules/notifications/notifications.route";
@@ -23,7 +23,7 @@ router.use("/auth", AuthRoutes);
 router.use("/posts", PostRoutes);
 
 // votes
-router.use("/votes",VoteRoutes);
+router.use("/votes", VoteRoutes);
 
 // comments
 router.use("/comments", CommentRoutes);
@@ -38,7 +38,7 @@ router.use("/subscriptions", PaymentRoutes);
 router.use("/users", UserFollowRoutes);
 
 // saved travel post
-router.use("/saved-posts", SavedPostRoutes);
+router.use("/saved-posts", SavedRoutes);
 
 // travel plans
 router.use("/travel-plans", TravelPlanRoutes);

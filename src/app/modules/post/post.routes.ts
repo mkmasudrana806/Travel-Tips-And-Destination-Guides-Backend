@@ -6,6 +6,7 @@ import validateRequestData from "../../middlewares/validateRequest";
 import optionalAuth from "../../middlewares/optionalAuth";
 import { PostShareRoutes } from "../postShare/postShare.route";
 import { PostVoteRoutes } from "../postVote/postVote.routes";
+import { SavedPostRoutes } from "../savedPost/savedPost.route";
 
 const router = express.Router();
 
@@ -42,5 +43,8 @@ router.use("/:postId/shares", PostShareRoutes);
 
 // middleware for 'votes' child route
 router.use("/:postid/votes", PostVoteRoutes);
+
+// for '/saved-posts' children
+router.use("/:postId/saved-posts", SavedPostRoutes);
 
 export const PostRoutes = router;
