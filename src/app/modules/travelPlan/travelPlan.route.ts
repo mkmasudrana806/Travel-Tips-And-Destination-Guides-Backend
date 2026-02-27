@@ -16,13 +16,17 @@ router.post(
 );
 
 // all travel plans
-router.get("/", TravelPlanController.getAllTravelPlansFiltered);
+router.get("/", optionalAuth(), TravelPlanController.getAllTravelPlans);
 
 // get my all travel plans
 router.get("/me", auth("user"), TravelPlanController.getMyAllTravelPlans);
 
 // get single travel plan
-router.get("/:planId", optionalAuth(), TravelPlanController.getSingleTravelPlan);
+router.get(
+  "/:planId",
+  optionalAuth(),
+  TravelPlanController.getSingleTravelPlan,
+);
 
 // update travel plan
 router.patch(

@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
-import { TTravelPlan } from "./travelPlan.interface";
+import {
+  TAllPlansResponse,
+  TTravelPlan,
+  TViewerContext,
+} from "./travelPlan.interface";
 import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
@@ -72,33 +76,86 @@ const getSingleTravelPlan = async (planId: string, viewerId: string) => {
 };
 
 /**
- * 
- 
-if(!plan){
-throw new AppError(httpStatus.NOT_FOUND, "Travle plan is not found!")}
  * ----------- get all travel plans (public route) --------------
-
-
- *
  * dynamically return all travel plans based on user queries
  *
+ * @param viewerId who is viewing all travel plans
  * @param query different user queries params
  * @return return filtered all travel plans
  */
-const getAllTravelPlansFiltered = async (query: Record<string, unknown>) => {
+const getAllTravelPlans = async (
+  viewerId: string,
+  query: Record<string, unknown>,
+) => {
+  // pagination
   const filter = buildTravelPlanFilter(query);
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  const result = await TravelPlan.find(filter)
+  // fetch plans and populate who created
+  const plans = await TravelPlan.find(filter)
+    .populate("user", "name profilePicture")
     .sort({ createdAt: -1 })
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .lean();
 
   const total = await TravelPlan.find(filter).countDocuments();
   const meta = { page, limit, total };
-  return { meta, result };
+
+  // response structure
+  let data: TAllPlansResponse[];
+
+  // if viewer not logged in. viewer context will be default settings
+  if (!viewerId) {
+    data = plans.map((plan) => {
+      return {
+        data: plan,
+        viewerContext: {
+          isOwner: false,
+          isParticipant: true,
+          hasRequested: false,
+        },
+      };
+    });
+    return { data, meta };
+  }
+
+  // if viewerId present. means he can be either plan owner or an user.
+  // for onwer: { isOwner: true, isParticipant: false, hasRequested: false}
+  // for user: { isOwner: false, isParticipant: true, hasRequested: true/false}
+  const planIds = plans.map((plan) => plan._id);
+
+  // fetch all request belong to the viewerId
+  const requests = await TravelRequest.find({
+    travelPlan: { $in: planIds },
+    requester: viewerId,
+  })
+    .select("travelPlan")
+    .lean();
+
+  // create a set to fast lookup to check hasRequested
+  const requestPlanSet = new Set(
+    requests.map((req) => req.travelPlan.toString()),
+  );
+
+  // make data formatted for logged in user
+  data = plans.map((plan) => {
+    const isOwner = plan.user._id.toString() === viewerId;
+    const hasRequested = requestPlanSet.has(plan._id.toString());
+    return {
+      data: plan,
+      viewerContext: {
+        isOwner,
+        hasRequested,
+        isParticipant: !isOwner,
+      },
+    };
+  });
+
+  // return data for logged-in user
+  return { meta, data };
 };
 
 /**
@@ -183,7 +240,7 @@ const deleteTravelPlan = async (userId: string, planId: string) => {
 
 export const TravelPlanService = {
   createTravelPlan,
-  getAllTravelPlansFiltered,
+  getAllTravelPlans,
   getSingleTravelPlan,
   getMyAllTravelPlans,
   updateTravelPlan,
