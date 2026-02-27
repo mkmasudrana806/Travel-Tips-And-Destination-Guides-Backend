@@ -1,5 +1,6 @@
 import { Date, Types } from "mongoose";
 
+// comment type
 export type TComment = {
   _id: Types.ObjectId;
   post: Types.ObjectId;
@@ -12,4 +13,14 @@ export type TComment = {
   isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
+};
+
+// comment viewerContex
+export type TCommentViewerContext = {
+  isOwner: boolean;
+};
+
+export type TAllCommentsResponse = {
+  data: TComment;
+  viewerContext: TCommentViewerContext;
 };

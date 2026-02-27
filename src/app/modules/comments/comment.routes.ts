@@ -3,6 +3,7 @@ import validateRequestData from "../../middlewares/validateRequest";
 import { CommentControllers } from "./comment.controller";
 import auth from "../../middlewares/auth";
 import { CommentValidations } from "./comment.validation";
+import optionalAuth from "../../middlewares/optionalAuth";
 
 // '/comments'
 const router = express.Router();
@@ -19,7 +20,7 @@ postRouter.post(
 );
 
 // get all root comments with depth 1's replies (latest 3 replies for depth 1)
-postRouter.get("/", CommentControllers.getAllComments);
+postRouter.get("/", optionalAuth(), CommentControllers.getAllComments);
 
 // get replies of a comment
 router.get("/:commentId/replies", CommentControllers.getRepliesOfComment);

@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
-import { TComment } from "./comment.interface";
+import { TAllCommentsResponse, TComment } from "./comment.interface";
 import { Comment } from "./comment.model";
 import mongoose from "mongoose";
 import { NotificationService } from "../notifications/notifications.service";
@@ -101,11 +101,13 @@ const createAComment = async (
  * Rule 2: if root comment has replies >=3, only 3 replies are returned. else all returns.
  * and show load more 12+ comments. we have antoher api to fetch more replies for that root comment with controlled way.
  *
+ * @param viewerId who viewing all comments of a post. owner/users(logged in/out)
  * @param postId post to views all comments
  * @param query page, limit, sort
  * @returns paginated comments and its chil comments
  */
 const getAllComments = async (
+  viewerId: string,
   postId: string,
   query: Record<string, unknown>,
 ) => {
@@ -181,12 +183,45 @@ const getAllComments = async (
   });
 
   const hasNextPage = page * limit < totalRoots;
-  return {
-    comments: structured,
-    page,
-    limit,
-    hasNextPage,
-  };
+  const meta = { page, limit, hasNextPage };
+
+  let data: TAllCommentsResponse[];
+  // if viewer is not logged in
+  if (!viewerId) {
+    data = structured.map((root) => ({
+      data: {
+        ...root,
+        replies: root.replies.map((reply) => ({
+          data: reply,
+          viewerContext: {
+            isOwner: false,
+          },
+        })),
+      },
+      viewerContext: {
+        isOwner: false,
+      },
+    }));
+
+    return { meta, data };
+  }
+
+  // for logged in user
+  data = structured.map((root) => ({
+    data: {
+      ...root,
+      replies: root.replies.map((reply) => ({
+        data: reply,
+        viewerContext: {
+          isOwner: reply.user.toString() === viewerId,
+        },
+      })),
+    },
+    viewerContext: {
+      isOwner: root.user.toString() === viewerId,
+    },
+  }));
+  return { meta, data };
 };
 
 /**
