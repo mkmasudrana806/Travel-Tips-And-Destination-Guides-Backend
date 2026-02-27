@@ -106,7 +106,8 @@ const getSingleUser = async (userId: string, viewerId: string | null) => {
   if (!user) throw new AppError(httpStatus.NOT_FOUND, "user not found");
 
   // return profile data with viewer context
-  return { ...user, isFollowing: !!follows, isSelf };
+  const viewerContext = { isFollowing: !!follows, isSelf };
+  return { data: user, viewerContext };
 };
 
 /**

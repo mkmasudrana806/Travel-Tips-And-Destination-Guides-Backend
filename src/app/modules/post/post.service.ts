@@ -189,7 +189,9 @@ const getSinglePost = async (postId: string, viewerId: string) => {
 
   // isVoted
   const isVoted = { status: !!postVote, voteType: postVote?.type || null };
-  return { ...post, isVoted, isOwner };
+  const viewerContext = { isVoted, isOwner };
+  
+  return { data: post, viewerContext };
 };
 
 /**

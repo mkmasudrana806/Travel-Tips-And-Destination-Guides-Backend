@@ -60,13 +60,17 @@ const getSingleUser = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const viewerId = req.user.userId;
 
-  const result = await UserServices.getSingleUser(userId, viewerId);
+  const { data, viewerContext } = await UserServices.getSingleUser(
+    userId,
+    viewerId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "User is retrieved successfully",
-    data: result,
+    data: data,
+    viewerContext,
   });
 });
 

@@ -67,7 +67,8 @@ const getSingleTravelPlan = async (planId: string, viewerId: string) => {
   const hasRequested = !!travelRequest;
 
   // return plan data with viewer meta data
-  return { ...plan, isOwner, isParticipant, hasRequested };
+  const viewerContext = { isOwner, isParticipant, hasRequested };
+  return { data: plan, viewerContext };
 };
 
 /**

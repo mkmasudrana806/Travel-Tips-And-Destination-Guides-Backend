@@ -21,13 +21,17 @@ const createTravelPlan = asyncHanlder(async (req, res) => {
 const getSingleTravelPlan = asyncHanlder(async (req, res) => {
   const viewerId = req.user.userId;
   const planId = req.params.planId;
-  const result = await TravelPlanService.getSingleTravelPlan(planId, viewerId);
+  const { data, viewerContext } = await TravelPlanService.getSingleTravelPlan(
+    planId,
+    viewerId,
+  );
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
     message: "Travel plan is retrieved",
-    data: result,
+    data: data,
+    viewerContext,
   });
 });
 

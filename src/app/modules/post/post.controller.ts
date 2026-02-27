@@ -50,13 +50,17 @@ const getMyPosts = asyncHanlder(async (req, res) => {
 const getSinglePost = asyncHanlder(async (req, res) => {
   const postId = req.params.postId;
   const viewerId = req.user.userId;
-  const result = await PostServices.getSinglePost(postId, viewerId);
+  const { data, viewerContext } = await PostServices.getSinglePost(
+    postId,
+    viewerId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "Post retrieved successfully",
-    data: result,
+    data,
+    viewerContext,
   });
 });
 
