@@ -48,14 +48,16 @@ const createTravelPlan = async (
  * @param planId single plan id to view
  * @returns single plan data
  */
-const getSingleTravelPlan = async (planId: string, viewerId: string) => {
+const getSingleTravelPlan = async (planId: string, viewerId?: string) => {
   const [plan, travelRequest] = await Promise.all([
     TravelPlan.findById(planId).populate("user", "name profilePicture").lean(),
     viewerId
-      ? TravelRequest.exists({
+      ? TravelRequest.findOne({
           travelPlan: planId,
           requester: viewerId,
         })
+          .select("status")
+          .lean()
       : null,
   ]);
 
@@ -65,13 +67,12 @@ const getSingleTravelPlan = async (planId: string, viewerId: string) => {
 
   // check is Owner
   const isOwner = plan.user._id.toString() === viewerId;
-  // if not owner, so participant (either loged or not. no matter)
-  const isParticipant = isOwner ? false : true;
+
   // has requested
-  const hasRequested = !!travelRequest;
+  const requestStatus = isOwner ? "none" : (travelRequest?.status ?? "none");
 
   // return plan data with viewer meta data
-  const viewerContext = { isOwner, isParticipant, hasRequested };
+  const viewerContext = { isOwner, requestStatus };
   return { data: plan, viewerContext };
 };
 
