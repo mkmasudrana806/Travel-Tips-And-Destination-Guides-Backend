@@ -14,7 +14,7 @@ const travelPlanBodySchema = z.object({
 
 // create travel
 const travelPlanCreate = z.object({
-  body: travelPlanBodySchema.strict(),
+  body: travelPlanBodySchema.omit({status: true}).strict(),
 });
 
 // update travel
