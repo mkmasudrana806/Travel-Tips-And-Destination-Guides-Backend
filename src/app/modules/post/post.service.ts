@@ -15,6 +15,7 @@ import { TJwtPayload } from "../../interface/JwtPayload";
 import PostVote from "../postVote/postVote.model";
 import SavedPost from "../savedPost/savedPost.model";
 import UserFollow from "../userFollow/userFollow.model";
+import validateObjectId from "../../utils/validateObjectId";
 
 /**
  * ------------- Create a new post ----------------
@@ -34,6 +35,7 @@ const createPost = async (userId: string, payload: TPostCreate) => {
   // loop through all image inside content and received ids
   $("img").each((i, el) => {
     const id = $(el).attr("data-image-id");
+    validateObjectId({ name: "data-image-id", value: id });
     if (id) idsInEditor.push(id);
   });
 
@@ -334,6 +336,7 @@ const updateAPost = async (
     // loop through all image inside content and received ids
     $("img").each((i, el) => {
       const id = $(el).attr("data-image-id");
+      validateObjectId({ name: "data-image-id", value: id });
       if (id) idsInEditor.push(id);
     });
 
