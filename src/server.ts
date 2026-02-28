@@ -21,6 +21,10 @@ async function main() {
     server = app.listen(config.app_port, () => {
       console.log(`app listening on port ${config.app_port}`);
     });
+
+    // set headers and request timeout
+    server.headersTimeout = 10_000;
+    server.requestTimeout = 15_000;
   } catch (error) {
     console.log("Error while connecting to Database!", error);
   }

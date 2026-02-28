@@ -2,14 +2,18 @@ import { Request, Response } from "express";
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
 import { ApiRoutes } from "./app/routes";
 import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
+import mongoSanitize from "express-mongo-sanitize";
 
 const app = express();
 
 // parsers (middleware)
-app.use(express.json());
+app.use(mongoSanitize());
+app.use(helmet());
+app.use(express.json({ limit: "200kb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
