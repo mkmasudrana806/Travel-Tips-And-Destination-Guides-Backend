@@ -1,4 +1,5 @@
 import { z } from "zod";
+import objectId from "../../utils/validateObjectIdInZod";
 
 const createPost = z.object({
   title: z
@@ -19,8 +20,8 @@ const createPost = z.object({
   estimatedCost: z.number(),
   travelType: z.enum(["budget", "midrange", "luxury"]),
   premium: z.boolean(),
-  bannerId: z.string(),
-  contentIds: z.array(z.string()),
+  bannerId: objectId("banner id"),
+  contentIds: z.array(objectId("content ids")),
 });
 
 // create post
