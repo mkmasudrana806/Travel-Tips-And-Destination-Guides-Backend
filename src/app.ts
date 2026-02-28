@@ -10,15 +10,24 @@ import mongoSanitize from "express-mongo-sanitize";
 
 const app = express();
 
-// parsers (middleware)
-app.use(mongoSanitize());
+// security headers
 app.use(helmet());
+app.disable("x-powered-by");
+
+// body parser
 app.use(express.json({ limit: "200kb" }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "200kb" }));
+
+// security sanitizer
+app.use(mongoSanitize());
+
 app.use(
   cors({
     // origin: ["https://travel-tips-and-destination-guides-client.vercel.app"],
-    origin: ["http://localhost:3000"],
+    origin:
+      process.env.NODE_ENV === "development"
+        ? ["http://localhost:3000"]
+        : ["https://travelshare.vercel.com"],
     credentials: true,
   }),
 ); // your client url
