@@ -6,7 +6,7 @@ import config from "../../config";
 // create user schema
 const userSchema = new Schema<TUser, IUser>(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, maxlength: 100 },
     email: {
       type: String,
       required: true,
@@ -17,15 +17,22 @@ const userSchema = new Schema<TUser, IUser>(
       type: String,
       required: true,
       select: 1,
+      minlength: 4,
+      maxlength: 100,
     },
     passwordChangedAt: { type: Date },
-    age: { type: Number, required: true },
+    age: {
+      type: Number,
+      required: true,
+      min: [5, "Age not allowed less than 5"],
+      max: [150, "Age cann't be longer than 150"],
+    },
     gender: {
       type: String,
       required: true,
       enum: ["male", "female"],
     },
-    address: { type: String, required: true },
+    address: { type: String, required: true, maxlength: 256 },
     role: {
       type: String,
       required: true,
@@ -71,7 +78,6 @@ userSchema.post("find", function (docs) {
     doc.password = "";
   });
 });
-
 
 // ----------- hide password to client response -----------
 userSchema.post("findOneAndUpdate", function (doc) {

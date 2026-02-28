@@ -17,6 +17,7 @@ const commentSchema = new Schema<TComment>(
     content: {
       type: String,
       required: true,
+      maxlength: [2000, "Comment length max 2000 characters"],
     },
     parentComment: {
       type: Schema.Types.ObjectId,
@@ -26,6 +27,7 @@ const commentSchema = new Schema<TComment>(
     depth: {
       type: Number,
       default: 0,
+      max: [2, "Parent comment depth allowed max 2"],
     },
     replyCount: {
       type: Number,

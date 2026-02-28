@@ -12,21 +12,26 @@ const loginUserSchema = z.object({
       .string({
         required_error: "Password is required",
       })
-      .min(4, "Password must be at least 4 characters"),
+      .min(4)
+      .max(100),
   }),
 });
 
 // change user password schema
 const changeUserPasswordSchema = z.object({
   body: z.object({
-    oldPassword: z.string({
-      required_error: "Old password is required",
-    }),
+    oldPassword: z
+      .string({
+        required_error: "Old password is required",
+      })
+      .min(4)
+      .max(100),
     newPassword: z
       .string({
         required_error: "New password is required",
       })
-      .min(4, "Password must be at least 4 characters"),
+      .min(4)
+      .max(100),
   }),
 });
 
@@ -44,9 +49,11 @@ const forgotPasswordSchema = z.object({
 // reset password schema
 const resetPasswordSchema = z.object({
   body: z.object({
-    token: z.string({
-      required_error: "Token is required",
-    }),
+    token: z
+      .string({
+        required_error: "Token is required",
+      })
+      .max(512),
     email: z
       .string({
         required_error: "Email is required",
@@ -56,17 +63,20 @@ const resetPasswordSchema = z.object({
       .string({
         required_error: "New password is required",
       })
-      .min(4, "Password must be at least 4 characters"),
+      .min(4)
+      .max(100),
   }),
 });
 
 // refresh token schema
 const refreshTokenSchema = z.object({
   cookies: z.object({
-    refreshToken: z.string({
-      required_error: "Refresh token is required",
-      invalid_type_error: "Refresh token must be string",
-    }),
+    refreshToken: z
+      .string({
+        required_error: "Refresh token is required",
+        invalid_type_error: "Refresh token must be string",
+      })
+      .max(512),
   }),
 });
 

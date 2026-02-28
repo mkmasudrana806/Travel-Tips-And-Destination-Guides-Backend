@@ -6,18 +6,20 @@ const createPost = z.object({
     .string({
       required_error: "Title is required",
     })
-    .min(5),
+    .min(5)
+    .max(128),
   category: z.enum(["Adventure", "Business Travel", "Exploration"]),
   image: z.string().url("Baner image is not added"),
   content: z
     .string({
       required_error: "content is required",
     })
-    .min(100),
-  locationName: z.string(),
-  country: z.string(),
-  travelDays: z.number(),
-  estimatedCost: z.number(),
+    .min(100)
+    .max(50000),
+  locationName: z.string().max(128),
+  country: z.string().max(100),
+  travelDays: z.number().max(100),
+  estimatedCost: z.number().max(100_000),
   travelType: z.enum(["budget", "midrange", "luxury"]),
   premium: z.boolean(),
   bannerId: objectId("banner id"),

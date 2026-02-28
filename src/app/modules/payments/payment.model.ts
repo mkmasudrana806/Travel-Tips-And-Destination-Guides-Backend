@@ -7,7 +7,11 @@ const paymentSchema = new Schema<TPayment>(
     user: { type: Schema.Types.ObjectId, required: true, ref: "User" },
     username: { type: String, required: true },
     email: { type: String, required: true },
-    amount: { type: Number, required: true },
+    amount: {
+      type: Number,
+      required: true,
+      max: [100_000, "Amount excceded to maximum limit"],
+    },
     paymentDate: { type: Date, required: true, default: new Date() },
     expiresAt: { type: Date, required: true, default: new Date() },
     status: {

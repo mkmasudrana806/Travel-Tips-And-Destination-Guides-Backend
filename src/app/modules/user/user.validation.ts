@@ -1,27 +1,34 @@
 import z from "zod";
 
 const userSchema = z.object({
-  name: z.string({
-    required_error: "Name is required",
-  }),
+  name: z
+    .string({
+      required_error: "Name is required",
+    })
+    .max(100),
   email: z
     .string({
       required_error: "Email is required",
     })
     .email("Invalid email address"),
   password: z.string(),
-  age: z.number({
-    invalid_type_error: "Age should be a number",
-    required_error: "Age is required",
-  }),
-  gender: z.enum(["male", "female", "others"], {
+  age: z
+    .number({
+      invalid_type_error: "Age should be a number",
+      required_error: "Age is required",
+    })
+    .min(5)
+    .max(150),
+  gender: z.enum(["male", "female"], {
     invalid_type_error: "Gender is invalid",
     required_error: "Gender is required",
   }),
-  address: z.string({
-    invalid_type_error: "Address should be a string",
-    required_error: "Address is required",
-  }),
+  address: z
+    .string({
+      invalid_type_error: "Address should be a string",
+      required_error: "Address is required",
+    })
+    .max(256),
 });
 
 // create user validations schema

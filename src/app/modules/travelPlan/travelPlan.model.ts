@@ -7,8 +7,9 @@ const travelPlanSchema = new Schema<TTravelPlan>(
     startLocation: {
       type: String,
       required: true,
+      maxlength: 128,
     },
-    destination: { type: String, required: true },
+    destination: { type: String, required: true, maxlength: 128 },
     startDate: {
       type: Date,
       required: true,
@@ -19,19 +20,23 @@ const travelPlanSchema = new Schema<TTravelPlan>(
     minBudget: {
       type: Number,
       required: true,
+      max: 100_000,
     },
     maxBudget: {
       type: Number,
       required: true,
+      max: 100_000,
     },
     contact: {
       type: String,
       required: true,
       select: 0,
+      maxlength: 32,
     },
     note: {
       type: String,
       required: true,
+      maxlength: 200,
     },
     status: {
       type: String,

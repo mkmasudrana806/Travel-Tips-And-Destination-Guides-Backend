@@ -19,6 +19,7 @@ const postShareSchema = new Schema<TPostShare>(
       type: String,
       trim: true,
       default: null,
+      max: 300,
     },
   },
   {
