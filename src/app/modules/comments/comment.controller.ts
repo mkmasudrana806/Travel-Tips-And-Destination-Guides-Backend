@@ -2,12 +2,16 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { CommentServices } from "./comment.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // ------------------- create a comment -------------------
 const createAComment = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const postId = req.params.postId;
   const payload = req.body;
+  // validate mongoose object id
+  validateObjectId({ name: "post id", value: postId });
+
   const result = await CommentServices.createAComment(userId, postId, payload);
 
   sendResponse(res, {
@@ -23,6 +27,9 @@ const getAllComments = asyncHanlder(async (req, res) => {
   const viewerId = req.user.userId;
   const query = req.query;
   const postId = req.params.postId;
+  // validate mongoose object id
+  validateObjectId({ name: "post id", value: postId });
+
   const result = await CommentServices.getAllComments(viewerId, postId, query);
 
   sendResponse(res, {
@@ -37,6 +44,9 @@ const getAllComments = asyncHanlder(async (req, res) => {
 const getRepliesOfComment = asyncHanlder(async (req, res) => {
   const commentId = req.params.commentId;
   const query = req.query;
+  // validate mongoose object id
+  validateObjectId({ name: "comment id", value: commentId });
+
   const result = await CommentServices.getRepliesOfComment(commentId, query);
 
   sendResponse(res, {
@@ -51,6 +61,9 @@ const getRepliesOfComment = asyncHanlder(async (req, res) => {
 const deleteAComment = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const commentId = req.params.commentId;
+  // validate mongoose object id
+  validateObjectId({ name: "comment id", value: commentId });
+
   const result = await CommentServices.deleteAComment(commentId, userId);
 
   sendResponse(res, {
@@ -66,6 +79,9 @@ const updateAComment = asyncHanlder(async (req, res) => {
   const commentId = req.params.commentId;
   const userId = req.user.userId;
   const payload = req.body;
+  // validate comment id
+  validateObjectId({ name: "comment id", value: commentId });
+
   const result = await CommentServices.updateAComment(
     commentId,
     userId,

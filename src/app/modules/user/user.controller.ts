@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import { UserServices } from "./user.service";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
+import validateObjectId from "../../utils/validateObjectId";
 
 // ------------------- create an user -------------------
 const createAnUser = asyncHanlder(async (req, res) => {
@@ -59,6 +60,8 @@ const getMe = asyncHanlder(async (req, res) => {
 const getSingleUser = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const viewerId = req.user.userId;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
 
   const { data, viewerContext } = await UserServices.getSingleUser(
     userId,
@@ -77,6 +80,9 @@ const getSingleUser = asyncHanlder(async (req, res) => {
 // ------------------- delete an user -------------------
 const deleteUser = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
+
   const result = await UserServices.deleteUser(userId);
 
   sendResponse(res, {
@@ -105,6 +111,9 @@ const updateUser = asyncHanlder(async (req, res) => {
 const changeUserStatus = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const payload = req.body;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
+
   const result = await UserServices.changeUserStatus(userId, payload);
 
   sendResponse(res, {
@@ -119,6 +128,9 @@ const changeUserStatus = asyncHanlder(async (req, res) => {
 const changeUserRole = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const payload = req.body;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
+
   const result = await UserServices.changeUserRole(userId, payload);
 
   sendResponse(res, {

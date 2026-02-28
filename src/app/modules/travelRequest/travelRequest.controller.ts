@@ -2,12 +2,15 @@ import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
 import asyncHanlder from "../../utils/asyncHandler";
 import { TravelRequestService } from "./travelRequest.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // ---------------- create a travel request ---------------
 const createTravelRequest = asyncHanlder(async (req, res) => {
   const travelPlanId = req.params.planId;
   const requesterId = req.user.userId;
   const requestNote = req.body.requestNote;
+  // validate params id
+  validateObjectId({ name: "travelPlan id", value: travelPlanId });
 
   const result = await TravelRequestService.createTravelRequest(
     travelPlanId,
@@ -28,6 +31,9 @@ const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const planId = req.params.planId;
   const query = req.query;
+  // validate params id
+  validateObjectId({ name: "plan id", value: planId });
+
   const result = await TravelRequestService.getAllRequestsForPlan(
     planId,
     userId,
@@ -47,6 +53,9 @@ const updateTravelRequestStatus = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const requestId = req.params.requestId;
   const payload = req.body;
+  // validate params id
+  validateObjectId({ name: "request id", value: requestId });
+
   const result = await TravelRequestService.updateTravelRequestStatus(
     userId,
     requestId,
@@ -66,6 +75,9 @@ const cancelTravelRequest = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const requestId = req.params.requestId;
   const payload = req.body;
+  // validate params id
+  validateObjectId({ name: "request id", value: requestId });
+
   const result = await TravelRequestService.cancelTravelRequest(
     userId,
     requestId,

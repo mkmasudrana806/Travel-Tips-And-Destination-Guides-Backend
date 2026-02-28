@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import sendResponse from "../../utils/sendResponse";
 import asyncHanlder from "../../utils/asyncHandler";
 import { NotificationService } from "./notifications.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // --------------- get my all notifications ----------------
 const getMyNotifications = asyncHanlder(async (req, res) => {
@@ -25,6 +26,9 @@ const getMyNotifications = asyncHanlder(async (req, res) => {
 const markAsRead = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const notificationId = req.params.notificationId;
+  // validate params id
+  validateObjectId({ name: "notification id", value: notificationId });
+
   const result = await NotificationService.markAsRead(notificationId, userId);
 
   sendResponse(res, {

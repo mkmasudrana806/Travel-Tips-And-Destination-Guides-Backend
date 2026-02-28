@@ -2,11 +2,14 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { SavedPostService } from "./savedPost.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // --------------- saved a post ----------------
 const savedPost = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const postId = req.params.postId;
+  // validate params id
+  validateObjectId({ name: "post id", value: postId });
 
   const result = await SavedPostService.savePost(userId, postId);
 
@@ -22,6 +25,9 @@ const savedPost = asyncHanlder(async (req, res) => {
 const deleteSavedPost = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const postId = req.params.postId;
+  // validate params id
+  validateObjectId({ name: "post id", value: postId });
+
   const result = await SavedPostService.deleteSavedPost(userId, postId);
 
   sendResponse(res, {
@@ -46,7 +52,7 @@ const getAllSavedPosts = asyncHanlder(async (req, res) => {
     success: true,
     message: "All post retrived successfull",
     data: data,
-    meta: data,
+    meta: meta,
   });
 });
 

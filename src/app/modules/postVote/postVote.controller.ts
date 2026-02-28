@@ -2,12 +2,16 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { PostVoteServices } from "./postVote.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // ------------------- upvote/downvote a post -------------------
 const votePost = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const postId = req.params.postId;
   const type = req.body.type;
+  // validate params id
+  validateObjectId({ name: "post id", value: postId });
+
   const result = await PostVoteServices.toggleVote(userId, postId, type);
 
   sendResponse(res, {
@@ -22,6 +26,9 @@ const votePost = asyncHanlder(async (req, res) => {
 const postVoterLists = asyncHanlder(async (req, res) => {
   const postId = req.params.postId;
   const query = req.query;
+  // validate params id
+  validateObjectId({ name: "post id", value: postId });
+
   const { data, meta } = await PostVoteServices.postVoterLists(postId, query);
 
   sendResponse(res, {
@@ -50,5 +57,5 @@ const listsOfPostsIVote = asyncHanlder(async (req, res) => {
 export const PostVoteController = {
   votePost,
   postVoterLists,
-  listsOfPostsIVote
+  listsOfPostsIVote,
 };

@@ -2,11 +2,15 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { UserFollowService } from "./userFollow.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // ------------------- my vote stutus of a post -------------------
 const toggleFollow = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const targetUserId = req.params.userId;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
+
   const result = await UserFollowService.toggleFollow(userId, targetUserId);
 
   sendResponse(res, {
@@ -21,6 +25,9 @@ const toggleFollow = asyncHanlder(async (req, res) => {
 const getFollowers = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const query = req.query;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
+
   const { meta, result } = await UserFollowService.getFollowers(userId, query);
 
   sendResponse(res, {
@@ -36,6 +43,9 @@ const getFollowers = asyncHanlder(async (req, res) => {
 const getFollowings = asyncHanlder(async (req, res) => {
   const userId = req.params.userId;
   const query = req.query;
+  // validate params id
+  validateObjectId({ name: "user id", value: userId });
+
   const { meta, result } = await UserFollowService.getFollowings(userId, query);
 
   sendResponse(res, {
@@ -51,6 +61,9 @@ const getFollowings = asyncHanlder(async (req, res) => {
 const getMutualFriends = asyncHanlder(async (req, res) => {
   const viewerId = req.user.userId;
   const targetUserId = req.params.userId;
+  // validate params id
+  validateObjectId({ name: "targetUser id", value: targetUserId });
+
   const result = await UserFollowService.getMutualFriends(
     viewerId,
     targetUserId,

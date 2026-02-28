@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import asyncHanlder from "../../utils/asyncHandler";
 import sendResponse from "../../utils/sendResponse";
 import { TravelPlanService } from "./travelPlan.service";
+import validateObjectId from "../../utils/validateObjectId";
 
 // ---------------- create a travel plan ---------------
 const createTravelPlan = asyncHanlder(async (req, res) => {
@@ -21,6 +22,9 @@ const createTravelPlan = asyncHanlder(async (req, res) => {
 const getSingleTravelPlan = asyncHanlder(async (req, res) => {
   const viewerId = req.user.userId;
   const planId = req.params.planId;
+  // validate params id
+  validateObjectId({ name: "plan id", value: planId });
+
   const { data, viewerContext } = await TravelPlanService.getSingleTravelPlan(
     planId,
     viewerId,
@@ -54,6 +58,9 @@ const updateTravelPlan = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const planId = req.params.planId;
   const data = req.body;
+  // validate params id
+  validateObjectId({ name: "plan id", value: planId });
+
   const result = await TravelPlanService.updateTravelPlan(userId, planId, data);
 
   sendResponse(res, {
@@ -68,6 +75,9 @@ const updateTravelPlan = asyncHanlder(async (req, res) => {
 const deleteTravelPlan = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const planId = req.params.planId;
+  // validate params id
+  validateObjectId({ name: "plan id", value: planId });
+
   const result = await TravelPlanService.deleteTravelPlan(userId, planId);
 
   sendResponse(res, {
@@ -86,7 +96,6 @@ const getAllTravelPlans = asyncHanlder(async (req, res) => {
     viewerId,
     query,
   );
-
 
   sendResponse(res, {
     success: true,
