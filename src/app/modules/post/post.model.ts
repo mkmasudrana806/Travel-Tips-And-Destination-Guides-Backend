@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Query } from "mongoose";
 import TPost from "./post.interface";
 
 const postSchema = new Schema<TPost>(
@@ -34,6 +34,18 @@ const postSchema = new Schema<TPost>(
 
 postSchema.index({ author: 1 });
 postSchema.index({ travelType: 1 });
+
+// add a pre-hook middleware to filter deleted post from query
+postSchema.pre(/^find/, function (next) {
+  (this as Query<any, any>).where({ isDeleted: false });
+  console.log("Prehook middleware for post is executed.");
+  next();
+});
+
+postSchema.pre("countDocuments", function (next) {
+  (this as Query<any, any>).where({ isDeleted: false });
+  next();
+});
 
 const Post = model<TPost>("Post", postSchema);
 export default Post;

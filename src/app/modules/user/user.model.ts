@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Query, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import { IUser, TUser } from "./user.interface";
 import config from "../../config";
@@ -64,6 +64,17 @@ userSchema.pre("save", async function (next) {
     user.password,
     Number(config.bcrypt_salt_rounds),
   );
+  next();
+});
+
+// ----------- include only active ser -----------
+userSchema.pre(/^find/, function (next) {
+  (this as Query<any, any>).where({ isDeleted: false });
+  next();
+});
+
+userSchema.pre("countDocuments", function (next) {
+  (this as Query<any, any>).where({ isDeleted: false });
   next();
 });
 

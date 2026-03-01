@@ -68,8 +68,7 @@ const getAllUsers = async (query: Record<string, any>) => {
 const getMe = async (user: TJwtPayload) => {
   const result = await User.findOne({
     _id: user.userId,
-    role: user.role,
-    isDeleted: false,
+    role: user.role
   });
   return result;
 };
@@ -250,7 +249,6 @@ const getVerified = async (
     upvoteCount: {
       $gt: 100,
     },
-    isDeleted: false,
   });
 
   if (!postfound) {

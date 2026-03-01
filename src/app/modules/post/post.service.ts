@@ -84,9 +84,7 @@ const getAllTravelPosts = async (
   const skip = (page - 1) * limit;
 
   // make a query object
-  const filter: any = {
-    isDeleted: false,
-  };
+  const filter: any = {};
 
   // category filter
   if (category) {
@@ -262,7 +260,7 @@ const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
  */
 const getSinglePost = async (postId: string, viewerId: string) => {
   // check if post found
-  const post = await Post.findOne({ _id: postId, isDeleted: false })
+  const post = await Post.findById(postId)
     .populate({
       path: "author",
       select: "_id name isVerified profilePicture",
@@ -323,8 +321,7 @@ const updateAPost = async (
   // check if the post exists and belongs to the user
   const post = await Post.findOne({
     _id: postId,
-    author: userId,
-    isDeleted: false,
+    author: userId
   });
   if (!post) throw new AppError(httpStatus.NOT_FOUND, "Post not found");
 
@@ -369,7 +366,7 @@ const updateAPost = async (
 
   // update into database
   const result = await Post.findOneAndUpdate(
-    { _id: postId, author: userId, isDeleted: false },
+    { _id: postId, author: userId },
     payload,
     {
       new: true,
@@ -394,8 +391,7 @@ const deleteAPost = async (user: TJwtPayload, postId: string) => {
     deletedPost = await Post.findOneAndUpdate(
       {
         _id: postId,
-        author: user.userId,
-        isDeleted: false,
+        author: user.userId
       },
       { isDeleted: true },
       { new: true },
@@ -405,8 +401,7 @@ const deleteAPost = async (user: TJwtPayload, postId: string) => {
   } else if (user.role === "admin") {
     deletedPost = await Post.findOneAndUpdate(
       {
-        _id: postId,
-        isDeleted: false,
+        _id: postId
       },
       { isDeleted: true },
       { new: true },
