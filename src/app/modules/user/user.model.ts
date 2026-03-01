@@ -67,7 +67,7 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// ----------- include only active ser -----------
+// ----------- include only active user -----------
 userSchema.pre(/^find/, function (next) {
   (this as Query<any, any>).where({ isDeleted: false });
   next();
@@ -76,6 +76,10 @@ userSchema.pre(/^find/, function (next) {
 userSchema.pre("countDocuments", function (next) {
   (this as Query<any, any>).where({ isDeleted: false });
   next();
+});
+
+userSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: false } });
 });
 
 // ----------- hide password to client response -----------

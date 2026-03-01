@@ -47,5 +47,9 @@ postSchema.pre("countDocuments", function (next) {
   next();
 });
 
+postSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: false } });
+});
+
 const Post = model<TPost>("Post", postSchema);
 export default Post;
