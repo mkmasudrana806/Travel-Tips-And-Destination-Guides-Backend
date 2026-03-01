@@ -80,8 +80,11 @@ userSchema.pre("countDocuments", function (next) {
 
 userSchema.pre("aggregate", function (next) {
   this.pipeline().unshift({ $match: { isDeleted: false } });
+  next();
 });
 
+
+// ----------- 
 // ----------- hide password to client response -----------
 userSchema.post("save", function (doc) {
   doc.password = "";
