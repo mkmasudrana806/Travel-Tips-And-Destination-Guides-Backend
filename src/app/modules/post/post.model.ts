@@ -1,4 +1,4 @@
-import { Schema, model, Query } from "mongoose";
+import { Schema, model, Query, Aggregate } from "mongoose";
 import TPost from "./post.interface";
 
 const postSchema = new Schema<TPost>(
@@ -36,19 +36,27 @@ postSchema.index({ author: 1 });
 postSchema.index({ travelType: 1 });
 
 // add a pre-hook middleware to filter deleted post from query
-postSchema.pre(/^find/, function (next) {
-  (this as Query<any, any>).where({ isDeleted: false });
-  console.log("Prehook middleware for post is executed.");
+postSchema.pre(/^find/, function (this: Query<any, any>, next) {
+  const includeDeleted = this.getOptions().includeDeleted;
+  if (!includeDeleted) {
+    (this as Query<any, any>).where({ isDeleted: false });
+  }
   next();
 });
 
-postSchema.pre("countDocuments", function (next) {
-  (this as Query<any, any>).where({ isDeleted: false });
+postSchema.pre("countDocuments", function (this: Query<any, any>, next) {
+  const includeDeleted = this.getOptions().includeDeleted;
+  if (!includeDeleted) {
+    (this as Query<any, any>).where({ isDeleted: false });
+  }
   next();
 });
 
-postSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: false } });
+postSchema.pre("aggregate", function (this: Aggregate<any>, next) {
+  const includeDeleted = this.options?.includeDeleted;
+  if (!includeDeleted) {
+    this.pipeline().unshift({ $match: { isDeleted: false } });
+  }
   next();
 });
 

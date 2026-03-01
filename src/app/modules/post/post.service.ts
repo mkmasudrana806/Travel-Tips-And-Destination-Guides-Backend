@@ -233,7 +233,7 @@ const getAllTravelPosts = async (
  */
 const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
   const postQuery = new QueryBuilder(
-    Post.find({ author: userId, isDeleted: false }).populate({
+    Post.find({ author: userId }).populate({
       path: "author",
       select: "_id name email isVerified profilePicture premiumAccess",
     }),

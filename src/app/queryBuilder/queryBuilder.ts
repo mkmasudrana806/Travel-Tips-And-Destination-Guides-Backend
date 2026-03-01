@@ -26,7 +26,7 @@ class QueryBuilder<T> {
           (field) =>
             ({
               [field]: { $regex: searchTerm, $options: "i" },
-            } as FilterQuery<T>)
+            }) as FilterQuery<T>,
         ),
       });
     }
@@ -101,11 +101,15 @@ class QueryBuilder<T> {
 
   /**
    * -------------------  count documents -------------------------
+   * @param withDeleted by default false. means deleted data will not count.
+   * passing 'true' will include deleted data into count
    * @returns it return total documents, page, limit and totalPage
    */
-  async countTotal() {
+  async countTotal(withDeleted: boolean = false) {
     const totalQueryries = this.modelQuery.getFilter(); // it gives previous filtered documents
-    const total = await this.modelQuery.model.countDocuments(totalQueryries);
+    const total = await this.modelQuery.model
+      .countDocuments(totalQueryries)
+      .setOptions({ includeDeleted: withDeleted });
     let page = Number(this?.query?.page) || 1;
     let limit = Number(this?.query?.limit) || 10;
     const totalPage = Math.ceil(total / limit);

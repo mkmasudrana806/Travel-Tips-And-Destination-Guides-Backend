@@ -1,4 +1,4 @@
-import { model, Query, Schema } from "mongoose";
+import { Aggregate, model, Query, QueryWithHelpers, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import { IUser, TUser } from "./user.interface";
 import config from "../../config";
@@ -68,23 +68,32 @@ userSchema.pre("save", async function (next) {
 });
 
 // ----------- include only active user -----------
-userSchema.pre(/^find/, function (next) {
-  (this as Query<any, any>).where({ isDeleted: false });
+userSchema.pre(/^find/, function (this: Query<any, any>, next) {
+  const includeDeleted = this.getOptions().includeDeleted;
+  console.log("include deleted: ", includeDeleted);
+  // if we don't want include deleted data. below code will run
+  if (!includeDeleted) {
+    (this as Query<any, any>).where({ isDeleted: false });
+  }
   next();
 });
 
-userSchema.pre("countDocuments", function (next) {
-  (this as Query<any, any>).where({ isDeleted: false });
+userSchema.pre("countDocuments", function (this: Query<any, any>, next) {
+  const includeDeleted = this.getOptions().includeDeleted;
+  if (!includeDeleted) {
+    (this as Query<any, any>).where({ isDeleted: false });
+  }
   next();
 });
 
-userSchema.pre("aggregate", function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: false } });
+userSchema.pre("aggregate", function (this: Aggregate<any>, next) {
+  const includeDeleted = this.options?.includeDeleted;
+  if (!includeDeleted) {
+    this.pipeline().unshift({ $match: { isDeleted: false } });
+  }
   next();
 });
 
-
-// ----------- 
 // ----------- hide password to client response -----------
 userSchema.post("save", function (doc) {
   doc.password = "";

@@ -47,13 +47,16 @@ const updateProfilePicture = async (userId: string, file: TfileUpload) => {
  * @return return all users
  */
 const getAllUsers = async (query: Record<string, any>) => {
-  const userQuery = new QueryBuilder(User.find({ isDeleted: false }), query)
+  const userQuery = new QueryBuilder(
+    User.find({}),
+    query,
+  )
     .search(searchableFields)
     .filter()
     .sort()
     .paginate()
     .fieldsLimiting();
-  const meta = await userQuery.countTotal();
+  const meta = await userQuery.countTotal(true);
   const result = await userQuery.modelQuery;
   return { meta, result };
 };
@@ -68,7 +71,7 @@ const getAllUsers = async (query: Record<string, any>) => {
 const getMe = async (user: TJwtPayload) => {
   const result = await User.findOne({
     _id: user.userId,
-    role: user.role
+    role: user.role,
   });
   return result;
 };
