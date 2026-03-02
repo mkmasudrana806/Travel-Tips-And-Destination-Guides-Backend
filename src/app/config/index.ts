@@ -25,6 +25,7 @@ const config = {
   cloudinary_secret_key: process.env.CLOUDINARY_SECRET_KEY,
   frontend_url: process.env.FRONTEND_URL,
   backend_url: process.env.BACKEND_URL,
+  cron_secret: process.env.CRON_SECRET,
 };
 
 export default config;

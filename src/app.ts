@@ -7,6 +7,7 @@ import { ApiRoutes } from "./app/routes";
 import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
 import mongoSanitize from "express-mongo-sanitize";
+import { cleanupOrphanMedia } from "./app/utils/crons";
 
 const app = express();
 
@@ -41,6 +42,8 @@ app.use("/api/v1", ApiRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is running...");
 });
+
+app.get("/api/cron/schedule1d", cleanupOrphanMedia);
 
 // not found route
 app.use("*", notFoundRoute);
