@@ -196,3 +196,17 @@ Stores system alerts that inform users about important events like requests, com
 | resourceId            | String | Related resource ID             |
 | createdAt             | Date   | Creation timestamp              |
 | updatedAt             | Date   | Last update timestamp           |
+
+
+## PostShare
+
+Stores information about posts shared by users, including optional captions.
+
+| Field | Type | Description |
+| --- | --- | --- |
+| _id (PK) | String | Unique share identifier |
+| post (FK → Post) | String | The specific post being shared |
+| user (FK → User) | String | The user who shared the post |
+| caption | String | Optional text or message added to the share |
+| createdAt | Date | Creation timestamp |
+| updatedAt | Date | Last update timestamp |
