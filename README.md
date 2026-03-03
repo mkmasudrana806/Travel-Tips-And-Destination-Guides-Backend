@@ -1,22 +1,26 @@
 # TravelShare – Social Travel Planning Platform
 
-A social travel platform where users share real travel experiences, discover destinations, and find travel partners.  
-The system combines social media features with travel planning, partner matching, and budget-based trip discovery.
+It allows users to share travel experiences, follow other travelers, create travel plans, finding travel partners, interact through comments, and manage social engagement features such as votes, saved posts, and notifications.
+
+The system is designed using a modular and layered architecture to ensure scalability, maintainability, and separation of concerns.
 
 - [Click Live Website](https://travel-tips-and-destination-guides-client.vercel.app/)
 - [Click Live Server API](https://travel-tips-and-destination-guides-backend.vercel.app)
 
-## Key Features
+## Core Features
 
 - Social travel posts with images, votes, and comments
 - Follow system with mutual connections
 - Budget-based destination filtering
 - Travel plan creation and partner matching
-- Join request workflow (request → accept/reject)
+- Join request workflow (request → cancel/accept/reject)
 - Saved trips for future planning
 - Smart personalized feed
 - Notification system (polling-based)
+- Travel sharing of others experiences
 - Admin dashboard for moderation
+- Centralized error handling
+- Security best practices
 
 ## Tech Stack
 
@@ -25,24 +29,26 @@ The system combines social media features with travel planning, partner matching
 - TypeScript
 - MongoDB
 - Mongoose
-- Zod
-- Cloudinary
-- Nodemailer
+- Zod (Input validation)
+- Cloudinary (media upload)
+- Nodemailer (email service)
 - JWT Authentication (RBAC)
 - RESTful API architecture
-- Modular service-based structure
 
 ## System Architecture
 
-### High-Level System Architecture (Payment):
-
+<details>
+    <summary> High-Level Payment's System Architecture (Click): </summary>
+    
 ![System Architecture](docs/architecture/AmarPay-payment-system-diagram.png)
 
 > More architecture diagram will be added later
 
-### ER Diagram:
+</details>
 
-`User` `Post` `PostVote` `UserFollow` `Comment` `TravelPlan` `TravelRequest` `Media` `Notification` `Payment` `SavedPost`
+**Fore more details:** [Data Model](./docs/architecture/architecture.md)
+
+### ER Diagram:
 
 ![System Architecture](docs/architecture/ER-Diagram.png)
 
@@ -131,7 +137,7 @@ Server will run at: `http://localhost:5000`
 ## Author
 
 **Masud Rana**
-Backend Engineer (Node.js)
+Junior Backend Engineer (Node.js)
 
 - Portfolio: [https://masudranasheikh.me](https://masudranasheikh.me)
 - GitHub: [https://github.com/mkmasudrana806](https://github.com/mkmasudrana806)
