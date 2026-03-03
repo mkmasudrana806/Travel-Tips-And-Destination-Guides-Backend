@@ -46,11 +46,13 @@ The system is designed using a modular and layered architecture to ensure scalab
 
 </details>
 
-**Fore more details:** [Data Model](./docs/architecture/architecture.md)
+**Fore more details:** [Architecture overview](./docs/architecture/architecture.md)
 
 ### ER Diagram:
 
 ![System Architecture](docs/architecture/ER-Diagram.png)
+
+**Fore more details:** [Database design](./docs/database-design.md)
 
 ## API Documentation
 
