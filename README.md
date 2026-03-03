@@ -63,6 +63,24 @@ All technical documentation is available in the `docs/` folder:
 - [Swagger API](./docs/swagger.yaml)
 - [Developer Guideline](./docs/developer-guideline.md)
 
+## Key Design Decisions
+
+**Why Reference-Based Relationships Over Embedded Documents ?**
+
+Relationships are modeled using ObjectId references instead of nested arrays to prevent unbounded document growth and maintain predictable query performance.
+
+<details>
+<summary> Why Controlled Comment Depth? </summary>
+
+Comment nesting depth is limited intentionally to avoid recursive database operations and excessive payload sizes.
+
+</details>
+
+<details> 
+<summary> Why Context-Aware Resource Representation? </summary>
+Public endpoints optionally enrich responses when authentication context is available, reducing frontend round trips and improving performance.
+</details>
+
 ## Project Folder Structure
 
 ```
@@ -100,6 +118,48 @@ package.json
 vercel.json
 .gitignore
 README.md
+```
+
+## Key limitations
+
+Due to vercel free tier's limitaions,
+Intentionally I have not implemented some strategies. Such as:
+
+- Rate limiting for abuse protection
+- Socket.io for real-time notification
+- Background asyncrhonous processing
+- Redis caching for reduce server load and faster response.
+- and so on. All are now future improvements.
+
+## Response Structure
+
+All API responses follow a consistent format:
+
+```json
+{
+  "success": true,
+  "message": "User register sucessfull",
+  "data": {},
+  "meta": {}, (optional)
+  "viewerContext": {} (optional)
+}
+```
+
+## Error Handling
+
+Errors are handled centrally using global error middleware.
+
+```json
+{
+  "success": false,
+  "message": "Error message",
+  "errorSources": [
+    {
+      "path": "email",
+      "message": "Email already exists"
+    }
+  ]
+}
 ```
 
 ## Installation Guide
