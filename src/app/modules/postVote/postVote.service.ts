@@ -183,13 +183,13 @@ const postVoterLists = async (
     { $sort: { createdAt: -1 } },
   ]);
 
-  const totalVotes = await PostVote.countDocuments({ post: postId, ...filter });
+  const total = await PostVote.countDocuments({ post: postId, ...filter });
   return {
     data,
     meta: {
       page,
       limit,
-      totalVotes,
+      total,
     },
   };
 };

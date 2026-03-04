@@ -238,6 +238,10 @@ const deleteTravelPlan = async (userId: string, planId: string) => {
     _id: planId,
     user: userId,
   });
+
+  if (!result) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Travel plan not found!");
+  }
   return result;
 };
 

@@ -43,7 +43,7 @@ router.delete("/:postId", auth("user", "admin"), PostControllers.deletePost);
 router.use("/:postId/shares", PostShareRoutes);
 
 // middleware for 'votes' child route
-router.use("/:postid/votes", PostVoteRoutes);
+router.use("/:postId/votes", PostVoteRoutes);
 
 // for '/saved-posts' children
 router.use("/:postId/saved-posts", SavedPostRoutes);

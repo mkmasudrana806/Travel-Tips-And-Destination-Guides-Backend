@@ -1,3 +1,5 @@
+import httpStatus from "http-status";
+import AppError from "../../utils/AppError";
 import { TNotification } from "./notifications.interface";
 import Notification from "./notifications.model";
 
@@ -60,7 +62,7 @@ const getMyNotifications = async (
  * @returns read data
  */
 const markAsRead = async (notificationId: string, userId: string) => {
-  const result = Notification.findOneAndUpdate(
+  const result = await Notification.findOneAndUpdate(
     {
       _id: notificationId,
       recipient: userId,
@@ -70,6 +72,9 @@ const markAsRead = async (notificationId: string, userId: string) => {
     { new: true },
   );
 
+  if (!result) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Already marked as read!");
+  }
   return result;
 };
 

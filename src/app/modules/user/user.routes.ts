@@ -28,7 +28,7 @@ router.get("/:userId", optionalAuth(), UserControllers.getSingleUser);
 router.delete("/:userId", auth("admin"), UserControllers.deleteUser);
 
 // update my profile
-router.put(
+router.patch(
   "/",
   auth("user"),
   validateRequestData(UserValidations.updateUserValidationsSchema),

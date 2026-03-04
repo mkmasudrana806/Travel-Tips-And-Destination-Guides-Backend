@@ -47,10 +47,7 @@ const updateProfilePicture = async (userId: string, file: TfileUpload) => {
  * @return return all users
  */
 const getAllUsers = async (query: Record<string, any>) => {
-  const userQuery = new QueryBuilder(
-    User.find({}),
-    query,
-  )
+  const userQuery = new QueryBuilder(User.find({}), query)
     .search(searchableFields)
     .filter()
     .sort()
@@ -124,7 +121,13 @@ const deleteUser = async (userId: string) => {
     { isDeleted: true },
     { new: true },
   );
-  return result ? true : false;
+  if (!result) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "User not found or already deleted",
+    );
+  }
+  return { isDeleted: result ? true : false };
 };
 
 /**
@@ -181,7 +184,8 @@ const changeUserStatus = async (
     new: true,
     runValidators: true,
   });
-  return result;
+
+  return { isStatusChanged: result ? true : false };
 };
 
 /**
@@ -212,11 +216,11 @@ const changeUserRole = async (userId: string, payload: { role: string }) => {
     );
   }
 
-  await User.findByIdAndUpdate(userId, payload, {
+  const result = await User.findByIdAndUpdate(userId, payload, {
     new: true,
     runValidators: true,
   });
-  return "User role is changed";
+  return { isRoleChanged: result ? true : false };
 };
 
 /**

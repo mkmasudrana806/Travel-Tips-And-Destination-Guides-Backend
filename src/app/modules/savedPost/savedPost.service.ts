@@ -36,12 +36,16 @@ const savePost = async (userId: string, postId: string) => {
  * @returns true
  */
 const deleteSavedPost = async (userId: string, postId: string) => {
-  await SavedPost.findOneAndDelete({
+  const result = await SavedPost.findOneAndDelete({
     user: userId,
     post: postId,
   });
 
-  return true;
+  if (!result) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Saved post not found!");
+  }
+
+  return { isDeleted: true };
 };
 
 /**

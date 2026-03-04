@@ -271,12 +271,9 @@ const deleteAComment = async (commentId: string, userId: string) => {
     },
   );
   if (!result) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      "Comment not found or unauthorized",
-    );
+    throw new AppError(httpStatus.BAD_REQUEST, "Comment not found");
   }
-  return true;
+  return { isDeleted: result ? true : false };
 };
 
 // -------------- update a comment --------------
