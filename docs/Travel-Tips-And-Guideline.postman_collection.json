@@ -1,0 +1,5003 @@
+{
+  "info": {
+    "_postman_id": "b5096eb6-1a35-412a-b3a0-3a4cfc276973",
+    "name": "Travel-Tips-And-Guideline",
+    "description": "# Travel Share Guideline API\n\nBackend API for a social travel platform where users can share travel experiences, create travel plans, interact with posts, and collaborate with other travelers.\n\n## Base URL\n\n`http://localhost:5000/api/v1`\n\n## Authentication\n\nMost endpoints require a JWT access token.\n\nHeader format:\n\n`Authorization: Bearer accessToken`",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "30695014"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "Create an user",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Masud Rana Sheikh\",\r\n    \"email\": \"masudrana@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"age\": 25,\r\n    \"gender\": \"male\",\r\n    \"address\": \"Sirajganj\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/users",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Masud Rana Sheikh\",\r\n    \"email\": \"masudrana@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"age\": 25,\r\n    \"gender\": \"male\",\r\n    \"address\": \"Sirajganj\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/users",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "428"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"1ac-lySkm9EFFm7GaVpP3Y/fciVZ8c4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 11:00:37 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User created successfully\",\n    \"data\": {\n        \"name\": \"Masud Rana Sheikh\",\n        \"email\": \"masudrana@gmail.com\",\n        \"password\": \"\",\n        \"age\": 25,\n        \"gender\": \"male\",\n        \"address\": \"Sirajganj\",\n        \"role\": \"user\",\n        \"status\": \"active\",\n        \"isVerified\": false,\n        \"premiumAccess\": false,\n        \"followerCount\": 0,\n        \"followingCount\": 0,\n        \"isDeleted\": false,\n        \"_id\": \"69a810d5d4822418b71f2ea3\",\n        \"createdAt\": \"2026-03-04T11:00:37.181Z\",\n        \"updatedAt\": \"2026-03-04T11:00:37.181Z\",\n        \"__v\": 0\n    }\n}"
+            },
+            {
+              "name": "Duplicate key error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Masud Rana Sheikh\",\r\n    \"email\": \"masudrana@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"age\": 25,\r\n    \"gender\": \"male\",\r\n    \"address\": \"Sirajganj\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/users",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "126"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7e-eWjOiUov+LX9Bt7zwidLbZ9zDMk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 11:01:12 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"User already exists\",\n    \"errorSources\": [\n        {\n            \"path\": \"Error\",\n            \"message\": \"User already exists\"\n        }\n    ],\n    \"stack\": \"\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get all users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{Base URL}}/users?searchTerm=masud rana",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "masud rana"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get all users with pagination (no viewerContext)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "",
+                    "value": "",
+                    "type": "text",
+                    "disabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{Base URL}}/users?searchTerm=masud rana",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "searchTerm",
+                      "value": "masud rana"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2547"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"9f3-IZZTFjpreAzWCGCCBlujojwzA5M\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 11:06:44 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All users retrieved successfully\",\n    \"meta\": {\n        \"total\": 7,\n        \"page\": 1,\n        \"limit\": 10,\n        \"totalPage\": 1\n    },\n    \"data\": [\n        {\n            \"_id\": \"69a810d5d4822418b71f2ea3\",\n            \"name\": \"Masud Rana Sheikh\",\n            \"email\": \"masudrana@gmail.com\",\n            \"password\": \"\",\n            \"age\": 25,\n            \"gender\": \"male\",\n            \"address\": \"Sirajganj\",\n            \"role\": \"user\",\n            \"status\": \"active\",\n            \"isVerified\": false,\n            \"premiumAccess\": false,\n            \"followerCount\": 0,\n            \"followingCount\": 0,\n            \"isDeleted\": false,\n            \"createdAt\": \"2026-03-04T11:00:37.181Z\",\n            \"updatedAt\": \"2026-03-04T11:00:37.181Z\"\n        },\n        {\n            \"_id\": \"69a80ae29e194447f12423cc\",\n            \"name\": \"Masud Rana\",\n            \"email\": \"masud.wg@gmail.com\",\n            \"password\": \"\",\n            \"age\": 24,\n            \"gender\": \"male\",\n            \"address\": \"Narayanganj\",\n            \"role\": \"user\",\n            \"status\": \"active\",\n            \"isVerified\": false,\n            \"premiumAccess\": false,\n            \"followerCount\": 0,\n            \"followingCount\": 0,\n            \"isDeleted\": false,\n            \"createdAt\": \"2026-03-04T10:35:14.274Z\",\n            \"updatedAt\": \"2026-03-04T10:40:30.488Z\",\n            \"passwordChangedAt\": \"2026-03-04T10:40:30.488Z\"\n        },\n        {\n            \"_id\": \"69965c3567f7c25e9d9b2154\",\n            \"name\": \"Masud Rana\",\n            \"email\": \"sheikh@gmail.com\",\n            \"password\": \"\",\n            \"age\": 24,\n            \"gender\": \"male\",\n            \"address\": \"Narayanganj\",\n            \"role\": \"user\",\n            \"status\": \"active\",\n            \"isVerified\": true,\n            \"premiumAccess\": false,\n            \"followerCount\": 5000,\n            \"followingCount\": 0,\n            \"isDeleted\": false,\n            \"createdAt\": \"2026-02-19T00:41:25.721Z\",\n            \"updatedAt\": \"2026-02-19T01:52:02.288Z\"\n        },\n        {\n            \"_id\": \"6995f95744ae30b9ab52051c\",\n            \"name\": \"Masud Rana\",\n            \"email\": \"213902101@student.green.edu.bd\",\n            \"password\": \"\",\n            \"age\": 24,\n            \"gender\": \"male\",\n            \"address\": \"Narayanganj\",\n            \"role\": \"admin\",\n            \"status\": \"active\",\n            \"isVerified\": false,\n            \"premiumAccess\": false,\n            \"followerCount\": 0,\n            \"followingCount\": 0,\n            \"isDeleted\": false,\n            \"createdAt\": \"2026-02-18T17:39:35.912Z\",\n            \"updatedAt\": \"2026-02-19T00:39:14.038Z\"\n        },\n        {\n            \"followerCount\": 0,\n            \"_id\": \"698a0e679025ee8a719505e0\",\n            \"name\": \"Masud Rana\",\n            \"email\": \"masud@gmail.com\",\n            \"password\": \"\",\n            \"age\": 23,\n            \"gender\": \"male\",\n            \"address\": \"Kanchan, Rupganj, Narayanganj, Bangladesh\",\n            \"role\": \"user\",\n            \"status\": \"active\",\n            \"profilePicture\": \"\",\n            \"isVerified\": false,\n            \"premiumAccess\": false,\n            \"isDeleted\": false,\n            \"createdAt\": \"2026-02-09T16:42:15.904Z\",\n            \"updatedAt\": \"2026-03-04T10:29:34.548Z\",\n            \"followingCount\": 2,\n            \"passwordChangedAt\": \"2026-03-04T10:29:34.548Z\"\n        },\n        {\n            \"followingCount\": 0,\n            \"_id\": \"69886b199a6dfd87c1c88780\",\n            \"name\": \"Masud Rana\",\n            \"email\": \"admin@gmail.com\",\n            \"password\": \"\",\n            \"age\": 20,\n            \"gender\": \"male\",\n            \"contact\": \"017234324324\",\n            \"address\": \"Sirajganj\",\n            \"role\": \"admin\",\n            \"status\": \"active\",\n            \"profilePicture\": \"https://png.pngtree.com/png-vector/20230509/ourmid/pngtree-personal-flat-icon-vector-png-image_7092615.png\",\n            \"isVerified\": true,\n            \"premiumAccess\": false,\n            \"isDeleted\": false,\n            \"createdAt\": \"2026-02-08T10:53:13.484Z\",\n            \"updatedAt\": \"2026-02-21T13:40:21.636Z\",\n            \"followerCount\": 1\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get my profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get a public user profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/6992fcf2e170bc7fca579ebe",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "6992fcf2e170bc7fca579ebe"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response with viewerContext (single data)",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{Base URL}}/users/6992fcf2e170bc7fca579ebe",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users",
+                    "6992fcf2e170bc7fca579ebe"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "606"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"25e-GuQqiE+0T3GCdE+rjLvxT3/whZ4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 11:08:40 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User is retrieved successfully\",\n    \"data\": {\n        \"_id\": \"6992fcf2e170bc7fca579ebe\",\n        \"name\": \"Masud\",\n        \"email\": \"rana@gmail.com\",\n        \"age\": 23,\n        \"gender\": \"male\",\n        \"contact\": \"324234234\",\n        \"address\": \"adsdfsdf\",\n        \"role\": \"user\",\n        \"status\": \"active\",\n        \"profilePicture\": \"https://avatar.iran.liara.run/public/boy?username=Ash\",\n        \"isVerified\": false,\n        \"premiumAccess\": false,\n        \"followers\": [],\n        \"following\": [],\n        \"isDeleted\": false,\n        \"createdAt\": \"2026-02-16T11:18:10.920Z\",\n        \"updatedAt\": \"2026-02-27T01:58:06.024Z\",\n        \"__v\": 0,\n        \"passwordChangedAt\": \"2026-02-18T08:19:50.105Z\",\n        \"followerCount\": 1\n    },\n    \"viewerContext\": {\n        \"isFollowing\": true,\n        \"isSelf\": false\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete an user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/69952f3e2ba062d088203fe7",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "69952f3e2ba062d088203fe7"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Delete an user",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{Base URL}}/users/69952f3e2ba062d088203fe7",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users",
+                    "69952f3e2ba062d088203fe7"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "83"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"53-nsKp1+mqsxgBia9aUj9CaDDm6ng\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 11:19:59 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User is deleted successfully\",\n    \"data\": {\n        \"isDeleted\": true\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update my profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Masud\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/users",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change user status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"blocked\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/users/6992fcf2e170bc7fca579ebe/status",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "6992fcf2e170bc7fca579ebe",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change user role",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"role\": \"admin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/users/69965c3567f7c25e9d9b2154/role",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "69965c3567f7c25e9d9b2154",
+                "role"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get verified",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"isVerified\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/users/verification",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "verification"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const token = pm.response.json().data.accessToken;\r",
+                  "pm.environment.set(\"User Token\", token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"masud@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/auth/login",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success Response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"masud@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/auth/login",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Set-Cookie",
+                  "value": "refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OThhMGU2NzkwMjVlZThhNzE5NTA1ZTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYyMDg4MiwiZXhwIjoxODA0MTU2ODgyfQ.L7RU3DyUkNH2wMLy_M8b5z4qYBSe4pH_6Blkuqv8wvQ; Max-Age=864000; Path=/; Expires=Sat, 14 Mar 2026 10:41:22 GMT; HttpOnly; Secure"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "280"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"118-fcIXqwXXzG556hHiD9aCPOVFM6k\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 10:41:22 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User is logged in successfully\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OThhMGU2NzkwMjVlZThhNzE5NTA1ZTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYyMDg4MiwiZXhwIjoxNzczNDg0ODgyfQ.rHbTTpIja2rntFY9CD4XApDMQ08uDwdG0op5gwxvYo0\"\n    }\n}"
+            },
+            {
+              "name": "Invalid credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"email\": \"masudf@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/auth/login",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "124"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7c-00AxBVlUXEcI4mNerY4OGDVDiV8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 10:55:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"User is not found!\",\n    \"errorSources\": [\n        {\n            \"path\": \"Error\",\n            \"message\": \"User is not found!\"\n        }\n    ],\n    \"stack\": \"\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"oldPassword\": \"654321\",\r\n    \"newPassword\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/auth/change-password",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"masud.wg@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/auth/forgot-password",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"masud.wg@gmail.com\",\r\n    \"userId\": \"69a80ae29e194447f12423cc\",\r\n    \"newPassword\": \"654321\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWE4MGFlMjllMTk0NDQ3ZjEyNDIzY2MiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYyMDUyMiwiZXhwIjoxNzcyNjIxMTIyfQ.LAQ1Q7tWuHfOnDlxW9bcRLUrtPy_B2rzqX4fPNX_o3Y\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/auth/reset-password",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/auth/refresh-token",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Refresh token response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{Base URL}}/auth/refresh-token",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "refresh-token"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "285"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"11d-NgGt7BCXlyN9Z7hiVV9b3znLZ+k\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 10:59:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Access token generated successfully\",\n    \"data\": {\n        \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OThhMGU2NzkwMjVlZThhNzE5NTA1ZTAiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYyMTk1OCwiZXhwIjoxNzczNDg1OTU4fQ.rAKmI9Voanr-ju3vQgFUGRDXDZLVewnC4CXvxJJDhGg\"\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Comment",
+      "item": [
+        {
+          "name": "Create a comment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\":\"amar sonar bangla comment by masud\",\r\n    \"parentComment\": \"699968529d9b5eb73e56c8e7\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/comments",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e",
+                "comments"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create a comment",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"content\":\"amar sonar bangla comment by masud\",\r\n    \"parentComment\": \"699968529d9b5eb73e56c8e7\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/comments",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts",
+                    "698c136e1495bf2659708a9e",
+                    "comments"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "404"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"194-YCczHoyjoAIlk3jhXW/7qJitGvY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 14:46:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Comment posted is successfull\",\n    \"data\": {\n        \"user\": \"698a0e679025ee8a719505e0\",\n        \"post\": \"698c136e1495bf2659708a9e\",\n        \"content\": \"amar sonar bangla comment by masud\",\n        \"parentComment\": \"699968529d9b5eb73e56c8e7\",\n        \"depth\": 1,\n        \"replyCount\": 0,\n        \"isDeleted\": false,\n        \"isEdited\": false,\n        \"_id\": \"69a845ac248f8f1150f6405f\",\n        \"createdAt\": \"2026-03-04T14:46:04.417Z\",\n        \"updatedAt\": \"2026-03-04T14:46:04.417Z\",\n        \"__v\": 0\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get comments of a post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/comments?page=1&limit=2",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response with pagination and viewerContext",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "text"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/comments?page=1&limit=2",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts",
+                    "698c136e1495bf2659708a9e",
+                    "comments"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "2"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1526"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"5f6-5rsbK0tIdH98bF/kgz6BpFW/4pA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 14:47:09 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All Comments retrieved successfull\",\n    \"data\": {\n        \"meta\": {\n            \"page\": 1,\n            \"limit\": 2,\n            \"hasNextPage\": false\n        },\n        \"data\": [\n            {\n                \"data\": {\n                    \"_id\": \"699968529d9b5eb73e56c8e7\",\n                    \"user\": \"698a0e679025ee8a719505e0\",\n                    \"post\": \"698c136e1495bf2659708a9e\",\n                    \"content\": \"amar sonar bangla comment by masud\",\n                    \"parentComment\": null,\n                    \"depth\": 0,\n                    \"replyCount\": 13,\n                    \"createdAt\": \"2026-02-21T08:09:54.095Z\",\n                    \"updatedAt\": \"2026-03-04T14:46:04.353Z\",\n                    \"__v\": 0,\n                    \"replies\": [\n                        {\n                            \"data\": {\n                                \"_id\": \"6999687e9d9b5eb73e56c8f0\",\n                                \"user\": \"698a0e679025ee8a719505e0\",\n                                \"post\": \"698c136e1495bf2659708a9e\",\n                                \"content\": \"amar sonar bangla comment by masud\",\n                                \"parentComment\": \"699968529d9b5eb73e56c8e7\",\n                                \"depth\": 1,\n                                \"replyCount\": 2,\n                                \"createdAt\": \"2026-02-21T08:10:38.035Z\",\n                                \"updatedAt\": \"2026-02-21T08:12:47.178Z\",\n                                \"__v\": 0\n                            },\n                            \"viewerContext\": {\n                                \"isOwner\": true\n                            }\n                        },\n                        {\n                            \"data\": {\n                                \"_id\": \"69996dd048389393c5a20e0c\",\n                                \"user\": \"698a0e679025ee8a719505e0\",\n                                \"post\": \"698c136e1495bf2659708a9e\",\n                                \"content\": \"amar sonar bangla comment by masud\",\n                                \"parentComment\": \"699968529d9b5eb73e56c8e7\",\n                                \"depth\": 1,\n                                \"replyCount\": 0,\n                                \"createdAt\": \"2026-02-21T08:33:20.061Z\",\n                                \"updatedAt\": \"2026-02-21T08:33:20.061Z\",\n                                \"__v\": 0\n                            },\n                            \"viewerContext\": {\n                                \"isOwner\": true\n                            }\n                        },\n                        {\n                            \"data\": {\n                                \"_id\": \"69996dd348389393c5a20e15\",\n                                \"user\": \"698a0e679025ee8a719505e0\",\n                                \"post\": \"698c136e1495bf2659708a9e\",\n                                \"content\": \"amar sonar bangla comment by masud\",\n                                \"parentComment\": \"699968529d9b5eb73e56c8e7\",\n                                \"depth\": 1,\n                                \"replyCount\": 0,\n                                \"createdAt\": \"2026-02-21T08:33:23.474Z\",\n                                \"updatedAt\": \"2026-02-21T08:33:23.474Z\",\n                                \"__v\": 0\n                            },\n                            \"viewerContext\": {\n                                \"isOwner\": true\n                            }\n                        }\n                    ],\n                    \"hasMoreReplies\": true\n                },\n                \"viewerContext\": {\n                    \"isOwner\": true\n                }\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete a comment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/comments/699985b3136b7eb01218efee",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "comments",
+                "699985b3136b7eb01218efee"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Not found error message",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{Base URL}}/comments/699985b3136b7eb01218efee",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "comments",
+                    "699985b3136b7eb01218efee"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "122"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7a-O/002mjrCzzwbTP0dA66DJMb3wg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 14:52:03 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"Comment not found\",\n    \"errorSources\": [\n        {\n            \"path\": \"Error\",\n            \"message\": \"Comment not found\"\n        }\n    ],\n    \"stack\": \"\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a comment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{User Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"amar sonar bangla, ami tomay valobashi\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/comments/69996dd848389393c5a20e30",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "comments",
+                "69996dd848389393c5a20e30"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get replies of a comment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/comments/699968529d9b5eb73e56c8e7/replies?page=1&limit=2",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "comments",
+                "699968529d9b5eb73e56c8e7",
+                "replies"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/comments/699968529d9b5eb73e56c8e7/replies?page=1&limit=2",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "comments",
+                    "699968529d9b5eb73e56c8e7",
+                    "replies"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "2"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "808"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"328-78hekywsOu+b/89aLFC4XDEl3HA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 14:52:38 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Replies of a comment retrieved successfull\",\n    \"data\": {\n        \"replies\": [\n            {\n                \"_id\": \"69a845ac248f8f1150f6405f\",\n                \"user\": \"698a0e679025ee8a719505e0\",\n                \"post\": \"698c136e1495bf2659708a9e\",\n                \"content\": \"amar sonar bangla comment by masud\",\n                \"parentComment\": \"699968529d9b5eb73e56c8e7\",\n                \"depth\": 1,\n                \"replyCount\": 0,\n                \"isDeleted\": false,\n                \"isEdited\": false,\n                \"createdAt\": \"2026-03-04T14:46:04.417Z\",\n                \"updatedAt\": \"2026-03-04T14:46:04.417Z\",\n                \"__v\": 0\n            },\n            {\n                \"_id\": \"69a0efbd6c4c050b39f72ddf\",\n                \"user\": \"698a0e679025ee8a719505e0\",\n                \"post\": \"698c136e1495bf2659708a9e\",\n                \"content\": \"amar sonar bangla comment by masud\",\n                \"parentComment\": \"699968529d9b5eb73e56c8e7\",\n                \"depth\": 1,\n                \"replyCount\": 0,\n                \"isDeleted\": false,\n                \"isEdited\": false,\n                \"createdAt\": \"2026-02-27T01:13:33.540Z\",\n                \"updatedAt\": \"2026-02-27T01:13:33.540Z\",\n                \"__v\": 0\n            }\n        ],\n        \"page\": 1,\n        \"limit\": 2,\n        \"hasNextPage\": true\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Post",
+      "item": [
+        {
+          "name": "Create a post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzA4ZWUwMWQyM2IyODVmZmY2YzFhOWEiLCJlbWFpbCI6Im1hc3VkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzI4NjgwOTM1LCJleHAiOjE3Mjg3NjczMzV9.2RS6Sbz6gB2tnWT6sVR1_cCMCum99YcwGmD-l424fGE",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"title\": \"Exploring the Mountains of Nepal\",\r\n    \"content\": \"<p>There’s something magical about leaving behind the endless horns and crowded streets of Dhaka and heading toward the calm, green landscapes of Sylhet. The journey itself feels like a transition—from concrete and chaos to misty hills, tea gardens, and fresh air.</p><p><br></p><h2>The Journey Begins</h2><p>Our trip started before sunrise. The city was just waking up, with tea stalls opening and buses filling up with sleepy travelers. Whether you choose the train or a long-distance bus, the road out of Dhaka slowly replaces skyscrapers with open fields, rivers, and small village markets.</p><p>The further we traveled, the greener everything became. It felt like the air itself changed—cooler, calmer, and filled with the scent of rain and earth.</p><p><br></p>\",\r\n    \"category\": \"Adventure\",\r\n    \"locationName\": \"Bogura\",\r\n    \"country\": \"Bangladesh\",\r\n    \"travelDays\": 3,\r\n    \"estimatedCost\": 3000,\r\n    \"travelType\": \"budget\",\r\n    \"image\": \"https://example.com/images/nepal-mountains.jpg\",\r\n    \"premium\": true,\r\n    \"bannerId\": \"698c128f8dece2b2e4bd0191\",\r\n    \"contentIds\": [\"698c12a88dece2b2e4bd0194\"]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/posts",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Create a post",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzA4ZWUwMWQyM2IyODVmZmY2YzFhOWEiLCJlbWFpbCI6Im1hc3VkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzI4NjgwOTM1LCJleHAiOjE3Mjg3NjczMzV9.2RS6Sbz6gB2tnWT6sVR1_cCMCum99YcwGmD-l424fGE",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\": \"Exploring the Mountains of Nepal\",\r\n    \"content\": \"<p>There’s something magical about leaving behind the endless horns and crowded streets of Dhaka and heading toward the calm, green landscapes of Sylhet. The journey itself feels like a transition—from concrete and chaos to misty hills, tea gardens, and fresh air.</p><p><br></p><h2>The Journey Begins</h2><p>Our trip started before sunrise. The city was just waking up, with tea stalls opening and buses filling up with sleepy travelers. Whether you choose the train or a long-distance bus, the road out of Dhaka slowly replaces skyscrapers with open fields, rivers, and small village markets.</p><p>The further we traveled, the greener everything became. It felt like the air itself changed—cooler, calmer, and filled with the scent of rain and earth.</p><p><br></p>\",\r\n    \"category\": \"Adventure\",\r\n    \"locationName\": \"Bogura\",\r\n    \"country\": \"Bangladesh\",\r\n    \"travelDays\": 3,\r\n    \"estimatedCost\": 3000,\r\n    \"travelType\": \"budget\",\r\n    \"image\": \"https://example.com/images/nepal-mountains.jpg\",\r\n    \"premium\": true,\r\n    \"bannerId\": \"698c128f8dece2b2e4bd0191\",\r\n    \"contentIds\": [\"698c12a88dece2b2e4bd0194\"]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/posts",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1300"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"514-Akj8qUVYUQtyQZToxCBg5oNbBvU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 13:00:45 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Post created successfully\",\n    \"data\": {\n        \"author\": \"698a0e679025ee8a719505e0\",\n        \"title\": \"Exploring the Mountains of Nepal\",\n        \"content\": \"<p>There’s something magical about leaving behind the endless horns and crowded streets of Dhaka and heading toward the calm, green landscapes of Sylhet. The journey itself feels like a transition—from concrete and chaos to misty hills, tea gardens, and fresh air.</p><p><br></p><h2>The Journey Begins</h2><p>Our trip started before sunrise. The city was just waking up, with tea stalls opening and buses filling up with sleepy travelers. Whether you choose the train or a long-distance bus, the road out of Dhaka slowly replaces skyscrapers with open fields, rivers, and small village markets.</p><p>The further we traveled, the greener everything became. It felt like the air itself changed—cooler, calmer, and filled with the scent of rain and earth.</p><p><br></p>\",\n        \"category\": \"Adventure\",\n        \"locationName\": \"Bogura\",\n        \"country\": \"Bangladesh\",\n        \"travelDays\": 3,\n        \"estimatedCost\": 3000,\n        \"travelType\": \"budget\",\n        \"image\": \"https://example.com/images/nepal-mountains.jpg\",\n        \"premium\": true,\n        \"upvoteCount\": 0,\n        \"downvoteCount\": 0,\n        \"isDeleted\": false,\n        \"_id\": \"69a82cfd7474d7186005dc14\",\n        \"createdAt\": \"2026-03-04T13:00:45.763Z\",\n        \"updatedAt\": \"2026-03-04T13:00:45.763Z\",\n        \"__v\": 0\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get all post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts?days=3&minCost=3000",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "3"
+                },
+                {
+                  "key": "minCost",
+                  "value": "3000"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get all post with viewerContext",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{Base URL}}/posts?days=3&minCost=3000",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts"
+                  ],
+                  "query": [
+                    {
+                      "key": "days",
+                      "value": "3"
+                    },
+                    {
+                      "key": "minCost",
+                      "value": "3000"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1510"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"5e6-fwb0FdhDS0n9wL+KGOZeCWiQ/bo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 13:03:56 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Filtered post retrived successfully\",\n    \"meta\": {\n        \"total\": 1,\n        \"page\": 1,\n        \"limit\": 10\n    },\n    \"data\": [\n        {\n            \"data\": {\n                \"_id\": \"69a82cfd7474d7186005dc14\",\n                \"author\": {\n                    \"_id\": \"698a0e679025ee8a719505e0\",\n                    \"name\": \"Masud\",\n                    \"password\": \"\",\n                    \"profilePicture\": \"\"\n                },\n                \"title\": \"Exploring the Mountains of Nepal\",\n                \"content\": \"<p>There’s something magical about leaving behind the endless horns and crowded streets of Dhaka and heading toward the calm, green landscapes of Sylhet. The journey itself feels like a transition—from concrete and chaos to misty hills, tea gardens, and fresh air.</p><p><br></p><h2>The Journey Begins</h2><p>Our trip started before sunrise. The city was just waking up, with tea stalls opening and buses filling up with sleepy travelers. Whether you choose the train or a long-distance bus, the road out of Dhaka slowly replaces skyscrapers with open fields, rivers, and small village markets.</p><p>The further we traveled, the greener everything became. It felt like the air itself changed—cooler, calmer, and filled with the scent of rain and earth.</p><p><br></p>\",\n                \"category\": \"Adventure\",\n                \"locationName\": \"Bogura\",\n                \"country\": \"Bangladesh\",\n                \"travelDays\": 3,\n                \"estimatedCost\": 3000,\n                \"travelType\": \"budget\",\n                \"image\": \"https://example.com/images/nepal-mountains.jpg\",\n                \"premium\": true,\n                \"upvoteCount\": 0,\n                \"downvoteCount\": 0,\n                \"isDeleted\": false,\n                \"createdAt\": \"2026-03-04T13:00:45.763Z\",\n                \"updatedAt\": \"2026-03-04T13:00:45.763Z\",\n                \"__v\": 0\n            },\n            \"viewerContext\": {\n                \"voteType\": \"none\",\n                \"isOwner\": true,\n                \"isSaved\": false,\n                \"isFollowingAuthor\": false\n            }\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get single post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get single post",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts",
+                    "698c136e1495bf2659708a9e"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1959"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"7a7-wNfhBSUJQDKKIiEWGl42lIkclRI\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 13:41:13 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [
+                {
+                  "expires": "Invalid Date",
+                  "domain": "",
+                  "path": ""
+                }
+              ],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Post retrieved successfully\",\n    \"data\": {\n        \"_id\": \"698c136e1495bf2659708a9e\",\n        \"author\": {\n            \"_id\": \"698a0e679025ee8a719505e0\",\n            \"name\": \"Masud\",\n            \"password\": \"\",\n            \"profilePicture\": \"\",\n            \"isVerified\": false\n        },\n        \"title\": \"Exploring the Mountains of Nepal with Masud Rana\",\n        \"content\": \"<p>There’s something magical about leaving behind the endless horns and crowded streets of Dhaka and heading toward the calm, green landscapes of Sylhet. The journey itself feels like a transition—from concrete and chaos to misty hills, tea gardens, and fresh air.</p><p><br></p><h2>The Journey Begins</h2><p>Our trip started before sunrise. The city was just waking up, with tea stalls opening and buses filling up with sleepy travelers. Whether you choose the train or a long-distance bus, the road out of Dhaka slowly replaces skyscrapers with open fields, rivers, and small village markets.</p><p>The further we traveled, the greener everything became. It felt like the air itself changed—cooler, calmer, and filled with the scent of rain and earth.</p><p><br></p><p><img src=\\\"https://res.cloudinary.com/dnmvttdo4/image/upload/v1770787495/anuwtaqjg9gfqpb8bwih.jpg\\\" data-image-id=\\\"698c12a88dece2b2e4bd0194\\\" class=\\\"post-content-image\\\"></p><p><br></p><p>After several hours, we finally reached Sylhet. The first thing you notice is the slower pace of life. The streets are quieter, the sky seems wider, and the greenery surrounds you everywhere. Tea gardens stretch across the hills like soft green carpets, and the cool breeze feels like a reward after the long journey.</p>\",\n        \"category\": \"Exploration\",\n        \"image\": \"https://res.cloudinary.com/dnmvttdo4/image/upload/v1770787471/p8dygbqibbfyuoj6dr6l.jpg\",\n        \"premium\": true,\n        \"isDeleted\": false,\n        \"createdAt\": \"2026-02-11T05:28:14.936Z\",\n        \"updatedAt\": \"2026-03-01T10:17:25.959Z\",\n        \"__v\": 0,\n        \"upvoteCount\": 0,\n        \"downvoteCount\": 1,\n        \"travelType\": \"budget\"\n    },\n    \"viewerContext\": {\n        \"voteType\": \"none\",\n        \"isOwner\": true,\n        \"isSaved\": true,\n        \"isFollowingAuthor\": false\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a post",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"<p>Leaving Dhaka before sunrise, the journey to Sajek feels like stepping out of noise and into silence. The long road through highways, small towns, and finally the hilly terrain of Khagrachari slowly changes the mood of the trip. As the flat concrete views fade away, green hills, winding roads, and fresh air begin to take over. The last stretch from Dighinala to Sajek, with its narrow uphill road and deep valleys on both sides, is both thrilling and unforgettable.</p><p><br></p><p><br></p><p>Reaching Sajek Valley feels like arriving in another world. Clouds float below the hills, cool winds blow across the wooden cottages, and the horizon looks endless. Watching the sunrise from Konglak Hill or simply sitting on a balcony with a cup of tea becomes the highlight of the trip. Sajek is not just a destination—it’s a peaceful escape from the busy rhythm of Dhaka, where time slows down and nature takes the lead.</p>\",\r\n    \"contentIds\": [\r\n        \"698c26ce03763778584aed28\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/posts/698c27d503763778584aed2f",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c27d503763778584aed2f"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vote Post",
+      "item": [
+        {
+          "name": "Vote a post",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"type\": \"downvote\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/posts/69a82cfd7474d7186005dc14/votes",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "69a82cfd7474d7186005dc14",
+                "votes"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{User Token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"type\": \"downvote\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/posts/69a82cfd7474d7186005dc14/votes",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "posts",
+                    "69a82cfd7474d7186005dc14",
+                    "votes"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "99"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"63-J7KtddX8/k1LDjD30Fee8Mtf52M\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 15:08:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"vote successfull\",\n    \"data\": {\n        \"message\": \"Vote added\",\n        \"voteType\": \"downvote\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "LIsts of voter of a post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/698c27d503763778584aed2f/votes?type=upvote",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c27d503763778584aed2f",
+                "votes"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "upvote"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "lists of post i vote",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{User Token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{Base URL}}/votes/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "votes",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "UserFollow",
+      "item": [
+        {
+          "name": "Follow toggle",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/6992fcf2e170bc7fca579ebe/follow",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "6992fcf2e170bc7fca579ebe",
+                "follow"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/users/6992fcf2e170bc7fca579ebe/follow",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "users",
+                    "6992fcf2e170bc7fca579ebe",
+                    "follow"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "68"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"44-PjapCqnmJFb0qoLnkZ7KSvRTD6A\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:06:25 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Follow is done\",\n    \"data\": {\n        \"isFollow\": true\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get followers of an user",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/69886b199a6dfd87c1c88780/followers",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "69886b199a6dfd87c1c88780",
+                "followers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get following of an user",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/698a0e679025ee8a719505e0/followings",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "698a0e679025ee8a719505e0",
+                "followings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get mutual friends between users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/698a0e679025ee8a719505e0/mutual",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "698a0e679025ee8a719505e0",
+                "mutual"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Empty success response for lists result",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{User Token}}",
+                    "type": "text",
+                    "disabled": true
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/users/698a0e679025ee8a719505e0/mutual",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "users",
+                    "698a0e679025ee8a719505e0",
+                    "mutual"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "74"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"4a-l6ZWMjd7ObH0iOPT03CkccKxMmU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:13:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Mutual friends retrived sucessfully\",\n    \"data\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get profile suggestion",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/users/profile/suggestions",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "users",
+                "profile",
+                "suggestions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "SavedPost",
+      "item": [
+        {
+          "name": "Saved a travel psot",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/69a82cfd7474d7186005dc14/saved-posts",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "69a82cfd7474d7186005dc14",
+                "saved-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete a saved post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/69a82cfd7474d7186005dc14/saved-posts",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "69a82cfd7474d7186005dc14",
+                "saved-posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all my saved posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/saved-posts/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "saved-posts",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "TravelPlan",
+      "item": [
+        {
+          "name": "Create a travel plan",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{   \"startLocation\": \"Dhaka\",\r\n    \"destination\": \"Cox' Bazar\",\r\n    \"startDate\": \"2026-02-10T00:00:00.000Z\",\r\n    \"endDate\": \"2026-02-17T00:00:00.000Z\",\r\n    \"minBudget\": 2000,\r\n    \"maxBudget\": 2700,\r\n    \"contact\": \"01792852446\",\r\n    \"note\": \"I am planning to a budget tour from Dhaka to Sajek. Want to get budget hotel there. so need more 3 members\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-plans",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{   \"startLocation\": \"Dhaka\",\r\n    \"destination\": \"Cox' Bazar\",\r\n    \"startDate\": \"2026-02-10T00:00:00.000Z\",\r\n    \"endDate\": \"2026-02-17T00:00:00.000Z\",\r\n    \"minBudget\": 2000,\r\n    \"maxBudget\": 2700,\r\n    \"contact\": \"01792852446\",\r\n    \"note\": \"I am planning to a budget tour from Dhaka to Sajek. Want to get budget hotel there. so need more 3 members\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/travel-plans",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "travel-plans"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "545"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"221-E+/K02lar0arHI7vVxYuJD8Xyrk\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 15:43:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Travel plan is created\",\n    \"data\": {\n        \"user\": \"698a0e679025ee8a719505e0\",\n        \"startLocation\": \"Dhaka\",\n        \"destination\": \"Cox' Bazar\",\n        \"startDate\": \"2026-02-10T00:00:00.000Z\",\n        \"endDate\": \"2026-02-17T00:00:00.000Z\",\n        \"travelDays\": 8,\n        \"minBudget\": 2000,\n        \"maxBudget\": 2700,\n        \"contact\": \"01792852446\",\n        \"note\": \"I am planning to a budget tour from Dhaka to Sajek. Want to get budget hotel there. so need more 3 members\",\n        \"status\": \"open\",\n        \"_id\": \"69a853129d892e21ccd02c92\",\n        \"createdAt\": \"2026-03-04T15:43:14.200Z\",\n        \"updatedAt\": \"2026-03-04T15:43:14.200Z\",\n        \"__v\": 0\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update a travel plan",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n    \"status\": \"closed\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-plans/69a853129d892e21ccd02c92",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans",
+                "69a853129d892e21ccd02c92"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get single travel plan details",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{User Token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-plans/69a853129d892e21ccd02c92",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans",
+                "69a853129d892e21ccd02c92"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a travel plan",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/travel-plans/69a853129d892e21ccd02c92",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans",
+                "69a853129d892e21ccd02c92"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my all travel plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/travel-plans/me?status=closed",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans",
+                "me"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "closed"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all travel plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/travel-plans?page=1&limit=3",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "3"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "All travel with pagination and viewerContext",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/travel-plans?page=1&limit=3",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "travel-plans"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "3"
+                    }
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1918"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"77e-uEj9rfjQQ7rbwaZYV+0LFqiDRWg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 15:50:04 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All plans retrieved sucessfull\",\n    \"meta\": {\n        \"page\": 1,\n        \"limit\": 3,\n        \"total\": 8\n    },\n    \"data\": [\n        {\n            \"data\": {\n                \"_id\": \"69a16adaa3ce1563e7d00b26\",\n                \"user\": {\n                    \"_id\": \"698a0e679025ee8a719505e0\",\n                    \"name\": \"Masud\",\n                    \"password\": \"\",\n                    \"profilePicture\": \"\"\n                },\n                \"startLocation\": \"Dhaka\",\n                \"destination\": \"Cox' Bazar\",\n                \"startDate\": \"2026-02-10T00:00:00.000Z\",\n                \"endDate\": \"2026-02-17T00:00:00.000Z\",\n                \"travelDays\": 8,\n                \"minBudget\": 2000,\n                \"maxBudget\": 2700,\n                \"note\": \"I am planning to a budget tour from Dhaka to Sajek. Want to get budget hotel there. so need more 3 members\",\n                \"status\": \"open\",\n                \"createdAt\": \"2026-02-27T09:58:50.604Z\",\n                \"updatedAt\": \"2026-02-27T09:58:50.604Z\",\n                \"__v\": 0\n            },\n            \"viewerContext\": {\n                \"isOwner\": true,\n                \"requestStatus\": \"none\"\n            }\n        },\n        {\n            \"data\": {\n                \"_id\": \"69a16a8fa3ce1563e7d00b1d\",\n                \"user\": {\n                    \"_id\": \"6992fcf2e170bc7fca579ebe\",\n                    \"name\": \"Masud\",\n                    \"password\": \"\",\n                    \"profilePicture\": \"https://avatar.iran.liara.run/public/boy?username=Ash\"\n                },\n                \"startLocation\": \"Dhaka\",\n                \"destination\": \"Cox' Bazar\",\n                \"startDate\": \"2026-02-10T00:00:00.000Z\",\n                \"endDate\": \"2026-02-17T00:00:00.000Z\",\n                \"travelDays\": 8,\n                \"minBudget\": 2000,\n                \"maxBudget\": 2700,\n                \"note\": \"I am planning to a budget tour from Dhaka to Sajek. Want to get budget hotel there. so need more 3 members\",\n                \"status\": \"open\",\n                \"createdAt\": \"2026-02-27T09:57:35.517Z\",\n                \"updatedAt\": \"2026-02-27T09:57:35.517Z\",\n                \"__v\": 0\n            },\n            \"viewerContext\": {\n                \"isOwner\": false,\n                \"requestStatus\": \"none\"\n            }\n        },\n        {\n            \"data\": {\n                \"_id\": \"6998156cf6bafe9dec292b16\",\n                \"user\": {\n                    \"_id\": \"698a0e679025ee8a719505e0\",\n                    \"name\": \"Masud\",\n                    \"password\": \"\",\n                    \"profilePicture\": \"\"\n                },\n                \"startLocation\": \"Rupganj\",\n                \"destination\": \"Sirajganj\",\n                \"startDate\": \"2026-02-10T00:00:00.000Z\",\n                \"endDate\": \"2026-02-17T00:00:00.000Z\",\n                \"travelDays\": 8,\n                \"minBudget\": 2000,\n                \"maxBudget\": 2700,\n                \"note\": \"I am planning to a budget tour from Dhaka to Sajek. Want to get budget hotel there. so need more 3 members\",\n                \"status\": \"closed\",\n                \"createdAt\": \"2026-02-20T08:03:56.046Z\",\n                \"updatedAt\": \"2026-02-20T08:27:30.684Z\",\n                \"__v\": 0\n            },\n            \"viewerContext\": {\n                \"isOwner\": true,\n                \"requestStatus\": \"none\"\n            }\n        }\n    ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TravelRequest",
+      "item": [
+        {
+          "name": "Create a travel Request",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTkyZmNmMmUxNzBiYzdmY2E1NzllYmUiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYzOTYwNSwiZXhwIjoxNzczNTAzNjA1fQ.jM1cJssgNwxbjp5eSbssMXTysLjhWdJkiy1rAHB10qA",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-plans/6998156cf6bafe9dec292b16/requests",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans",
+                "6998156cf6bafe9dec292b16",
+                "requests"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTkyZmNmMmUxNzBiYzdmY2E1NzllYmUiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYzOTYwNSwiZXhwIjoxNzczNTAzNjA1fQ.jM1cJssgNwxbjp5eSbssMXTysLjhWdJkiy1rAHB10qA",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/travel-plans/6998156cf6bafe9dec292b16/requests",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "travel-plans",
+                    "6998156cf6bafe9dec292b16",
+                    "requests"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "415"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"19f-rb5zIjqKAB8VFz5mJUfol1UYWA8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 15:54:17 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Trip request sucessfull\",\n    \"data\": {\n        \"travelPlan\": \"6998156cf6bafe9dec292b16\",\n        \"requester\": \"6992fcf2e170bc7fca579ebe\",\n        \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\",\n        \"status\": \"pending\",\n        \"_id\": \"69a855a97ddd2aebe07fcf9d\",\n        \"createdAt\": \"2026-03-04T15:54:17.234Z\",\n        \"updatedAt\": \"2026-03-04T15:54:17.234Z\",\n        \"__v\": 0\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get all request for a travel plan",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-plans/6998156cf6bafe9dec292b16/requests",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-plans",
+                "6998156cf6bafe9dec292b16",
+                "requests"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response with list returns",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/travel-plans/6998156cf6bafe9dec292b16/requests",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "travel-plans",
+                    "6998156cf6bafe9dec292b16",
+                    "requests"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "548"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"224-kv215gbyEYulnQfd7BSpiIeaktw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 15:55:05 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All requests for a plan retrived sucessfully\",\n    \"data\": [\n        {\n            \"_id\": \"69a855a97ddd2aebe07fcf9d\",\n            \"travelPlan\": \"6998156cf6bafe9dec292b16\",\n            \"requester\": {\n                \"_id\": \"6992fcf2e170bc7fca579ebe\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"https://avatar.iran.liara.run/public/boy?username=Ash\"\n            },\n            \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\",\n            \"status\": \"pending\",\n            \"createdAt\": \"2026-03-04T15:54:17.234Z\",\n            \"updatedAt\": \"2026-03-04T15:54:17.234Z\",\n            \"__v\": 0\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update partner travel request",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"accepted\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-requests/69a855a97ddd2aebe07fcf9d",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-requests",
+                "69a855a97ddd2aebe07fcf9d"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get I requested plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/travel-requests/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-requests",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel my travel request",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"cancel\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/travel-requests/69a855a97ddd2aebe07fcf9d",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "travel-requests",
+                "69a855a97ddd2aebe07fcf9d"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Validation error",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"status\": \"cancel\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/travel-requests/69a855a97ddd2aebe07fcf9d",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "travel-requests",
+                    "69a855a97ddd2aebe07fcf9d"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "168"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a8-ZAmbu6zqL5gRPbCzaSRM4IX6iTo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:03:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"Zod validation error\",\n    \"errorSources\": [\n        {\n            \"path\": \"status\",\n            \"message\": \"Invalid enum value. Expected 'cancelled', received 'cancel'\"\n        }\n    ],\n    \"stack\": \"\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get my notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/notifications/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "notifications",
+                "me"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/notifications/me",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "notifications",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "3690"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"e6a-Ax7Ze87j7NjzNP6O1gQ3/uxNMuA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:15:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All notifications retrived successfully\",\n    \"meta\": {\n        \"page\": 1,\n        \"limit\": 10,\n        \"total\": 10\n    },\n    \"data\": [\n        {\n            \"_id\": \"69a855a97ddd2aebe07fcf9f\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"6992fcf2e170bc7fca579ebe\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"https://avatar.iran.liara.run/public/boy?username=Ash\"\n            },\n            \"type\": \"travel_request\",\n            \"resourceType\": \"TravelPlan\",\n            \"resourceId\": \"6998156cf6bafe9dec292b16\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-03-04T15:54:17.292Z\",\n            \"updatedAt\": \"2026-03-04T15:54:17.292Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a8489cb0cf6a49690a08e1\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_share\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-03-04T14:58:36.637Z\",\n            \"updatedAt\": \"2026-03-04T14:58:36.637Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a84877b0cf6a49690a08d7\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_share\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-03-04T14:57:59.057Z\",\n            \"updatedAt\": \"2026-03-04T14:57:59.057Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a845ac248f8f1150f64061\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_comment\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-03-04T14:46:04.535Z\",\n            \"updatedAt\": \"2026-03-04T14:46:04.535Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a0efbd6c4c050b39f72de1\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_comment\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-02-27T01:13:33.647Z\",\n            \"updatedAt\": \"2026-02-27T01:13:33.647Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a0ef6c6c4c050b39f72dd6\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_comment\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-02-27T01:12:12.145Z\",\n            \"updatedAt\": \"2026-02-27T01:12:12.145Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a0ef566c4c050b39f72dcd\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_comment\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-02-27T01:11:50.123Z\",\n            \"updatedAt\": \"2026-02-27T01:11:50.123Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a0ef506c4c050b39f72dc4\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_comment\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-02-27T01:11:44.972Z\",\n            \"updatedAt\": \"2026-02-27T01:11:44.972Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a0dd0affcf7f37686af367\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_share\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-02-26T23:53:46.100Z\",\n            \"updatedAt\": \"2026-02-26T23:53:46.100Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"69a0d6d455842fae0cc6e5c3\",\n            \"recipient\": \"698a0e679025ee8a719505e0\",\n            \"sender\": {\n                \"_id\": \"698a0e679025ee8a719505e0\",\n                \"name\": \"Masud\",\n                \"password\": \"\",\n                \"profilePicture\": \"\"\n            },\n            \"type\": \"post_share\",\n            \"resourceType\": \"Post\",\n            \"resourceId\": \"698c136e1495bf2659708a9e\",\n            \"isRead\": false,\n            \"createdAt\": \"2026-02-26T23:27:16.025Z\",\n            \"updatedAt\": \"2026-02-26T23:27:16.025Z\",\n            \"__v\": 0\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Mark notification as read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/notifications/69935417cfced67b02a3ee8a/read",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "notifications",
+                "69935417cfced67b02a3ee8a",
+                "read"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark all notification as read",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{travelUserToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{Base URL}}/notifications/read-all",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "notifications",
+                "read-all"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{travelUserToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/notifications/read-all",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "notifications",
+                    "read-all"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "174"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ae-HeZxv2tTwOYVIxpNlGNYVt0ijx0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:27:15 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"All notification marked as read successfull\",\n    \"data\": {\n        \"acknowledged\": true,\n        \"modifiedCount\": 10,\n        \"upsertedId\": null,\n        \"upsertedCount\": 0,\n        \"matchedCount\": 10\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Unread notification counts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/notifications/unread/count",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "notifications",
+                "unread",
+                "count"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/v1/notifications/unread/count",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "v1",
+                    "notifications",
+                    "unread",
+                    "count"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "92"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"5c-0Ucw1a5zcBkUDH5NGgrz1xnW7ss\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:45:36 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"Calculated un read notification counts\",\n    \"data\": {\n        \"unreadCount\": 0\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Payment",
+      "item": [
+        {
+          "name": "Make a subscriptions session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"amount\": 2334,\r\n    \"subscriptionType\": \"monthly\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/subscriptions",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "subscriptions"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"amount\": 2334,\r\n    \"subscriptionType\": \"monthly\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/subscriptions",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "subscriptions"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "177"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"b1-XeQfc7D9iCKDtXjbf2vKzwk5tfA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 16:53:10 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"amarPay session is initiated successfully\",\n    \"data\": {\n        \"result\": \"true\",\n        \"payment_url\": \"https://sandbox.aamarpay.com/paynow.php?track=AAM1772643188103783\"\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get my payments history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/subscriptions/me",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "subscriptions",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all payments history",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Admin Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/subscriptions?email=masud",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "subscriptions"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "masud"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PostShare",
+      "item": [
+        {
+          "name": "Share a post",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"caption\": \"This place is awesome. highly recommended\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/shares",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e",
+                "shares"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Unauthorized access",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/shares",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts",
+                    "698c136e1495bf2659708a9e",
+                    "shares"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "description": "",
+                  "type": "text"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "128"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"80-rk+OCwhjJG46mxsOPMy15PMUzTg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 14:54:53 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"message\": \"Unauthorized access!\",\n    \"errorSources\": [\n        {\n            \"path\": \"Error\",\n            \"message\": \"Unauthorized access!\"\n        }\n    ],\n    \"stack\": \"\"\n}"
+            },
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"caption\": \"This place is awesome. highly recommended\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/shares",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "posts",
+                    "698c136e1495bf2659708a9e",
+                    "shares"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "301"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"12d-4S7t4Tyja+a8vER/8UGIFwJRDkY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Wed, 04 Mar 2026 14:58:36 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"post share successfull\",\n    \"data\": {\n        \"post\": \"698c136e1495bf2659708a9e\",\n        \"user\": \"698a0e679025ee8a719505e0\",\n        \"caption\": \"This place is awesome. highly recommended\",\n        \"_id\": \"69a8489cb0cf6a49690a08df\",\n        \"createdAt\": \"2026-03-04T14:58:36.577Z\",\n        \"updatedAt\": \"2026-03-04T14:58:36.577Z\",\n        \"__v\": 0\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete shared post",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/shares/69a0dd0affcf7f37686af365",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e",
+                "shares",
+                "69a0dd0affcf7f37686af365"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get shares of a post",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{Base URL}}/posts/698c136e1495bf2659708a9e/shares",
+              "host": [
+                "{{Base URL}}"
+              ],
+              "path": [
+                "posts",
+                "698c136e1495bf2659708a9e",
+                "shares"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Base URL",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cron media cleanup",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "991c5cc8e84bb16be557d6ecca69ab09",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:5000/api/cron/schedule1d",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "cron",
+            "schedule1d"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{User Token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

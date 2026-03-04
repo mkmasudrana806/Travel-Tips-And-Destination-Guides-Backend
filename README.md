@@ -60,6 +60,7 @@ All technical documentation is available in the `docs/` folder:
 
 - [Data Model](./docs/data-model.md)
 - [API References](./docs/api-references.md)
+- [Postman API Documentation](https://documenter.getpostman.com/view/30695014/2sBXcKBxsM)
 - [Swagger API](./docs/swagger.yaml)
 - [Developer Guideline](./docs/developer-guideline.md)
 
