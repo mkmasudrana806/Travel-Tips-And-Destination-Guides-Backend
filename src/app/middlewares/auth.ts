@@ -15,8 +15,18 @@ import { TJwtPayload } from "../interface/JwtPayload";
 const auth = (...requiredRoles: string[]) => {
   return asyncHanlder(
     async (req: Request, res: Response, next: NextFunction) => {
-      const token = req.headers.authorization;
-      // check if token is provided to headers
+      // full header string
+      const authHeader = req.headers.authorization;
+
+      // check if header exists and must prefix with bearer
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access!");
+      }
+
+      // extract tokne, except 'Bearer' prefix
+      const token = authHeader.split(" ")[1];
+
+      // check if token part is not empty
       if (!token) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access!");
       }
@@ -57,10 +67,7 @@ const auth = (...requiredRoles: string[]) => {
       // check if the jwt issued before the password change
       if (
         user.passwordChangedAt &&
-        User.isJWTIssuedBeforePasswordChange(
-          user.passwordChangedAt,
-          iat,
-        )
+        User.isJWTIssuedBeforePasswordChange(user.passwordChangedAt, iat)
       ) {
         throw new AppError(httpStatus.UNAUTHORIZED, "You are not authorized");
       }

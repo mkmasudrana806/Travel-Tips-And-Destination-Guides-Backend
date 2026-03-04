@@ -15,7 +15,12 @@ import { TJwtPayload } from "../interface/JwtPayload";
 const optionalAuth = () => {
   return asyncHanlder(
     async (req: Request, res: Response, next: NextFunction) => {
-      const token = req.headers.authorization;
+      // full header string
+      const authHeader = req.headers?.authorization;
+
+      // extract tokne, except 'Bearer' prefix
+      const token = authHeader?.split(" ")[1];
+
       const optionalReqData = {
         userId: "",
         role: "guest",
