@@ -2,7 +2,7 @@
 
 ### Overview
 
-The API follows RESTful principles with a focus on clarity, predictability, and scalability.
+The API follows RESTful principles with a focus on clarity, predictability, and scalability. Which uses versioning system api design: `/api/v1`
 
 Endpoints are resource-oriented and structured around domain entities such as users, posts, comments, travel plans, and follows.
 
@@ -13,9 +13,6 @@ The design prioritizes:
 - Context-aware responses
 - Controlled data fetching
 
-Entry point `/api/v1` at **app.ts** file
-
-Before enter into chapter. Please visit [API Endpoints](/docs/api-endpoints.md)
 
 ## Resource-Based Routing at **routes/index.ts** file
 

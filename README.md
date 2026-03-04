@@ -59,7 +59,7 @@ The system is designed using a modular and layered architecture to ensure scalab
 All technical documentation is available in the `docs/` folder:
 
 - [Data Model](./docs/data-model.md)
-- [API Design](./docs/api-design.md)
+- [API References](./docs/api-references.md)
 - [Swagger API](./docs/swagger.yaml)
 - [Developer Guideline](./docs/developer-guideline.md)
 
@@ -167,8 +167,9 @@ Errors are handled centrally using global error middleware.
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/travelshare.git
-cd travelshare
+git clone https://github.com/mkmasudrana806/Travel-Tips-And-Destination-Guides-Backend.git
+
+cd Travel-Tips-And-Destination-Guides-Backend
 ```
 
 ### 2. Install dependencies
@@ -191,7 +192,7 @@ JWT_ACCESS_SECRET=your_access_secret
 ### 4. Run the server
 
 ```bash
-npm run dev
+npm start
 ```
 
 Server will run at: `http://localhost:5000`
