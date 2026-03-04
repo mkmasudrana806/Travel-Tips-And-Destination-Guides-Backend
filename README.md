@@ -59,7 +59,7 @@ The system is designed using a modular and layered architecture to ensure scalab
 All technical documentation is available in the `docs/` folder:
 
 - [Data Model](./docs/data-model.md)
-- [API Endpoints](./docs/api-endpoints.md)
+- [API Design](./docs/api-design.md)
 - [Swagger API](./docs/swagger.yaml)
 - [Developer Guideline](./docs/developer-guideline.md)
 
