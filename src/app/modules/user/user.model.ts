@@ -70,7 +70,6 @@ userSchema.pre("save", async function (next) {
 // ----------- include only active user -----------
 userSchema.pre(/^find/, function (this: Query<any, any>, next) {
   const includeDeleted = this.getOptions().includeDeleted;
-  console.log("include deleted: ", includeDeleted);
   // if we don't want include deleted data. below code will run
   if (!includeDeleted) {
     (this as Query<any, any>).where({ isDeleted: false });
@@ -96,19 +95,19 @@ userSchema.pre("aggregate", function (this: Aggregate<any>, next) {
 
 // ----------- hide password to client response -----------
 userSchema.post("save", function (doc) {
-  doc.password = "";
+  if (doc) doc.password = "";
 });
 
 // ----------- hide password to client response -----------
 userSchema.post("find", function (docs) {
   docs.forEach((doc: TUser) => {
-    doc.password = "";
+    if (doc) doc.password = "";
   });
 });
 
 // ----------- hide password to client response -----------
 userSchema.post("findOneAndUpdate", function (doc) {
-  doc.password = "";
+  if (doc) doc.password = "";
 });
 
 // ----------- isPasswordMatch statics methods -----------
