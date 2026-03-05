@@ -103,7 +103,6 @@ src/
     │   ├──savedPost/
     │   ├──travelPlan/
     │   ├──travelRequest/
-    │   ├──uploadFile/
     │   ├──user/
     │   └──userFollow/
     ├──queryBuilder/
@@ -196,6 +195,8 @@ npm start
 ```
 
 Server will run at: `http://localhost:5000`
+
+Swagger UI will run at: `http://localhost:5000`
 
 ## Author
 
