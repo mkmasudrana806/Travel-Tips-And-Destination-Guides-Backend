@@ -8,6 +8,10 @@ import notFoundRoute from "./app/middlewares/notFoundRoute";
 import globalErrorHandler from "./app/middlewares/globalErrorHandlerRoute";
 import mongoSanitize from "express-mongo-sanitize";
 import { cleanupOrphanMedia } from "./app/utils/crons";
+// postman to openapi and swagger ui
+import swaggerUI from "swagger-ui-express";
+import YAML from "yamljs";
+import path from "path";
 
 const app = express();
 
@@ -44,6 +48,13 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/api/cron/schedule1d", cleanupOrphanMedia);
+
+// ---------- swagger api documentation ----------
+const swaggerDocument = YAML.load(
+  path.join(process.cwd(), "docs", "openapi.yaml"),
+);
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
 // not found route
 app.use("*", notFoundRoute);

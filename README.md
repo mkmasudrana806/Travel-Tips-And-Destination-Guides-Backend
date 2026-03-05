@@ -58,10 +58,9 @@ The system is designed using a modular and layered architecture to ensure scalab
 
 All technical documentation is available in the `docs/` folder:
 
-- [Data Model](./docs/data-model.md)
 - [API References](./docs/api-references.md)
+- [Swagger UI](http://localhost:5000/api-docs)
 - [Postman API Documentation](https://documenter.getpostman.com/view/30695014/2sBXcKBxsM)
-- [Swagger API](./docs/swagger.yaml)
 - [Developer Guideline](./docs/developer-guideline.md)
 
 ## Key Design Decisions

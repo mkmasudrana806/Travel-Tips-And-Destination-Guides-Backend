@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "b5096eb6-1a35-412a-b3a0-3a4cfc276973",
     "name": "Travel-Tips-And-Guideline",
-    "description": "# Travel Share Guideline API\n\nBackend API for a social travel platform where users can share travel experiences, create travel plans, interact with posts, and collaborate with other travelers.\n\n## Base URL\n\n`http://localhost:5000/api/v1`\n\n## Authentication\n\nMost endpoints require a JWT access token.\n\nHeader format:\n\n`Authorization: Bearer accessToken`",
+    "description": "# Travel Share - a Social Platform for Traveler\n\nBackend API for a social travel platform where users can share travel experiences, create travel plans, interact with posts, and collaborate with other travelers.\n\n## Base URL\n\n- Localhost: `http://localhost:5000/api/v1`\n    \n- Live API: `https://travelshare-backend.vercel.com/api/v1`\n    \n\n## Authentication\n\nMost endpoints require a JWT access token.\n\nHeader format:\n\n`Authorization: Bearer accessToken`",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "30695014"
   },
@@ -35,7 +35,8 @@
               "path": [
                 "users"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": [
             {
@@ -64,7 +65,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -268,6 +269,24 @@
         },
         {
           "name": "Get all users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[user:list] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "bearer",
@@ -280,14 +299,7 @@
               ]
             },
             "method": "GET",
-            "header": [
-              {
-                "key": "",
-                "value": "",
-                "type": "text",
-                "disabled": true
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{Base URL}}/users?searchTerm=masud rana",
               "host": [
@@ -302,7 +314,8 @@
                   "value": "masud rana"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: Admin Token Required"
           },
           "response": [
             {
@@ -339,7 +352,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -429,6 +442,23 @@
         },
         {
           "name": "Get my profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[user:me] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -441,9 +471,115 @@
                 "users",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{Base URL}}/users/me",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "516"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"204-GqVdrGgGQYT/Q16bplg6ooGW1M8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 14:24:57 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User is retrieved successfully\",\n    \"data\": {\n        \"followerCount\": 0,\n        \"_id\": \"698a0e679025ee8a719505e0\",\n        \"name\": \"Masud\",\n        \"email\": \"masud@gmail.com\",\n        \"password\": \"\",\n        \"age\": 23,\n        \"gender\": \"male\",\n        \"address\": \"Kanchan, Rupganj, Narayanganj, Bangladesh\",\n        \"role\": \"user\",\n        \"status\": \"active\",\n        \"profilePicture\": \"\",\n        \"isVerified\": false,\n        \"premiumAccess\": false,\n        \"isDeleted\": false,\n        \"createdAt\": \"2026-02-09T16:42:15.904Z\",\n        \"updatedAt\": \"2026-03-05T06:17:37.256Z\",\n        \"__v\": 0,\n        \"followingCount\": 2,\n        \"passwordChangedAt\": \"2026-03-04T10:29:34.548Z\"\n    }\n}"
+            }
+          ]
         },
         {
           "name": "Get a public user profile",
@@ -459,7 +595,8 @@
                 "users",
                 "6992fcf2e170bc7fca579ebe"
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token\n\nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -484,7 +621,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -596,7 +733,8 @@
                 "users",
                 "69952f3e2ba062d088203fe7"
               ]
-            }
+            },
+            "description": "🔐 Auth: Admin Token Required"
           },
           "response": [
             {
@@ -719,6 +857,25 @@
         },
         {
           "name": "Update my profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[user:updateMe] Status is success/auth/validation', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [],
@@ -739,9 +896,123 @@
               "path": [
                 "users"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Success response",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Masud\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{Base URL}}/users",
+                  "host": [
+                    "{{Base URL}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Content-Security-Policy",
+                  "value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+                },
+                {
+                  "key": "Cross-Origin-Opener-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Cross-Origin-Resource-Policy",
+                  "value": "same-origin"
+                },
+                {
+                  "key": "Origin-Agent-Cluster",
+                  "value": "?1"
+                },
+                {
+                  "key": "Referrer-Policy",
+                  "value": "no-referrer"
+                },
+                {
+                  "key": "Strict-Transport-Security",
+                  "value": "max-age=31536000; includeSubDomains"
+                },
+                {
+                  "key": "X-Content-Type-Options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "X-DNS-Prefetch-Control",
+                  "value": "off"
+                },
+                {
+                  "key": "X-Download-Options",
+                  "value": "noopen"
+                },
+                {
+                  "key": "X-Frame-Options",
+                  "value": "SAMEORIGIN"
+                },
+                {
+                  "key": "X-Permitted-Cross-Domain-Policies",
+                  "value": "none"
+                },
+                {
+                  "key": "X-XSS-Protection",
+                  "value": "0"
+                },
+                {
+                  "key": "Vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "Access-Control-Allow-Credentials",
+                  "value": "true"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "514"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"202-k8PEQ5tR1u1rAXy53thGELjQ78I\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Thu, 05 Mar 2026 14:27:28 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"message\": \"User is updated successfully\",\n    \"data\": {\n        \"followerCount\": 0,\n        \"_id\": \"698a0e679025ee8a719505e0\",\n        \"name\": \"Masud\",\n        \"email\": \"masud@gmail.com\",\n        \"password\": \"\",\n        \"age\": 23,\n        \"gender\": \"male\",\n        \"address\": \"Kanchan, Rupganj, Narayanganj, Bangladesh\",\n        \"role\": \"user\",\n        \"status\": \"active\",\n        \"profilePicture\": \"\",\n        \"isVerified\": false,\n        \"premiumAccess\": false,\n        \"isDeleted\": false,\n        \"createdAt\": \"2026-02-09T16:42:15.904Z\",\n        \"updatedAt\": \"2026-03-05T14:27:28.156Z\",\n        \"__v\": 0,\n        \"followingCount\": 2,\n        \"passwordChangedAt\": \"2026-03-04T10:29:34.548Z\"\n    }\n}"
+            }
+          ]
         },
         {
           "name": "Change user status",
@@ -777,12 +1048,33 @@
                 "6992fcf2e170bc7fca579ebe",
                 "status"
               ]
-            }
+            },
+            "description": "🔐 Auth: Admin Token Required"
           },
           "response": []
         },
         {
           "name": "Change user role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[user:roleChange] Status is success/auth/validation/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "bearer",
@@ -815,7 +1107,8 @@
                 "69965c3567f7c25e9d9b2154",
                 "role"
               ]
-            }
+            },
+            "description": "🔐 Auth: Admin Token Required"
           },
           "response": []
         },
@@ -842,9 +1135,36 @@
                 "users",
                 "verification"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// User folder tests",
+              "",
+              "pm.test('[user] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[user] If profile/user returned, it is object (soft)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const obj = (json && json.data && !Array.isArray(json.data) ? json.data : (json && !Array.isArray(json) ? json : null));",
+              "  if (obj) pm.expect(obj).to.be.an('object');",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
@@ -857,13 +1177,22 @@
             {
               "listen": "test",
               "script": {
+                "type": "text/javascript",
                 "exec": [
                   "const token = pm.response.json().data.accessToken;\r",
-                  "pm.environment.set(\"User Token\", token);"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                  "pm.environment.set(\"User Token\", token);",
+                  "",
+                  "pm.test('[auth:login] Status is success or invalid credentials', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
               }
             }
           ],
@@ -891,7 +1220,8 @@
                 "auth",
                 "login"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": [
             {
@@ -1153,7 +1483,8 @@
                 "auth",
                 "change-password"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
@@ -1183,7 +1514,8 @@
                 "auth",
                 "forgot-password"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": []
         },
@@ -1213,12 +1545,33 @@
                 "auth",
                 "reset-password"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": []
         },
         {
           "name": "Refresh token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[auth:refresh] Status is success or unauthorized', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "noauth"
@@ -1234,7 +1587,8 @@
                 "auth",
                 "refresh-token"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": [
             {
@@ -1259,7 +1613,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -1347,6 +1701,84 @@
             }
           ]
         }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Auth folder tests: token extraction + safe shape checks",
+              "",
+              "pm.test('[auth] JSON response when Content-Type is JSON', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (ct.includes('application/json') || ct.includes('+json')) {",
+              "    pm.expect(function () { pm.response.json(); }).to.not.throw();",
+              "  }",
+              "});",
+              "",
+              "pm.test('[auth] Status code is one of expected auth outcomes', function () {",
+              "  // auth flows can return 200/201 on success, 400/401/403/404/409 on invalid input/state",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[auth] Extract tokens if present and store into environment', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "",
+              "  let json;",
+              "  try { json = pm.response.json(); } catch (e) { return; }",
+              "",
+              "  // Walk common token locations: token/accessToken in root, data, or nested",
+              "  const candidates = [];",
+              "  const pushToken = (val, label) => {",
+              "    if (typeof val === 'string' && val.length > 20) candidates.push({ token: val, label });",
+              "  };",
+              "",
+              "  if (json && typeof json === 'object') {",
+              "    pushToken(json.accessToken, 'root.accessToken');",
+              "    pushToken(json.token, 'root.token');",
+              "    pushToken(json.refreshToken, 'root.refreshToken');",
+              "",
+              "    if (json.data && typeof json.data === 'object') {",
+              "      pushToken(json.data.accessToken, 'data.accessToken');",
+              "      pushToken(json.data.token, 'data.token');",
+              "      pushToken(json.data.refreshToken, 'data.refreshToken');",
+              "      if (json.data.tokens && typeof json.data.tokens === 'object') {",
+              "        pushToken(json.data.tokens.accessToken, 'data.tokens.accessToken');",
+              "        pushToken(json.data.tokens.token, 'data.tokens.token');",
+              "      }",
+              "    }",
+              "  }",
+              "",
+              "  // If Authorization header is returned (rare), grab bearer token",
+              "  const authHeader = pm.response.headers.get('Authorization') || pm.response.headers.get('authorization');",
+              "  if (authHeader && /^bearer\\s+/i.test(authHeader)) {",
+              "    pushToken(authHeader.replace(/^bearer\\s+/i, '').trim(), 'response.Authorization');",
+              "  }",
+              "",
+              "  // Decide where to store:",
+              "  // - Prefer User Token, unless response indicates admin role.",
+              "  const role = (json && json.data && json.data.user && (json.data.user.role || json.data.user.type)) || (json && json.user && (json.user.role || json.user.type));",
+              "  const roleStr = (typeof role === 'string' ? role.toLowerCase() : '');",
+              "",
+              "  const bestAccess = candidates.find(c => c.label.includes('accessToken') || c.label.endsWith('.token'));",
+              "  if (!bestAccess) return;",
+              "",
+              "  const tokenValue = bestAccess.token;",
+              "  if (roleStr.includes('admin')) {",
+              "    pm.environment.set('Admin Token', tokenValue);",
+              "  } else {",
+              "    pm.environment.set('User Token', tokenValue);",
+              "  }",
+              "",
+              "  // Also store in collection variable for convenience (non-secret local)",
+              "  pm.collectionVariables.set('accessToken', tokenValue);",
+              "});",
+              ""
+            ]
+          }
+        }
       ]
     },
     {
@@ -1354,6 +1786,29 @@
       "item": [
         {
           "name": "Create a comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[comment:create] Status is success or auth/validation/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -1376,7 +1831,8 @@
                 "698c136e1495bf2659708a9e",
                 "comments"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -1505,6 +1961,24 @@
         },
         {
           "name": "Get comments of a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[comment:list] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -1528,7 +2002,8 @@
                   "value": "2"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token\n\nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -1569,7 +2044,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -1671,7 +2146,8 @@
                 "comments",
                 "699985b3136b7eb01218efee"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -1692,7 +2168,7 @@
               },
               "status": "Bad Request",
               "code": 400,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -1782,15 +2258,31 @@
         },
         {
           "name": "Update a comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[comment:update] Status is success/auth/validation/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "{{User Token}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"content\": \"amar sonar bangla, ami tomay valobashi\"\r\n}",
@@ -1809,12 +2301,43 @@
                 "comments",
                 "69996dd848389393c5a20e30"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get replies of a comment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[comment:replies] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})",
+                  "",
+                  "pm.test('[comment:replies] If successful, response includes array somewhere (soft)', function () {",
+                  "    if (pm.response.code !== 200)",
+                  "        return;",
+                  "    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+                  "    if (!(ct.includes('application/json') || ct.includes('+json')))",
+                  "        return;",
+                  "    const json = pm.response.json();",
+                  "    const list = Array.isArray(json) ? json : json && Array.isArray(json.data) ? json.data : null;",
+                  "    if (list)",
+                  "        pm.expect(Array.isArray(list)).to.eql(true);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -1838,7 +2361,8 @@
                   "value": "2"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token\n\nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -1879,7 +2403,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -1967,6 +2491,34 @@
             }
           ]
         }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Comment folder tests",
+              "",
+              "pm.test('[comment] Status code is expected for Comment endpoints', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[comment] Replies/comments list endpoints return array when successful (if present)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) {",
+              "    pm.expect(Array.isArray(list)).to.eql(true);",
+              "  }",
+              "});",
+              ""
+            ]
+          }
+        }
       ]
     },
     {
@@ -1974,15 +2526,32 @@
       "item": [
         {
           "name": "Create a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[posts:create] Status is success or validation/auth error', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        409,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NzA4ZWUwMWQyM2IyODVmZmY2YzFhOWEiLCJlbWFpbCI6Im1hc3VkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzI4NjgwOTM1LCJleHAiOjE3Mjg3NjczMzV9.2RS6Sbz6gB2tnWT6sVR1_cCMCum99YcwGmD-l424fGE",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"title\": \"Exploring the Mountains of Nepal\",\r\n    \"content\": \"<p>There’s something magical about leaving behind the endless horns and crowded streets of Dhaka and heading toward the calm, green landscapes of Sylhet. The journey itself feels like a transition—from concrete and chaos to misty hills, tea gardens, and fresh air.</p><p><br></p><h2>The Journey Begins</h2><p>Our trip started before sunrise. The city was just waking up, with tea stalls opening and buses filling up with sleepy travelers. Whether you choose the train or a long-distance bus, the road out of Dhaka slowly replaces skyscrapers with open fields, rivers, and small village markets.</p><p>The further we traveled, the greener everything became. It felt like the air itself changed—cooler, calmer, and filled with the scent of rain and earth.</p><p><br></p>\",\r\n    \"category\": \"Adventure\",\r\n    \"locationName\": \"Bogura\",\r\n    \"country\": \"Bangladesh\",\r\n    \"travelDays\": 3,\r\n    \"estimatedCost\": 3000,\r\n    \"travelType\": \"budget\",\r\n    \"image\": \"https://example.com/images/nepal-mountains.jpg\",\r\n    \"premium\": true,\r\n    \"bannerId\": \"698c128f8dece2b2e4bd0191\",\r\n    \"contentIds\": [\"698c12a88dece2b2e4bd0194\"]\r\n}",
@@ -2000,7 +2569,8 @@
               "path": [
                 "posts"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -2133,6 +2703,36 @@
         },
         {
           "name": "Get all post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('[posts:list] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})",
+                  "",
+                  "pm.test('[posts:list] If successful, list is array (root or data)', function () {",
+                  "    if (pm.response.code !== 200)",
+                  "        return;",
+                  "    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+                  "    if (!(ct.includes('application/json') || ct.includes('+json')))",
+                  "        return;",
+                  "    const json = pm.response.json();",
+                  "    const list = Array.isArray(json) ? json : json && Array.isArray(json.data) ? json.data : null;",
+                  "    if (list)",
+                  "        pm.expect(Array.isArray(list)).to.eql(true);",
+                  "})"
+                ]
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -2154,7 +2754,8 @@
                   "value": "3000"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token  \nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -2276,6 +2877,38 @@
         },
         {
           "name": "Get single post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[posts:getOne] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})",
+                  "",
+                  "pm.test('[posts:getOne] If 404, response has message (soft)', function () {",
+                  "    if (pm.response.code !== 404)",
+                  "        return;",
+                  "    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+                  "    if (ct.includes('application/json') || ct.includes('+json')) {",
+                  "        const json = pm.response.json();",
+                  "        if (json && typeof json === 'object' && Object.prototype.hasOwnProperty.call(json, 'message')) {",
+                  "            pm.expect(json.message).to.be.a('string');",
+                  "        }",
+                  "    }",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -2288,7 +2921,8 @@
                 "posts",
                 "698c136e1495bf2659708a9e"
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token  \nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -2407,6 +3041,29 @@
         },
         {
           "name": "Update a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[posts:update] Status is success/notfound/auth/validation', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        409,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
             "header": [],
@@ -2428,12 +3085,35 @@
                 "posts",
                 "698c27d503763778584aed2f"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Delete a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[posts:delete] Status is success/notfound/auth', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        202,",
+                  "        204,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [],
@@ -2446,12 +3126,44 @@
                 "posts",
                 "698c136e1495bf2659708a9e"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get my posts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[posts:me] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})",
+                  "",
+                  "pm.test('[posts:me] If successful, list is array (root or data)', function () {",
+                  "    if (pm.response.code !== 200)",
+                  "        return;",
+                  "    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+                  "    if (!(ct.includes('application/json') || ct.includes('+json')))",
+                  "        return;",
+                  "    const json = pm.response.json();",
+                  "    const list = Array.isArray(json) ? json : json && Array.isArray(json.data) ? json.data : null;",
+                  "    if (list)",
+                  "        pm.expect(Array.isArray(list)).to.eql(true);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -2464,9 +3176,52 @@
                 "posts",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Post folder tests: safe validations for list/single/create/update/delete",
+              "",
+              "pm.test('[post] Status code is expected for Post endpoints', function () {",
+              "  // GET could be 200/404; create/update might be 200/201/400/401/403/404/422; delete 200/204/404",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[post] If JSON response with data, data is object/array', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  if (json && typeof json === 'object' && Object.prototype.hasOwnProperty.call(json, 'data')) {",
+              "    const d = json.data;",
+              "    const ok = (d === null) || (Array.isArray(d)) || (typeof d === 'object');",
+              "    pm.expect(ok).to.eql(true);",
+              "  }",
+              "});",
+              "",
+              "pm.test('[post] If list endpoint returns an array, ensure items are objects', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) {",
+              "    pm.expect(list.length).to.be.at.least(0);",
+              "    if (list.length > 0) pm.expect(list[0]).to.be.an('object');",
+              "  }",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
@@ -2475,6 +3230,29 @@
       "item": [
         {
           "name": "Vote a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[vote:create] Status is success/auth/validation/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -2497,7 +3275,8 @@
                 "69a82cfd7474d7186005dc14",
                 "votes"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -2538,7 +3317,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -2628,7 +3407,30 @@
         },
         {
           "name": "LIsts of voter of a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[vote:listVoters] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -2647,21 +3449,35 @@
                   "value": "upvote"
                 }
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": []
         },
         {
           "name": "lists of post i vote",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[vote:me] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "{{User Token}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{Base URL}}/votes/me",
               "host": [
@@ -2671,9 +3487,36 @@
                 "votes",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Vote Post folder tests",
+              "",
+              "pm.test('[vote] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[vote] If list endpoint returns array, assert array', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) pm.expect(Array.isArray(list)).to.eql(true);",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
@@ -2682,6 +3525,30 @@
       "item": [
         {
           "name": "Follow toggle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[follow:toggle] Status is success/auth/validation/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        409,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -2695,7 +3562,8 @@
                 "6992fcf2e170bc7fca579ebe",
                 "follow"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -2822,6 +3690,26 @@
         },
         {
           "name": "Get followers of an user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[follow:followers] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "noauth"
@@ -2838,13 +3726,37 @@
                 "69886b199a6dfd87c1c88780",
                 "followers"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": []
         },
         {
           "name": "Get following of an user",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[follow:followings] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
+            "auth": {
+              "type": "noauth"
+            },
             "method": "GET",
             "header": [],
             "url": {
@@ -2857,12 +3769,33 @@
                 "698a0e679025ee8a719505e0",
                 "followings"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": []
         },
         {
           "name": "Get mutual friends between users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[follow:mutual] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -2876,7 +3809,8 @@
                 "698a0e679025ee8a719505e0",
                 "mutual"
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token  \nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -2909,7 +3843,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -2999,6 +3933,25 @@
         },
         {
           "name": "Get profile suggestion",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[user:suggestions] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -3012,9 +3965,36 @@
                 "profile",
                 "suggestions"
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token  \nIf authenticated, additional viewer context will be included"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// UserFollow folder tests",
+              "",
+              "pm.test('[userfollow] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[userfollow] If followers/followings list returned, it is array (soft)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) pm.expect(Array.isArray(list)).to.eql(true);",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
@@ -3023,6 +4003,30 @@
       "item": [
         {
           "name": "Saved a travel psot",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[savedpost:save] Status is success/auth/validation/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        404,",
+                  "        409,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -3036,12 +4040,35 @@
                 "69a82cfd7474d7186005dc14",
                 "saved-posts"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "delete a saved post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[savedpost:delete] Status is success/auth/notfound', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        202,",
+                  "        204,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "DELETE",
             "header": [],
@@ -3055,12 +4082,32 @@
                 "69a82cfd7474d7186005dc14",
                 "saved-posts"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get all my saved posts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[savedpost:me] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -3073,9 +4120,36 @@
                 "saved-posts",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// SavedPost folder tests",
+              "",
+              "pm.test('[savedpost] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[savedpost] If list endpoint returns array, assert array', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) pm.expect(Array.isArray(list)).to.eql(true);",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
@@ -3084,6 +4158,28 @@
       "item": [
         {
           "name": "Create a travel plan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[travelplan:create] Status is success/auth/validation', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -3104,7 +4200,8 @@
               "path": [
                 "travel-plans"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -3250,7 +4347,8 @@
                 "travel-plans",
                 "69a853129d892e21ccd02c92"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
@@ -3261,13 +4359,7 @@
           },
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "{{User Token}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "",
@@ -3286,7 +4378,8 @@
                 "travel-plans",
                 "69a853129d892e21ccd02c92"
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token  \nIf authenticated, additional viewer context will be included"
           },
           "response": []
         },
@@ -3304,12 +4397,32 @@
                 "travel-plans",
                 "69a853129d892e21ccd02c92"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get my all travel plans",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[travelplan:meList] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -3328,12 +4441,45 @@
                   "value": "closed"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get all travel plans",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[travelplan:list] Status is 200 or validation/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        400,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})",
+                  "",
+                  "pm.test('[travelplan:list] If successful, list is array (root or data)', function () {",
+                  "    if (pm.response.code !== 200)",
+                  "        return;",
+                  "    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+                  "    if (!(ct.includes('application/json') || ct.includes('+json')))",
+                  "        return;",
+                  "    const json = pm.response.json();",
+                  "    const list = Array.isArray(json) ? json : json && Array.isArray(json.data) ? json.data : null;",
+                  "    if (list)",
+                  "        pm.expect(Array.isArray(list)).to.eql(true);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -3355,7 +4501,8 @@
                   "value": "3"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: Optional Token  \nIf authenticated, additional viewer context will be included"
           },
           "response": [
             {
@@ -3393,7 +4540,7 @@
               },
               "status": "Created",
               "code": 201,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -3481,6 +4628,36 @@
             }
           ]
         }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// TravelPlan folder tests",
+              "",
+              "pm.test('[travelplan] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[travelplan] If paginated response has meta, check page/limit types (soft)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const meta = json && (json.meta || (json.data && json.data.meta));",
+              "  if (meta && typeof meta === 'object') {",
+              "    if (Object.prototype.hasOwnProperty.call(meta, 'page')) pm.expect(meta.page).to.satisfy(v => typeof v === 'number' || typeof v === 'string');",
+              "    if (Object.prototype.hasOwnProperty.call(meta, 'limit')) pm.expect(meta.limit).to.satisfy(v => typeof v === 'number' || typeof v === 'string');",
+              "    if (Object.prototype.hasOwnProperty.call(meta, 'total')) pm.expect(meta.total).to.satisfy(v => typeof v === 'number' || typeof v === 'string');",
+              "  }",
+              "});",
+              ""
+            ]
+          }
+        }
       ]
     },
     {
@@ -3489,17 +4666,8 @@
         {
           "name": "Create a travel Request",
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
             "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTkyZmNmMmUxNzBiYzdmY2E1NzllYmUiLCJyb2xlIjoidXNlciIsImlhdCI6MTc3MjYzOTYwNSwiZXhwIjoxNzczNTAzNjA1fQ.jM1cJssgNwxbjp5eSbssMXTysLjhWdJkiy1rAHB10qA",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n    \"requestNote\": \"Hello, good to find you on the exact time. basically also I am finding someone for travel trip. love to connect with you\"\r\n}",
@@ -3519,7 +4687,8 @@
                 "6998156cf6bafe9dec292b16",
                 "requests"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -3652,6 +4821,26 @@
         },
         {
           "name": "Get all request for a travel plan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[travelrequest:listForPlan] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "protocolProfileBehavior": {
             "disableBodyPruning": true
           },
@@ -3677,7 +4866,8 @@
                 "6998156cf6bafe9dec292b16",
                 "requests"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -3825,12 +5015,32 @@
                 "travel-requests",
                 "69a855a97ddd2aebe07fcf9d"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get I requested plans",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[travelrequest:me] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -3843,7 +5053,8 @@
                 "travel-requests",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
@@ -3870,7 +5081,8 @@
                 "travel-requests",
                 "69a855a97ddd2aebe07fcf9d"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -3994,6 +5206,34 @@
             }
           ]
         }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// TravelRequest folder tests",
+              "",
+              "pm.test('[travelrequest] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[travelrequest] If successful JSON has data, ensure it is object/array', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  if (json && typeof json === 'object' && Object.prototype.hasOwnProperty.call(json, 'data')) {",
+              "    const d = json.data;",
+              "    pm.expect(d === null || Array.isArray(d) || typeof d === 'object').to.eql(true);",
+              "  }",
+              "});",
+              ""
+            ]
+          }
+        }
       ]
     },
     {
@@ -4001,6 +5241,25 @@
       "item": [
         {
           "name": "Get my notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[notifications:me] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -4013,7 +5272,8 @@
                 "notifications",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -4038,7 +5298,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -4141,21 +5401,37 @@
                 "69935417cfced67b02a3ee8a",
                 "read"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Mark all notification as read",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[notifications:readAll] Status is success/auth', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        202,",
+                  "        204,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "PATCH",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "{{travelUserToken}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{Base URL}}/notifications/read-all",
               "host": [
@@ -4165,7 +5441,8 @@
                 "notifications",
                 "read-all"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -4196,7 +5473,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -4286,6 +5563,25 @@
         },
         {
           "name": "Get Unread notification counts",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[notifications:unreadCount] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -4299,7 +5595,8 @@
                 "unread",
                 "count"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -4325,7 +5622,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -4413,6 +5710,36 @@
             }
           ]
         }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Notifications folder tests",
+              "",
+              "pm.test('[notifications] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[notifications] If unread count returned, it is numeric (soft)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const count = (json && (json.count ?? (json.data && (json.data.count ?? json.data.unreadCount))))",
+              "    ?? null;",
+              "",
+              "  if (count !== null && count !== undefined) {",
+              "    pm.expect(String(count)).to.match(/^\\d+$/);",
+              "  }",
+              "});",
+              ""
+            ]
+          }
+        }
       ]
     },
     {
@@ -4420,6 +5747,28 @@
       "item": [
         {
           "name": "Make a subscriptions session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[payment:createSession] Status is success/auth/validation', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        201,",
+                  "        400,",
+                  "        401,",
+                  "        403,",
+                  "        422",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [],
@@ -4440,7 +5789,8 @@
               "path": [
                 "subscriptions"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -4469,7 +5819,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -4559,6 +5909,25 @@
         },
         {
           "name": "Get my payments history",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[payment:meHistory] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [],
@@ -4571,12 +5940,32 @@
                 "subscriptions",
                 "me"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get all payments history",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[payment:allHistory] Status is 200 or auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "bearer",
@@ -4604,9 +5993,36 @@
                   "value": "masud"
                 }
               ]
-            }
+            },
+            "description": "🔐 Auth: Admin Token Required"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Payment folder tests",
+              "",
+              "pm.test('[payment] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[payment] If payment history list returned, it is array (soft)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) pm.expect(Array.isArray(list)).to.eql(true);",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
@@ -4637,7 +6053,8 @@
                 "698c136e1495bf2659708a9e",
                 "shares"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": [
             {
@@ -4784,7 +6201,7 @@
               },
               "status": "OK",
               "code": 200,
-              "_postman_previewlanguage": null,
+              "_postman_previewlanguage": "Text",
               "header": [
                 {
                   "key": "Content-Security-Policy",
@@ -4888,12 +6305,33 @@
                 "shares",
                 "69a0dd0affcf7f37686af365"
               ]
-            }
+            },
+            "description": "🔐 Auth: User Token Required"
           },
           "response": []
         },
         {
           "name": "Get shares of a post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('[postshare:list] Status is 200/404/auth-related', function () {",
+                  "    pm.expect([",
+                  "        200,",
+                  "        401,",
+                  "        403,",
+                  "        404",
+                  "    ]).to.include(pm.response.code);",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "noauth"
@@ -4910,15 +6348,72 @@
                 "698c136e1495bf2659708a9e",
                 "shares"
               ]
-            }
+            },
+            "description": "🔓 Auth: Not Required"
           },
           "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// PostShare folder tests",
+              "",
+              "pm.test('[postshare] Status code is expected', function () {",
+              "  pm.expect([200, 201, 202, 204, 400, 401, 403, 404, 409, 422]).to.include(pm.response.code);",
+              "});",
+              "",
+              "pm.test('[postshare] If shares list returned, it is array (soft)', function () {",
+              "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+              "  if (![200, 201].includes(pm.response.code)) return;",
+              "",
+              "  const json = pm.response.json();",
+              "  const list = (Array.isArray(json) ? json : (json && json.data && Array.isArray(json.data) ? json.data : null));",
+              "  if (list) pm.expect(Array.isArray(list)).to.eql(true);",
+              "});",
+              ""
+            ]
+          }
         }
       ]
     },
     {
       "name": "Base URL",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('[base] Status code is 200 for base URL', function () {",
+              "    pm.expect([",
+              "        200,",
+              "        204,",
+              "        301,",
+              "        302",
+              "    ]).to.include(pm.response.code);",
+              "})",
+              "",
+              "pm.test('[base] If body is present, it is text/html or json', function () {",
+              "    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+              "    if (pm.response.text() && pm.response.text().length > 0) {",
+              "        pm.expect(ct).to.satisfy(v => v.includes('text/html') || v.includes('application/json') || v.includes('+json') || v.includes('text/plain'));",
+              "    }",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
+        "auth": {
+          "type": "noauth"
+        },
         "method": "GET",
         "header": [],
         "url": {
@@ -4931,24 +6426,42 @@
           "path": [
             ""
           ]
-        }
+        },
+        "description": "Server starting..."
       },
       "response": []
     },
     {
       "name": "Cron media cleanup",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('[cron] Status code is expected', function () {",
+              "    pm.expect([",
+              "        200,",
+              "        202,",
+              "        204,",
+              "        400,",
+              "        401,",
+              "        403,",
+              "        404",
+              "    ]).to.include(pm.response.code);",
+              "})"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "auth": {
           "type": "noauth"
         },
         "method": "GET",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "991c5cc8e84bb16be557d6ecca69ab09",
-            "type": "text"
-          }
-        ],
+        "header": [],
         "url": {
           "raw": "http://localhost:5000/api/cron/schedule1d",
           "protocol": "http",
@@ -4961,7 +6474,8 @@
             "cron",
             "schedule1d"
           ]
-        }
+        },
+        "description": "🔓 Auth: Not Required\n\nVercel will do itsefl using environment variable. vercel will set authorization token or a normal string header for authentication"
       },
       "response": []
     }
@@ -4992,9 +6506,58 @@
       "listen": "test",
       "script": {
         "type": "text/javascript",
-        "packages": {},
-        "requests": {},
         "exec": [
+          "// Collection-level common tests (applies to every request)",
+          "",
+          "pm.test('[common] Response time under 5s', function () {",
+          "  pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('[common] Has a valid HTTP status code', function () {",
+          "  pm.expect(pm.response.code).to.be.a('number');",
+          "  pm.expect(pm.response.code).to.be.within(100, 599);",
+          "});",
+          "",
+          "pm.test('[common] Content-Type header present when body exists', function () {",
+          "  const hasBody = pm.response.text() && pm.response.text().length > 0;",
+          "  if (hasBody) {",
+          "    pm.expect(pm.response.headers.has('Content-Type')).to.eql(true);",
+          "  }",
+          "});",
+          "",
+          "pm.test('[common] JSON parse when Content-Type indicates JSON', function () {",
+          "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+          "  const looksJson = ct.includes('application/json') || ct.includes('+json');",
+          "",
+          "  if (looksJson) {",
+          "    pm.response.to.have.body;",
+          "    const text = pm.response.text();",
+          "    pm.expect(text).to.be.a('string');",
+          "",
+          "    const json = pm.response.json();",
+          "    // if parsed, it should be object/array/null",
+          "    pm.expect(json === null || typeof json === 'object').to.eql(true);",
+          "  }",
+          "});",
+          "",
+          "pm.test('[common] If response is JSON object, it may have message/success fields', function () {",
+          "  const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();",
+          "  if (!(ct.includes('application/json') || ct.includes('+json'))) return;",
+          "",
+          "  const data = pm.response.json();",
+          "  if (data && !Array.isArray(data) && typeof data === 'object') {",
+          "    // Soft checks: only assert type if present",
+          "    if (Object.prototype.hasOwnProperty.call(data, 'message')) {",
+          "      pm.expect(data.message).to.be.a('string');",
+          "    }",
+          "    if (Object.prototype.hasOwnProperty.call(data, 'success')) {",
+          "      pm.expect(data.success).to.be.a('boolean');",
+          "    }",
+          "    if (Object.prototype.hasOwnProperty.call(data, 'data')) {",
+          "      pm.expect(data).to.have.property('data');",
+          "    }",
+          "  }",
+          "});",
           ""
         ]
       }

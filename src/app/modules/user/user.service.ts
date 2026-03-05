@@ -70,6 +70,10 @@ const getMe = async (user: TJwtPayload) => {
     _id: user.userId,
     role: user.role,
   });
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, "My profile is not found!");
+  }
+  result.password = "";
   return result;
 };
 

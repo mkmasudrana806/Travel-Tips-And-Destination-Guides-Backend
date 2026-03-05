@@ -4,7 +4,6 @@ import { AuthRoutes } from "../modules/auth/auth.rotues";
 import { CommentRoutes } from "../modules/comments/comment.routes";
 import { PostRoutes } from "../modules/post/post.routes";
 import { PaymentRoutes } from "../modules/payments/payment.routes";
-import { UserFollowRoutes } from "../modules/userFollow/userFollow.routes";
 import { SavedRoutes } from "../modules/savedPost/savedPost.route";
 import { TravelPlanRoutes } from "../modules/travelPlan/travelPlan.route";
 import { TravelRequestRoutes } from "../modules/travelRequest/travelRequest.route";

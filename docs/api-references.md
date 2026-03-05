@@ -42,7 +42,9 @@ Endpoints that support pagination return a `meta` object.
 - `fields` → Select fields
 - Any field name → Exact match filtering
 
-Before enter into chapter. Please visit [API Design](/docs/api-design.md)
+Before enter into chapter. Please visit 
+- [API Design Strategies](/docs/api-design.md)
+- [Data Model](/docs/data-model.md)
 
 # User
 
