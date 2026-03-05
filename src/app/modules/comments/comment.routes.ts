@@ -23,7 +23,11 @@ postRouter.post(
 postRouter.get("/", optionalAuth(), CommentControllers.getAllComments);
 
 // get replies of a comment
-router.get("/:commentId/replies", CommentControllers.getRepliesOfComment);
+router.get(
+  "/:commentId/replies",
+  optionalAuth(),
+  CommentControllers.getRepliesOfComment,
+);
 
 // delete a comment
 router.delete("/:commentId", auth("user"), CommentControllers.deleteAComment);

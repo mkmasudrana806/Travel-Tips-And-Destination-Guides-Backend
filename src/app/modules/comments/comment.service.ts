@@ -226,11 +226,12 @@ const getAllComments = async (
 
 /**
  * -------------- get all replies of a comment --------------
- *
+ * @param viewerId who viewing comments (if logged in)
  * @param parentCommentId comment id to retrieve all replies
  * @param query page and limit
  */
 const getRepliesOfComment = async (
+  viewerId: string,
   parentCommentId: string,
   query: Record<string, unknown>,
 ) => {
@@ -243,19 +244,41 @@ const getRepliesOfComment = async (
   })
     .sort({ createdAt: -1 })
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .lean();
 
-  const totalReplies = await Comment.countDocuments({
+  const total = await Comment.countDocuments({
     parentComment: parentCommentId,
   });
-  const hasNextPage = page * limit < totalReplies;
+  const hasNextPage = page * limit < total;
+  const meta = { limit, page, total, hasNextPage };
 
-  return {
-    replies,
-    page,
-    limit,
-    hasNextPage,
-  };
+  // if viewer is not logged in, so isOwner=false for all
+  let data: TAllCommentsResponse[];
+  if (!viewerId) {
+    data = replies.map((reply) => ({
+      data: {
+        ...reply,
+      },
+      viewerContext: {
+        isOwner: false,
+      },
+    }));
+
+    return { meta, data };
+  }
+
+  // if user logged in, then check any comment belong to this viewer user
+  data = replies.map((reply) => ({
+    data: {
+      ...reply,
+    },
+    viewerContext: {
+      isOwner: reply.user.toString() === viewerId,
+    },
+  }));
+
+  return { meta, data };
 };
 
 // -------------- delete a comment --------------

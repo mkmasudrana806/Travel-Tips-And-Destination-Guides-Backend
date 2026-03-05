@@ -42,12 +42,13 @@ const getAllComments = asyncHanlder(async (req, res) => {
 
 // --------------- get replies of a comment -------------------
 const getRepliesOfComment = asyncHanlder(async (req, res) => {
+  const viewerId = req.user.userId;
   const commentId = req.params.commentId;
   const query = req.query;
   // validate mongoose object id
   validateObjectId({ name: "comment id", value: commentId });
 
-  const result = await CommentServices.getRepliesOfComment(commentId, query);
+  const result = await CommentServices.getRepliesOfComment(viewerId, commentId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
