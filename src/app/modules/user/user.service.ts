@@ -8,6 +8,7 @@ import { TfileUpload } from "../../interface/fileUploadType";
 import { TJwtPayload } from "../../interface/JwtPayload";
 import Post from "../post/post.model";
 import UserFollow from "../userFollow/userFollow.model";
+import { USER_QUERY_OPTIONS } from "./user.query";
 
 /**
  * ----------------------- Create an user----------------------
@@ -47,8 +48,8 @@ const updateProfilePicture = async (userId: string, file: TfileUpload) => {
  * @return return all users
  */
 const getAllUsers = async (query: Record<string, any>) => {
-  const userQuery = new QueryBuilder(User.find({}), query)
-    .search(searchableFields)
+  const userQuery = new QueryBuilder(User.find(), query, USER_QUERY_OPTIONS)
+    .search()
     .filter()
     .sort()
     .paginate()

@@ -1,18 +1,31 @@
 import { FilterQuery, Query } from "mongoose";
 
 type QueryParams = Record<string, unknown>;
+type QueryConfig = {
+  searchableFields?: string[];
+  filterableFields?: string[];
+  sortableFields?: string[];
+  selectableFields?: string[];
+};
 
 class QueryBuilder<T> {
   public modelQuery: Query<T[], T>;
   public query: QueryParams;
+  public config: QueryConfig;
 
   /**
    * @param modelQuery Model. like User, Student, Faculty
    * @param query req.query object
+   * @param config each model's builder logic
    */
-  constructor(modelQuery: Query<T[], T>, query: QueryParams) {
+  constructor(
+    modelQuery: Query<T[], T>,
+    query: QueryParams,
+    config: QueryConfig,
+  ) {
     this.modelQuery = modelQuery;
     this.query = query;
+    this.config = config;
   }
 
   /**
@@ -21,7 +34,8 @@ class QueryBuilder<T> {
    * @param searchableFields in which fields want to search. must passed array of fields to search
    * @returns return partial matching results
    */
-  search(searchableFields: string[] = []) {
+  search() {
+    const searchableFields: string[] = this.config.searchableFields || [];
     let search = this?.query?.search;
     if (search && typeof search === "string" && searchableFields.length) {
       const searchOptions = searchableFields.map(
@@ -43,8 +57,9 @@ class QueryBuilder<T> {
    *
    * @returns exact matching. ex: email=mkmasudrana806@gmail.com.  except: ['search','sort', 'limit', 'page', 'fields'] these are query fields
    */
-  filter(filterableFields: string[] = []) {
+  filter() {
     const queryObj = { ...this.query };
+    const filterableFields: string[] = this.config.filterableFields || [];
     const excludeFields = ["search", "sort", "limit", "page", "fields"];
     excludeFields.forEach((el) => delete queryObj[el]);
 
@@ -65,8 +80,9 @@ class QueryBuilder<T> {
    *
    * @returns sort based on any fields. ex: sort=email asc order. sort=-email desc order
    */
-  sort(sortableFields: string[] = []) {
+  sort() {
     const sortQuery = this.query?.sort;
+    const sortableFields: string[] = this.config.sortableFields || [];
     if (typeof sortQuery === "string") {
       const fields = sortQuery.split(",");
       const validSortFields = fields
@@ -108,8 +124,9 @@ class QueryBuilder<T> {
    *
    * @returns limit the fields. ex: fields=name,email keep these. fields=-name means except name, return alls fields
    */
-  fieldsLimiting(selectableFields: string[] = []) {
+  fieldsLimiting() {
     const fieldsQuery = this.query?.fields;
+    const selectableFields: string[] = this.config.selectableFields || [];
     if (typeof fieldsQuery === "string") {
       const fields = fieldsQuery
         .split(",")
