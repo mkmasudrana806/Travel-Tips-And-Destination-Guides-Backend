@@ -16,6 +16,7 @@ import PostVote from "../postVote/postVote.model";
 import SavedPost from "../savedPost/savedPost.model";
 import UserFollow from "../userFollow/userFollow.model";
 import validateObjectId from "../../utils/validateObjectId";
+import { POST_QUERY_OPTIONS } from "./post.query";
 
 /**
  * ------------- Create a new post ----------------
@@ -233,17 +234,19 @@ const getAllTravelPosts = async (
  */
 const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
   const postQuery = new QueryBuilder(
-    Post.find({ author: userId }).populate({
-      path: "author",
-      select: "_id name email isVerified profilePicture premiumAccess",
-    }),
+    Post.find({ author: userId }),
     query,
+    POST_QUERY_OPTIONS,
   )
+    .search()
     .filter()
-    .search(searchableFields)
+    .sort()
     .fieldsLimiting()
     .paginate()
-    .sort();
+    .populate({
+      path: "author",
+      select: "_id name email isVerified profilePicture premiumAccess",
+    });
 
   const data = await postQuery.modelQuery;
   const meta = await postQuery.countTotal();
@@ -321,7 +324,7 @@ const updateAPost = async (
   // check if the post exists and belongs to the user
   const post = await Post.findOne({
     _id: postId,
-    author: userId
+    author: userId,
   });
   if (!post) throw new AppError(httpStatus.NOT_FOUND, "Post not found");
 
@@ -391,7 +394,7 @@ const deleteAPost = async (user: TJwtPayload, postId: string) => {
     deletedPost = await Post.findOneAndUpdate(
       {
         _id: postId,
-        author: user.userId
+        author: user.userId,
       },
       { isDeleted: true },
       { new: true },
@@ -401,7 +404,7 @@ const deleteAPost = async (user: TJwtPayload, postId: string) => {
   } else if (user.role === "admin") {
     deletedPost = await Post.findOneAndUpdate(
       {
-        _id: postId
+        _id: postId,
       },
       { isDeleted: true },
       { new: true },

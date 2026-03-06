@@ -1,4 +1,4 @@
-import { FilterQuery, Query } from "mongoose";
+import { FilterQuery, PopulateOptions, Query } from "mongoose";
 
 type QueryParams = Record<string, unknown>;
 type QueryConfig = {
@@ -142,6 +142,17 @@ class QueryBuilder<T> {
       this.modelQuery = this.modelQuery.select("-__v");
     }
 
+    return this;
+  }
+
+  /**
+   * -------------- populate query result ------------------
+   *
+   * @param options populate object or array of objects ex: {path: "user", select: "name email"} or array of objects
+   * @returns
+   */
+  populate(options: PopulateOptions | PopulateOptions[]) {
+    this.modelQuery = this.modelQuery.populate(options);
     return this;
   }
 
