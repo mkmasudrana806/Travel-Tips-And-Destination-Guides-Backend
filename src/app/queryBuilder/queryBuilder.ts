@@ -157,6 +157,16 @@ class QueryBuilder<T> {
   }
 
   /**
+   * ----------- lean -> convert to plain javascript object -------------
+   *
+   * @returns plain javascript object
+   */
+  lean() {
+    this.modelQuery = this.modelQuery.lean<T[]>();
+    return this;
+  }
+
+  /**
    * -------------------  count documents -------------------------
    *
    * @param withDeleted by default false. ex: withDeletect=true, it counts deleted.

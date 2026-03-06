@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 type TPost = {
+  _id: Types.ObjectId;
   author: Types.ObjectId;
   title: string;
   content: string;

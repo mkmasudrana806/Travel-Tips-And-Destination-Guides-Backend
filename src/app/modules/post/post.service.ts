@@ -69,78 +69,39 @@ const getAllTravelPosts = async (
   viewerId: string,
   query: Record<string, unknown>,
 ) => {
-  const {
-    location,
-    category,
-    country,
-    minCost,
-    maxCost,
-    days,
-    travelType,
-    sort = "latest",
-  } = query;
+  const { minCost, maxCost, minDay, maxDay } = query;
 
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 10;
-  const skip = (page - 1) * limit;
+  // base filter object for domain post specific filter apply.
+  const baseFilter: any = {};
 
-  // make a query object
-  const filter: any = {};
-
-  // category filter
-  if (category) {
-    filter.category = { $regex: category, $options: "i" };
-  }
-  // location filter
-  if (location) {
-    filter.locationName = { $regex: location, $options: "i" };
-  }
-
-  // country filter
-  if (country) {
-    filter.country = { $regex: country, $options: "i" };
-  }
-
-  // cost range. as i received min and max. so i will keep only in range budget
+  // cost range filter
   if (minCost || maxCost) {
-    filter.estimatedCost = {};
-    if (minCost) filter.estimatedCost.$gte = Number(minCost);
-    if (maxCost) filter.estimatedCost.$lte = Number(maxCost);
+    baseFilter.estimatedCost = {};
+    if (minCost) baseFilter.estimatedCost.$gte = Number(minCost);
+    if (maxCost) baseFilter.estimatedCost.$lte = Number(maxCost);
   }
 
-  // travel days
-  if (days) {
-    filter.travelDays = Number(days);
+  // travel days range filter
+  if (minDay || maxDay) {
+    baseFilter.travelDays = {};
+    if (minDay) baseFilter.travelDays.$gte = Number(minDay);
+    if (maxDay) baseFilter.travelDays.$gte = Number(maxDay);
   }
 
-  // travel type
-  if (travelType) {
-    filter.travelType = travelType;
-  }
+  const queryBuilder = new QueryBuilder(
+    Post.find(baseFilter),
+    query,
+    POST_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .sort()
+    .paginate()
+    .fieldsLimiting()
+    .populate({ path: "author", select: "name profilePicture" });
 
-  // sorting by default latest
-  // but user can sort based on cost, upvote counts
-  let sortOption: any = { createdAt: -1 };
-
-  if (sort === "cheapest") {
-    sortOption = { estimatedCost: 1 };
-  } else if (sort === "popular") {
-    sortOption = { upvoteCount: -1 };
-  }
-
-  const posts = await Post.find(filter)
-    .sort(sortOption)
-    .skip(skip)
-    .limit(limit)
-    .populate("author", "name profilePicture");
-
-  // create meta data
-  const total = await Post.countDocuments(filter);
-  const meta = {
-    total,
-    page: page,
-    limit: limit,
-  };
+  const posts = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
 
   // if user not logged in, means no viewerId
   let data: TAllPostsResponse[];
@@ -246,7 +207,7 @@ const getMyPosts = async (userId: string, query: Record<string, unknown>) => {
     .populate({
       path: "author",
       select: "_id name email isVerified profilePicture premiumAccess",
-    });
+    }).lean();
 
   const data = await postQuery.modelQuery;
   const meta = await postQuery.countTotal();

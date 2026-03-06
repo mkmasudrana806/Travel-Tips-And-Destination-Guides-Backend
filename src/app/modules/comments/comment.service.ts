@@ -5,6 +5,8 @@ import { Comment } from "./comment.model";
 import mongoose from "mongoose";
 import { NotificationService } from "../notifications/notifications.service";
 import Post from "../post/post.model";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { COMMENT_QUERY_OPTIONS } from "./comment.query";
 
 /**
  * -------------- create a comment into db --------------
@@ -114,30 +116,30 @@ const getAllComments = async (
   // i allowed maximum 3 replies to load with root comment.
   const MAX_REPLY_COUNT = 3;
 
-  // pagination
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 20;
-  const skip = (page - 1) * limit;
+  const queryBuilder = new QueryBuilder(
+    Comment.find({
+      post: postId,
+      parentComment: null,
+    }),
+    query,
+    COMMENT_QUERY_OPTIONS,
+  )
+    .sort()
+    .fieldsLimiting()
+    .paginate()
+    .lean();
 
   // fetch root comments
-  const rootComments = await Comment.find({
-    post: postId,
-    parentComment: null,
-  })
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
-    .lean();
+  const rootComments = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
 
   const rootIds = rootComments.map((r) => r._id);
 
   // if no comments. return empty array
   if (rootIds.length === 0) {
     return {
-      comments: [],
-      page,
-      limit,
-      hasNextPage: false,
+      data: [],
+      meta,
     };
   }
 
@@ -176,15 +178,6 @@ const getAllComments = async (
     };
   });
 
-  // determine next page existence
-  const totalRoots = await Comment.countDocuments({
-    post: postId,
-    parentComment: null,
-  });
-
-  const hasNextPage = page * limit < totalRoots;
-  const meta = { page, limit, hasNextPage };
-
   let data: TAllCommentsResponse[];
   // if viewer is not logged in
   if (!viewerId) {
@@ -218,9 +211,10 @@ const getAllComments = async (
       })),
     },
     viewerContext: {
-      isOwner: root.user.toString() === viewerId,
+      isOwner: root.user?.toString() === viewerId,
     },
   }));
+
   return { meta, data };
 };
 
