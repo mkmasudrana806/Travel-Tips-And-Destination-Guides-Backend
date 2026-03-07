@@ -43,13 +43,17 @@ const getSingleTravelPlan = asyncHanlder(async (req, res) => {
 const getMyAllTravelPlans = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
   const query = req.query;
-  const result = await TravelPlanService.getMyAllTravelPlans(userId, query);
+  const { meta, data } = await TravelPlanService.getMyAllTravelPlans(
+    userId,
+    query,
+  );
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "All travel plans retrived sucessfull",
-    data: result,
+    data: data,
+    meta: meta,
   });
 });
 

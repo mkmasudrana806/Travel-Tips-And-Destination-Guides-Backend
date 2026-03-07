@@ -5,6 +5,8 @@ import Post from "../post/post.model";
 import { TPostShare } from "./postShare.interface";
 import { PostShare } from "./postShare.model";
 import { Schema, Types } from "mongoose";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { POST_SHARE_QUERY_OPTIONS } from "./postShare.query";
 
 /**
  * ------------- share a travel post -------------
@@ -62,38 +64,39 @@ const deleteSharedPost = async (userId: string, sharedPostId: string) => {
 };
 
 /**
+ * ----------- get all shares of a post ---------------
  *
  * @param postId post to shows all shares
  * @param query page, limit by default
  * @returns paginated shared posts
  */
-const getSharedPosts = async (
+const getSharesOfPost = async (
   postId: string,
   query: Record<string, unknown>,
 ) => {
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 10;
-  const skip = (page - 1) * limit;
+  const queryBuilder = new QueryBuilder(
+    PostShare.find({ post: postId }),
+    query,
+    POST_SHARE_QUERY_OPTIONS,
+  )
+    .sort()
+    .paginate()
+    .populate([
+      { path: "post" },
+      { path: "user", select: "name profilePicture" },
+    ])
+    .lean();
 
-  const data = await PostShare.find({ post: postId })
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
-    .populate("post")
-    .populate("user", "name profilePicture");
-  const total = await PostShare.countDocuments();
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
 
   return {
     data,
-    meta: {
-      page,
-      limit,
-      total,
-    },
+    meta,
   };
 };
 export const PostShareService = {
   sharePost,
   deleteSharedPost,
-  getSharedPosts,
+  getSharesOfPost,
 };

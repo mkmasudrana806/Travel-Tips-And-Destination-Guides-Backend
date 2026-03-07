@@ -206,12 +206,14 @@ const listOfPostsIVote = async (
   userId: string,
   query: Record<string, unknown>,
 ) => {
-  const votesBuild = new QueryBuilder(
-    PostVote.find({ user: userId }).populate("post"),
-    query,
-  ).paginate();
+  const page = Number(query?.page) || 1;
+  const limit = Math.min(Number(query?.page) || 1, 50);
+  const skip = (page - 1) * limit;
+  const result = await PostVote.find({ user: userId })
+    .populate("post")
+    .skip(skip)
+    .limit(limit);
 
-  const result = await votesBuild.modelQuery;
   return result;
 };
 

@@ -65,7 +65,8 @@ const allPaymentHistory = asyncHanlder(async (req, res) => {
 // ----------- get my payment history -----------
 const myPaymentHistory = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
-  const result = await PaymentServices.myPaymentsHistory(userId);
+  const query = req.query;
+  const result = await PaymentServices.myPaymentsHistory(userId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

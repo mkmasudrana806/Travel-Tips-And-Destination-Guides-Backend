@@ -6,6 +6,8 @@ import httpStatus from "http-status";
 import { User } from "../user/user.model";
 import { TPayment } from "./payment.interface";
 import config from "../../config";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { PAYMENT_QUERY_OPTIONS } from "./payment.query";
 
 /**
  * -------------------- initiate subscriptions session ----------------------
@@ -236,59 +238,23 @@ const onPaymentCancelled = async (userEmail: string, txnId: string) => {
 
 // get all payments history
 const allPaymentsHistory = async (query: Record<string, unknown>) => {
-  const {
-    page = 1,
-    limit = 20,
-    email,
-    status,
-    transactionId,
-    paymentDate,
-    sortBy = "paymentDate",
-    sortOrder = "desc",
-  } = query;
+  const queryBuilder = new QueryBuilder(
+    Payment.find(),
+    query,
+    PAYMENT_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .sort()
+    .fieldsLimiting()
+    .paginate()
+    .lean();
 
-  const filter: any = {};
-
-  // email search (partial match)
-  if (email) {
-    filter.email = { $regex: email, $options: "i" };
-  }
-
-  // status filter
-  if (status) {
-    filter.status = status;
-  }
-
-  // transactionId search
-  if (transactionId) {
-    filter.transactionId = {
-      $regex: transactionId,
-      $options: "i",
-    };
-  }
-
-  // date range filter
-  if (paymentDate) {
-      filter.paymentDate.$lte = new Date(paymentDate as string);
-  }
-
-  const skip = (Number(page) - 1) * Number(limit);
-
-  const sortCondition: any = {
-    [sortBy as string]: sortOrder === "asc" ? 1 : -1,
-  };
-
-  const [data, total] = await Promise.all([
-    Payment.find(filter).sort(sortCondition).skip(skip).limit(Number(limit)),
-    Payment.countDocuments(filter),
-  ]);
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal(true);
 
   return {
-    meta: {
-      page: Number(page),
-      limit: Number(limit),
-      total
-    },
+    meta,
     data,
   };
 };
@@ -299,11 +265,29 @@ const allPaymentsHistory = async (query: Record<string, unknown>) => {
  * @param userId userId who want to see his all payment history
  * @returns latest 20 payments history of the user
  */
-const myPaymentsHistory = async (userId: string) => {
-  const result = await Payment.find({ user: userId })
-    .sort({ paymentDate: -1 })
-    .limit(20);
-  return result;
+const myPaymentsHistory = async (
+  userId: string,
+  query: Record<string, unknown>,
+) => {
+  const queryBuilder = new QueryBuilder(
+    Payment.find({ user: userId }),
+    query,
+    PAYMENT_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .sort()
+    .fieldsLimiting()
+    .paginate()
+    .lean();
+
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
+  return {
+    meta,
+    data,
+  };
 };
 
 export const PaymentServices = {

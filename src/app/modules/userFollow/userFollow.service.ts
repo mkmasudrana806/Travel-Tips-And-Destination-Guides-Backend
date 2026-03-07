@@ -10,6 +10,7 @@ import {
 } from "./userFollow.utils";
 import { NotificationService } from "../notifications/notifications.service";
 import { boolean } from "zod";
+import { USER_FOLLOW_QUERY_OPTIONS } from "./userFollow.query";
 
 /**
  * ------------- follow/unfollow an user ----------------
@@ -113,18 +114,18 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
  * @returns meta and result
  */
 const getFollowers = async (userId: string, query: Record<string, unknown>) => {
-  const followersQuery = new QueryBuilder(
-    UserFollow.find({ following: userId }).populate(
-      "follower",
-      "name profilePicture",
-    ),
+  const queryBuilder = new QueryBuilder(
+    UserFollow.find({ following: userId }),
     query,
+    USER_FOLLOW_QUERY_OPTIONS,
   )
+    .sort()
     .paginate()
-    .sort();
+    .populate({ path: "follower", select: "name profilePicture" })
+    .lean();
 
-  const meta = await followersQuery.countTotal();
-  const result = await followersQuery.modelQuery;
+  const meta = await queryBuilder.countTotal();
+  const result = await queryBuilder.modelQuery;
   return {
     meta,
     result,
@@ -142,18 +143,18 @@ const getFollowings = async (
   userId: string,
   query: Record<string, unknown>,
 ) => {
-  const followingsQuery = new QueryBuilder(
-    UserFollow.find({ follower: userId }).populate(
-      "following",
-      "name profilePicture",
-    ),
+  const queryBuilder = new QueryBuilder(
+    UserFollow.find({ follower: userId }),
     query,
+    USER_FOLLOW_QUERY_OPTIONS,
   )
+    .sort()
     .paginate()
-    .sort();
+    .populate({ path: "following", select: "name profilePicture" })
+    .lean();
 
-  const meta = await followingsQuery.countTotal();
-  const result = await followingsQuery.modelQuery;
+  const meta = await queryBuilder.countTotal();
+  const result = await queryBuilder.modelQuery;
   return {
     meta,
     result,

@@ -9,6 +9,8 @@ import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
 import { buildTravelPlanFilter, getTravelDays } from "./travelPlan.utils";
 import TravelRequest from "../travelRequest/travelRequest.model";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { TRAVELPLAN_QUERY_OPTIONS } from "./travelPlan.query";
 
 /**
  * ------------- create a travel plan -------------
@@ -91,22 +93,30 @@ const getAllTravelPlans = async (
   viewerId: string,
   query: Record<string, unknown>,
 ) => {
-  // pagination
-  const filter = buildTravelPlanFilter(query);
-  const page = Number(query.page) || 1;
-  const limit = Number(query.limit) || 10;
-  const skip = (page - 1) * limit;
+  const baseFilter: Record<string, any> = {};
+  if (query.minBudget) {
+    baseFilter.maxBudget = { $gte: Number(query.minBudget) };
+  }
 
-  // fetch plans and populate who created
-  const plans = await TravelPlan.find(filter)
-    .populate("user", "name profilePicture")
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit)
+  if (query.maxBudget) {
+    baseFilter.minBudget = { $lte: Number(query.maxBudget) };
+  }
+
+  const queryBuilder = new QueryBuilder(
+    TravelPlan.find(baseFilter),
+    query,
+    TRAVELPLAN_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .sort()
+    .fieldsLimiting()
+    .paginate()
+    .populate({ path: "user", select: "name profilePicture" })
     .lean();
 
-  const total = await TravelPlan.find(filter).countDocuments();
-  const meta = { page, limit, total };
+  const plans = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
 
   // response structure
   let data: TAllPlansResponse[];
@@ -172,9 +182,22 @@ const getMyAllTravelPlans = async (
   userId: string,
   query: Record<string, unknown>,
 ) => {
-  query.user = userId;
-  const result = await TravelPlan.find(query).sort({ createdAt: -1 });
-  return result;
+  const queryBuilder = new QueryBuilder(
+    TravelPlan.find({ user: userId }),
+    query,
+    TRAVELPLAN_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .sort()
+    .fieldsLimiting()
+    .paginate()
+    .lean();
+
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
+  return { meta, data };
 };
 
 /**

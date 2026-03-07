@@ -39,14 +39,14 @@ const deleteSharedPost = asyncHanlder(async (req, res) => {
   });
 });
 
-// -------------- delete shared post ------------
+// -------------- get all shares of a post ------------
 const getSharedPosts = asyncHanlder(async (req, res) => {
   const postId = req.params.postId;
   const query = req.query;
   // validate params id
   validateObjectId({ name: "post id", value: postId });
 
-  const result = await PostShareService.getSharedPosts(postId, query);
+  const result = await PostShareService.getSharesOfPost(postId, query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

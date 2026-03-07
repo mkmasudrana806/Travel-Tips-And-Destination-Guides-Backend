@@ -76,7 +76,7 @@ const getAllSavedPosts = async (
       },
     });
   const total = await SavedPost.countDocuments({ user: userId });
-  const meta = { total, page, limit };
+  const meta = { total, page, limit, totalPage: Math.ceil(total / limit) };
   return { data, meta };
 };
 
