@@ -32,20 +32,25 @@ info:
   contact: {}
 servers:
   - url: http://localhost:{port}/api/v1
-  - url: https://travelshare-backend.vercel.com/api/v1
     variables:
       port:
         default: "5000"
+  - url: https://travelshare-backend.vercel.com/api/v1
 paths:
   /users:
     get:
       tags:
         - User
       summary: Get all users
-      description: "🔐 Auth: Admin Token Required"
+      description: |-
+        🔐 Auth: Admin Token Required
+
+        - Supports search, filtering, sorting, pagination, and field selection.
+            
+        - See query parameters documentation: `/docs/query-params.md#user`
       operationId: getAllUsers
       parameters:
-        - name: searchTerm
+        - name: search
           in: query
           schema:
             type: string
@@ -2072,7 +2077,11 @@ paths:
       description: |-
         🔐 Auth: Optional Token
 
-        If authenticated, additional viewer context will be included
+        If authenticated, additional viewer context will be included.
+
+        - Supports search, filtering, sorting, pagination, and field selection.
+            
+        - See query parameters documentation: `/docs/query-params.md#comment`
       operationId: getCommentsOfAPost
       parameters:
         - name: page
@@ -2803,7 +2812,7 @@ paths:
           in: query
           schema:
             type: string
-            example: "2"
+            example: "20"
       requestBody:
         content:
           application/json:
@@ -3025,14 +3034,18 @@ paths:
       summary: Get all post
       description: |-
         🔐 Auth: Optional Token  
-        If authenticated, additional viewer context will be included
+        If authenticated, additional viewer context will be included.
+
+        - Supports search, filtering, sorting, pagination, and field selection.
+            
+        - See query parameters documentation: `/docs/query-params.md#post`
       operationId: getAllPost
       parameters:
-        - name: days
+        - name: maxDay
           in: query
           schema:
             type: string
-            example: "3"
+            example: "4"
         - name: minCost
           in: query
           schema:
@@ -3993,7 +4006,12 @@ paths:
       tags:
         - Post
       summary: Get my posts
-      description: "🔐 Auth: User Token Required"
+      description: |-
+        🔐 Auth: User Token Required
+
+        - Supports search, filtering, sorting, pagination, and field selection.
+            
+        - See query parameters documentation: `/docs/query-params.md#post`
       operationId: getMyPosts
       responses:
         "200":
@@ -4286,7 +4304,12 @@ paths:
       tags:
         - UserFollow
       summary: Get followers of an user
-      description: "🔓 Auth: Not Required"
+      description: |-
+        🔓 Auth: Not Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#userfollow`
       operationId: getFollowersOfAnUser
       responses:
         "200":
@@ -4298,7 +4321,12 @@ paths:
       tags:
         - UserFollow
       summary: Get following of an user
-      description: "🔓 Auth: Not Required"
+      description: |-
+        🔓 Auth: Not Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#userfollow`
       operationId: getFollowingOfAnUser
       responses:
         "200":
@@ -4456,7 +4484,12 @@ paths:
       tags:
         - SavedPost
       summary: Get all my saved posts
-      description: "🔐 Auth: User Token Required"
+      description: |-
+        🔐 Auth: User Token Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#savedpost`
       operationId: getAllMySavedPosts
       responses:
         "200":
@@ -4468,7 +4501,11 @@ paths:
       summary: Get all travel plans
       description: |-
         🔐 Auth: Optional Token  
-        If authenticated, additional viewer context will be included
+        If authenticated, additional viewer context will be included.
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#travelplan`
       operationId: getAllTravelPlans
       parameters:
         - name: page
@@ -4481,6 +4518,11 @@ paths:
           schema:
             type: string
             example: "3"
+        - name: status
+          in: query
+          schema:
+            type: string
+            example: closed
       requestBody:
         content:
           text/plain:
@@ -5106,7 +5148,12 @@ paths:
       tags:
         - TravelPlan
       summary: Get my all travel plans
-      description: "🔐 Auth: User Token Required"
+      description: |-
+        🔐 Auth: User Token Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#travelplan`
       operationId: getMyAllTravelPlans
       parameters:
         - name: status
@@ -5122,8 +5169,21 @@ paths:
       tags:
         - TravelRequest
       summary: Get all request for a travel plan
-      description: "🔐 Auth: User Token Required"
+      description: >-
+        🔐 Auth: User Token Required.
+
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation:
+        `/docs/query-params.md#travelrequest`
       operationId: getAllRequestForATravelPlan
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            example: accepted
       requestBody:
         content:
           application/json:
@@ -5664,7 +5724,14 @@ paths:
       tags:
         - TravelRequest
       summary: Get I requested plans
-      description: "🔐 Auth: User Token Required"
+      description: >-
+        🔐 Auth: User Token Required
+
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation:
+        `/docs/query-params.md#travelrequest`
       operationId: getIRequestedPlans
       responses:
         "200":
@@ -6388,7 +6455,12 @@ paths:
       tags:
         - Payment
       summary: Get all payments history
-      description: "🔐 Auth: Admin Token Required"
+      description: |-
+        🔐 Auth: Admin Token Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#payment`
       operationId: getAllPaymentsHistory
       parameters:
         - name: email
@@ -6544,7 +6616,12 @@ paths:
       tags:
         - Payment
       summary: Get my payments history
-      description: "🔐 Auth: User Token Required"
+      description: |-
+        🔐 Auth: User Token Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#payment`
       operationId: getMyPaymentsHistory
       responses:
         "200":
@@ -6554,7 +6631,12 @@ paths:
       tags:
         - PostShare
       summary: Get shares of a post
-      description: "🔓 Auth: Not Required"
+      description: |-
+        🔓 Auth: Not Required
+
+        - Supports search, filtering, sorting, pagination, and field selection
+            
+        - See query parameters documentation: `/docs/query-params.md#postshare`
       operationId: getSharesOfAPost
       responses:
         "200":

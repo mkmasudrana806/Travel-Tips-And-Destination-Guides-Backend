@@ -196,7 +196,7 @@ npm start
 
 Server will run at: `http://localhost:5000`
 
-Swagger UI will run at: `http://localhost:5000`
+Swagger UI will run at: `http://localhost:5000/api-docs`
 
 ## Author
 
