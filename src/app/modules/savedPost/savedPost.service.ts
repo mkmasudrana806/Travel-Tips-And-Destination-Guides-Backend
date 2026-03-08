@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
 import SavedPost from "./savedPost.model";
+import Post from "../post/post.model";
 
 /**
  * ------------ saved a travel post ------------
@@ -10,6 +11,11 @@ import SavedPost from "./savedPost.model";
  * @returns saved post data
  */
 const savePost = async (userId: string, postId: string) => {
+  // check post exists
+  const post = await Post.findById(postId).select("title category");
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, "Post is not found!");
+  }
   // check post already saved or not
   const exists = await SavedPost.findOne({
     user: userId,
@@ -23,6 +29,8 @@ const savePost = async (userId: string, postId: string) => {
   const result = await SavedPost.create({
     user: userId,
     post: postId,
+    postTitle: post.title,
+    postCategory: post.category,
   });
 
   return result;

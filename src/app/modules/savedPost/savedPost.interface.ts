@@ -1,8 +1,11 @@
 import { ObjectId } from "mongoose";
+import { TPostCategory } from "../post/post.interface";
 
 export type TSavedPost = {
   user: ObjectId;
   post: ObjectId;
+  postTitle: string;
+  postCategory: TPostCategory;
   createdAt: Date;
   updatedAt: Date;
 };

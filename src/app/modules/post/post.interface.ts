@@ -1,16 +1,19 @@
 import { Types } from "mongoose";
 
+export type TPostCategory = "Adventure" | "Business Travel" | "Exploration";
+export type TTravelType = "budget" | "midrange" | "luxury";
+
 type TPost = {
   _id: Types.ObjectId;
   author: Types.ObjectId;
   title: string;
   content: string;
-  category: "Adventure" | "Business Travel" | "Exploration";
+  category: TPostCategory;
   locationName: string;
   country: string;
   travelDays: number;
   estimatedCost: number;
-  travelType: "budget" | "midrange" | "luxury";
+  travelType: TTravelType;
   image: string;
   premium: boolean;
   upvoteCount: number;
