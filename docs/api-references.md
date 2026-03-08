@@ -35,7 +35,7 @@ Endpoints that support pagination return a `meta` object.
 
 ## Query Parameters (Where Supported)
 
-- `searchTerm` → Text search
+- `search` → Text search
 - `sort` → Sorting (`sort=createdAt` or `sort=-createdAt`)
 - `page` → Page number
 - `limit` → Items per page

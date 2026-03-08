@@ -36,6 +36,10 @@ module/
  ├── route
  ├── validation
  ├── interface
+ ├── query
+ ├── utils (if required)
+ ├── constant (if required)
+
 ```
 
 #### controller
@@ -72,6 +76,21 @@ All core logic must live here.
 
 - Type definitions
 - Used to ensure consistency across service and model layers
+
+#### query
+
+- Query allowed lists
+- Used to restrict query params
+
+#### utils (if required)
+
+- Model specific utils methods
+- Used methods only inside that model
+
+#### constant (if required)
+
+- Constant declaration like variables, lists, etc
+- Used only inside this model/module
 
 ## middlewares/
 
@@ -130,10 +149,15 @@ To add a new feature:
    - Controller
    - Route
    - Validation
+   - Query (if required)
+   - Utils (if required)
+   - Constant (if required)
 
 3. Register this route inside central route loader at path `/src/app/routes/index.ts`.
 4. Apply proper authentication middleware and payload validation.
 5. Follow standardized response structure.
+
+**Note:** Follow this sequences: `interface` → `model` → `validation` → `service` → `controller` → `Route`. Then add this **route** file to `/routes/index.ts` file.
 
 # Modifying Existing Logic
 
