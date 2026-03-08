@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import AppError from "../../utils/AppError";
 import SavedPost from "./savedPost.model";
 import Post from "../post/post.model";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { POST_SAVED_QUERY_OPTIONS } from "./savedPost.query";
 
 /**
  * ------------ saved a travel post ------------
@@ -67,24 +69,28 @@ const getAllSavedPosts = async (
   userId: string,
   query: Record<string, unknown>,
 ) => {
-  const page = parseInt(query.page as string) || 1;
-  const limit = parseInt(query.limit as string) || 10;
-
-  const skip = (page - 1) * limit;
-
-  const data = await SavedPost.find({ user: userId })
-    .sort({ createdAt: 1 })
-    .skip(skip)
-    .limit(limit)
+  const queryBuilder = new QueryBuilder(
+    SavedPost.find({ user: userId }),
+    query,
+    POST_SAVED_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .fieldsLimiting()
+    .sort()
+    .paginate()
     .populate({
       path: "post",
       populate: {
         path: "author",
         select: "name profilePicture",
       },
-    });
-  const total = await SavedPost.countDocuments({ user: userId });
-  const meta = { total, page, limit, totalPage: Math.ceil(total / limit) };
+    })
+    .lean();
+
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
   return { data, meta };
 };
 

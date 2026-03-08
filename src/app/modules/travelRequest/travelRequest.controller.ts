@@ -34,7 +34,7 @@ const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
   // validate params id
   validateObjectId({ name: "plan id", value: planId });
 
-  const result = await TravelRequestService.getAllRequestsForPlan(
+  const { meta, data } = await TravelRequestService.getAllRequestsForPlan(
     planId,
     userId,
     query,
@@ -44,7 +44,8 @@ const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
     success: true,
     statusCode: httpStatus.CREATED,
     message: "All requests for a plan retrived sucessfully",
-    data: result,
+    data: data,
+    meta: meta,
   });
 });
 
@@ -92,16 +93,21 @@ const cancelTravelRequest = asyncHanlder(async (req, res) => {
   });
 });
 
-// ------------- accept/reject a travel partner request -------------------
+// ------------- lists of travel requests made an user -------------------
 const getTravelRequestsForAnUser = asyncHanlder(async (req, res) => {
   const userId = req.user.userId;
-  const result = await TravelRequestService.getTravelRequestsForAnUser(userId);
+  const query = req.query;
+  const { meta, data } = await TravelRequestService.getTravelRequestsForAnUser(
+    userId,
+    query,
+  );
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.CREATED,
     message: "All requested trip sharing retrived sucessfull",
-    data: result,
+    data: data,
+    meta: meta,
   });
 });
 

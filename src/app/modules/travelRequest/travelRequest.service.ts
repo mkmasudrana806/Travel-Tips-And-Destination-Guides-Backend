@@ -6,6 +6,8 @@ import { TTravelRequest } from "./travelRequest.interface";
 import { NotificationService } from "../notifications/notifications.service";
 import mongoose from "mongoose";
 import { NotificationType } from "../notifications/notifications.interface";
+import QueryBuilder from "../../queryBuilder/queryBuilder";
+import { TRAVEL_REQUEST_QUERY_OPTIONS } from "./travelRequest.query";
 
 /**
  * ----------- create a travel request with note -------------
@@ -82,15 +84,26 @@ const getAllRequestsForPlan = async (
   if (plan.user.toString() !== userId) {
     throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
   }
-  const requests = await TravelRequest.find({
-    travelPlan: planId,
-  })
-    .populate("requester", "name profilePicture")
-    .sort({ createdAt: -1 })
-    .skip(skip)
-    .limit(limit);
 
-  return requests;
+  const queryBuilder = new QueryBuilder(
+    TravelRequest.find({
+      travelPlan: planId,
+    }),
+    query,
+    TRAVEL_REQUEST_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .fieldsLimiting()
+    .sort()
+    .paginate()
+    .populate({ path: "requester", select: "name profilePicture" })
+    .lean();
+
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
+  return { meta, data };
 };
 
 /**
@@ -213,12 +226,25 @@ const cancelTravelRequest = async (
  * ----------- get all requested trip for an user (user side) --------------
  *
  * @param requesterId requester id, who want to see the status of requested travel plan
+ * @param query for filter, search, sort and paginate
  * @returns lists of requested travel trips
  */
-const getTravelRequestsForAnUser = async (requesterId: string) => {
-  const result = await TravelRequest.find({
-    requester: requesterId,
-  })
+const getTravelRequestsForAnUser = async (
+  requesterId: string,
+  query: Record<string, unknown>,
+) => {
+  const queryBuilder = new QueryBuilder(
+    TravelRequest.find({
+      requester: requesterId,
+    }),
+    query,
+    TRAVEL_REQUEST_QUERY_OPTIONS,
+  )
+    .search()
+    .filter()
+    .fieldsLimiting()
+    .sort()
+    .paginate()
     .populate({
       path: "travelPlan",
       populate: {
@@ -226,9 +252,12 @@ const getTravelRequestsForAnUser = async (requesterId: string) => {
         select: "name profilePicture",
       },
     })
-    .sort({ createdAt: -1 });
+    .lean();
 
-  return result;
+  const data = await queryBuilder.modelQuery;
+  const meta = await queryBuilder.countTotal();
+
+  return { meta, data };
 };
 
 export const TravelRequestService = {
