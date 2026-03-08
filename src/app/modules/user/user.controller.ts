@@ -10,7 +10,7 @@ const createAnUser = asyncHanlder(async (req, res) => {
   const result = await UserServices.createAnUser(payload);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "User created successfully",
     data: result,

@@ -15,7 +15,7 @@ const sharePost = asyncHanlder(async (req, res) => {
   const result = await PostShareService.sharePost(postId, userId, data);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "post share successfull",
     data: result,

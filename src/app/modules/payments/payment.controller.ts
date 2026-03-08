@@ -11,7 +11,7 @@ const getSubscriptionSession = asyncHanlder(async (req, res) => {
   const result = await PaymentServices.getSubscriptionSession(userId, payload);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "amarPay session is initiated successfully",
     data: result,

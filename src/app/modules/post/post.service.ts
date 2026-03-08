@@ -337,7 +337,7 @@ const updateAPost = async (
     },
   );
   if (!result)
-    throw new AppError(httpStatus.NOT_FOUND, "Post not found or update failed");
+    throw new AppError(httpStatus.FORBIDDEN, "Post not found or update failed");
   return result;
 };
 

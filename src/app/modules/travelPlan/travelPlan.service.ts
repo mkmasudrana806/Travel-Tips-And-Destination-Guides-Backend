@@ -7,7 +7,7 @@ import {
 import TravelPlan from "./travelPlan.model";
 import AppError from "../../utils/AppError";
 import httpStatus from "http-status";
-import { buildTravelPlanFilter, getTravelDays } from "./travelPlan.utils";
+import { getTravelDays } from "./travelPlan.utils";
 import TravelRequest from "../travelRequest/travelRequest.model";
 import QueryBuilder from "../../queryBuilder/queryBuilder";
 import { TRAVELPLAN_QUERY_OPTIONS } from "./travelPlan.query";

@@ -14,7 +14,7 @@ const toggleFollow = asyncHanlder(async (req, res) => {
   const result = await UserFollowService.toggleFollow(userId, targetUserId);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "Follow is done",
     data: result,

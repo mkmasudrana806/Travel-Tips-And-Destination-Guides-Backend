@@ -1,4 +1,3 @@
-import { searchableFields } from "./user.constant";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
 import AppError from "../../utils/AppError";
@@ -20,7 +19,7 @@ const createAnUser = async (payload: TUser) => {
   // check if the user already exists
   const user = await User.findOne({ email: payload.email });
   if (user) {
-    throw new AppError(httpStatus.BAD_REQUEST, "User already exists");
+    throw new AppError(httpStatus.CONFLICT, "User already exists");
   }
   const result = await User.create(payload);
   return result;

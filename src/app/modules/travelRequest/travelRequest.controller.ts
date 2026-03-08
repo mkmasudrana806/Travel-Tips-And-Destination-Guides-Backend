@@ -42,7 +42,7 @@ const getAllRequestsForPlan = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "All requests for a plan retrived sucessfully",
     data: data,
     meta: meta,
@@ -65,7 +65,7 @@ const updateTravelRequestStatus = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: `Partner request is ${result.status}`,
     data: result,
   });
@@ -87,7 +87,7 @@ const cancelTravelRequest = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "Request cancelled Sucessfull",
     data: result,
   });
@@ -104,7 +104,7 @@ const getTravelRequestsForAnUser = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "All requested trip sharing retrived sucessfull",
     data: data,
     meta: meta,

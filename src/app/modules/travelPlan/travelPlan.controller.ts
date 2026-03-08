@@ -32,7 +32,7 @@ const getSingleTravelPlan = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "Travel plan is retrieved",
     data: data,
     viewerContext,
@@ -69,7 +69,7 @@ const updateTravelPlan = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "travel plan updated sucessfull",
     data: result,
   });
@@ -86,7 +86,7 @@ const deleteTravelPlan = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "travel plan deleted sucessfull",
     data: result,
   });
@@ -103,7 +103,7 @@ const getAllTravelPlans = asyncHanlder(async (req, res) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "All plans retrieved sucessfull",
     data,
     meta,

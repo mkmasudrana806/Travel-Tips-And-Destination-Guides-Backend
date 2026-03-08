@@ -15,7 +15,7 @@ const createAComment = asyncHanlder(async (req, res) => {
   const result = await CommentServices.createAComment(userId, postId, payload);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "Comment posted is successfull",
     data: result,
@@ -48,7 +48,11 @@ const getRepliesOfComment = asyncHanlder(async (req, res) => {
   // validate mongoose object id
   validateObjectId({ name: "comment id", value: commentId });
 
-  const result = await CommentServices.getRepliesOfComment(viewerId, commentId, query);
+  const result = await CommentServices.getRepliesOfComment(
+    viewerId,
+    commentId,
+    query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -14,7 +14,7 @@ const savedPost = asyncHanlder(async (req, res) => {
   const result = await SavedPostService.savePost(userId, postId);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "Post savedd successfully",
     data: result,

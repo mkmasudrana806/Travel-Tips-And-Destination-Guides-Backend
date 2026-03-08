@@ -32,7 +32,7 @@ const getSubscriptionSession = async (userId: string, payload: TPayment) => {
   }).sort({ paymentDate: -1 });
 
   if (existingPayment && existingPayment.status === "pending") {
-    throw new AppError(400, "Payment already in progress");
+    throw new AppError(httpStatus.CONFLICT, "Payment already in progress");
   }
 
   if (
@@ -40,7 +40,7 @@ const getSubscriptionSession = async (userId: string, payload: TPayment) => {
     existingPayment.status === "completed" &&
     existingPayment.expiresAt > new Date()
   ) {
-    throw new AppError(400, "Active subscription already exists");
+    throw new AppError(httpStatus.CONFLICT, "Active subscription already exists");
   }
 
   // payment data
@@ -173,7 +173,7 @@ const onPaymentFailed = async (userEmail: string, txnId: string) => {
   });
 
   if (!payment) {
-    throw new AppError(httpStatus.FORBIDDEN, "Payment data is not available");
+    throw new AppError(httpStatus.NOT_FOUND, "Payment data is not available");
   }
 
   // first verify payment in amarpay database

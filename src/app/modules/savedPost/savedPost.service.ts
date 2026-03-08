@@ -25,7 +25,7 @@ const savePost = async (userId: string, postId: string) => {
   });
 
   if (exists) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Post already saved!");
+    throw new AppError(httpStatus.CONFLICT, "Post already saved!");
   }
 
   const result = await SavedPost.create({

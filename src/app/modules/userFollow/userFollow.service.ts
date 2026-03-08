@@ -102,7 +102,7 @@ const toggleFollow = async (currentUser: string, targetUser: string) => {
   } catch (error) {
     await session.abortTransaction();
     await session.endSession();
-    throw new AppError(httpStatus.BAD_REQUEST, "Failed to follow");
+    throw new AppError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to follow");
   }
 };
 

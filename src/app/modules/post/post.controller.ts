@@ -11,7 +11,7 @@ const createPost = asyncHanlder(async (req, res) => {
   const result = await PostServices.createPost(userId, postData);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "Post created successfully",
     data: result,

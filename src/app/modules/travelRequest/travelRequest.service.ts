@@ -1,4 +1,4 @@
-import httpStatus, { FORBIDDEN } from "http-status";
+import httpStatus, { BAD_REQUEST, FORBIDDEN } from "http-status";
 import AppError from "../../utils/AppError";
 import TravelPlan from "../travelPlan/travelPlan.model";
 import TravelRequest from "./travelRequest.model";
@@ -31,7 +31,7 @@ const createTravelRequest = async (
   // prevent author requesting own plan
   if (plan.user.toString() === requesterId) {
     throw new AppError(
-      httpStatus.BAD_REQUEST,
+      httpStatus.FORBIDDEN,
       "You cannot request your own travel plan",
     );
   }
@@ -53,7 +53,7 @@ const createTravelRequest = async (
     });
   } catch (error) {
     throw new AppError(
-      httpStatus.FORBIDDEN,
+      httpStatus.BAD_REQUEST,
       "Failed to create notification for TRAVEL_REQUEST",
     );
   } finally {
@@ -146,7 +146,7 @@ const updateTravelRequestStatus = async (
   const allowedTransition: string[] = statusTransition[travelRequest.status];
   if (!allowedTransition || !allowedTransition.includes(payload.status)) {
     throw new AppError(
-      FORBIDDEN,
+      BAD_REQUEST,
       `Cannot change status from ${travelRequest.status} to ${payload.status}`,
     );
   }
@@ -169,7 +169,7 @@ const updateTravelRequestStatus = async (
     });
   } catch (error) {
     throw new AppError(
-      httpStatus.FORBIDDEN,
+      httpStatus.INTERNAL_SERVER_ERROR,
       "Failed to create notification for TRAVEL_REQUEST",
     );
   } finally {
@@ -201,7 +201,7 @@ const cancelTravelRequest = async (
   }
   // check if he is the owner of this travelRequest
   if (userId !== travelRequest.requester.toString()) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Unauthorized access!");
+    throw new AppError(httpStatus.FORBIDDEN, "Unauthorized access!");
   }
 
   if (!payload.status) {
@@ -212,7 +212,7 @@ const cancelTravelRequest = async (
   const allowedTransition: string[] = statusTransition[travelRequest.status];
   if (!allowedTransition || !allowedTransition.includes(payload.status)) {
     throw new AppError(
-      FORBIDDEN,
+      BAD_REQUEST,
       `Cannot change status from ${travelRequest.status} to ${payload.status}`,
     );
   }

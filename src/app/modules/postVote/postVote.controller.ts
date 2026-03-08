@@ -15,7 +15,7 @@ const votePost = asyncHanlder(async (req, res) => {
   const result = await PostVoteServices.toggleVote(userId, postId, type);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "vote successfull",
     data: result,

@@ -10,7 +10,7 @@ const uploadFileToCloudinary = asyncHanlder(async (req, res) => {
   const result = await uploadFilesServices.uploadFileToCloudinary(file, userId);
 
   sendResponse(res, {
-    statusCode: httpStatus.OK,
+    statusCode: httpStatus.CREATED,
     success: true,
     message: "File uploaded successfully",
     data: result,
