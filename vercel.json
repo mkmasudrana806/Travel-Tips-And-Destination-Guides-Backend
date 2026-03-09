@@ -1,10 +1,20 @@
 {
     "version": 2,
+    "functions": {
+        "dist/server.js": {
+            "runtime": "@vercel/node"
+        }
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "dist/server.js"
+        }
+    ],
     "crons": [
         {
             "path": "/api/cron/media-cleanup",
             "schedule": "0 0 * * *"
         }
-    ],
-    "outputDirectory": ""
+    ]
 }
