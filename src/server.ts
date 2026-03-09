@@ -1,46 +1,24 @@
 import app from "./app";
 import config from "./app/config";
 import mongoose from "mongoose";
-import { Server } from "http";
 import seedAdmin from "./app/DB";
+import { Request, Response } from "express";
 
-let server: Server;
+let isConnected = false;
 
-// databas connection
-main().catch((err) => console.log(err));
-async function main() {
-  try {
-    // await mongoose.connect("mongodb://127.0.0.1:27017/travel");
-    await mongoose.connect(config.database_url as string);
+// connect database and seed admin
+async function connectDB() {
+  if (isConnected) return;
 
-    console.log("Database is connected!");
+  await mongoose.connect(config.database_url as string);
+  console.log("Database connected");
 
-    // seed admin to database
-    await seedAdmin();
-    // app listening
-    server = app.listen(config.app_port, () => {
-      console.log(`app listening on port ${config.app_port}`);
-    });
+  await seedAdmin();
 
-    // set headers and request timeout
-    server.headersTimeout = 10_000;
-    server.requestTimeout = 15_000;
-  } catch (error) {
-    console.log("Error while connecting to Database!", error);
-  }
+  isConnected = true;
 }
 
-// unhandledRejection error
-process.on("unhandledRejection", () => {
-  console.log("Unhandled rejection detected");
-  if (server) {
-    server.close(() => process.exit(1));
-  }
-  process.exit(1);
-});
-
-// uncaught exception handling
-process.on("uncaughtException", () => {
-  console.log("Uncaught exception detected");
-  process.exit(1);
-});
+export default async function handler(req: Request, res: Response) {
+  await connectDB();
+  return app(req, res);
+}

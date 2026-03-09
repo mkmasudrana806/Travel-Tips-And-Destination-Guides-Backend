@@ -32,12 +32,12 @@ app.use(
     origin:
       process.env.NODE_ENV === "development"
         ? ["http://localhost:3000"]
-        : ["https://travelshare.vercel.com"],
+        : ["https://travelshare.vercel.app"],
     credentials: true,
   }),
 ); // your client url
 app.use(cookieParser());
-app.use(express.static("./uploads"));
+//app.use(express.static("./uploads"));
 
 // api routes (middleware)
 app.use("/api/v1", ApiRoutes);
@@ -47,7 +47,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Server is running...");
 });
 
-app.get("/api/cron/schedule1d", cleanupOrphanMedia);
+app.get("/api/cron/media-cleanup", cleanupOrphanMedia);
 
 // ---------- swagger api documentation ----------
 const swaggerDocument = YAML.load(
