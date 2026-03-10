@@ -2,23 +2,31 @@ import app from "./app";
 import config from "./app/config";
 import mongoose from "mongoose";
 import seedAdmin from "./app/DB";
-import { Request, Response } from "express";
 
 let isConnected = false;
 
-// connect database and seed admin
 async function connectDB() {
-  if (isConnected) return;
+  if (isConnected) {
+    return;
+  }
 
-  await mongoose.connect(config.database_url as string);
-  console.log("Database connected");
+  try {
+    await mongoose.connect(config.database_url as string);
+    console.log("Database connected");
 
-  await seedAdmin();
+    await seedAdmin();
 
-  isConnected = true;
+    isConnected = true;
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    throw error;
+  }
 }
 
-export default async function handler(req: Request, res: Response) {
+// This wrapper ensures DB is connected before Express handles the request
+const handler = async (req: any, res: any) => {
   await connectDB();
   return app(req, res);
-}
+};
+
+export default handler;
