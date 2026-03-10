@@ -4,8 +4,8 @@ It allows users to share travel experiences, follow other travelers, create trav
 
 The system is designed using a modular and layered architecture to ensure scalability, maintainability, and separation of concerns.
 
-- [Click Live Website](https://travel-tips-and-destination-guides-client.vercel.app/)
-- [Click Live Server API](https://travel-tips-and-destination-guides-backend.vercel.app)
+- [Click Live Website](https://travel-share.vercel.app/)
+- [Click API Server](https://travel-share-backend.vercel.app)
 
 ## Core Features
 
@@ -59,7 +59,7 @@ The system is designed using a modular and layered architecture to ensure scalab
 All technical documentation is available in the `docs/` folder:
 
 - [API References](./docs/api-references.md)
-- [Swagger UI](http://localhost:5000/api-docs)
+- [Swagger UI](https://travel-share-backend.vercel.app/api-docs)
 - [Postman API Documentation](https://documenter.getpostman.com/view/30695014/2sBXcKBxsM)
 - [Developer Guideline](./docs/developer-guideline.md)
 

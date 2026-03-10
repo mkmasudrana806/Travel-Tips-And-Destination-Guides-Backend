@@ -25,6 +25,8 @@ const config = {
   cloudinary_secret_key: process.env.CLOUDINARY_SECRET_KEY,
   frontend_url: process.env.FRONTEND_URL,
   backend_url: process.env.BACKEND_URL,
+  frontend_url_prod: process.env.FRONTEND_URL_PROD,
+  backend_url_prod: process.env.BACKEND_URL_PROD,
   cron_secret: process.env.CRON_SECRET,
 };
 

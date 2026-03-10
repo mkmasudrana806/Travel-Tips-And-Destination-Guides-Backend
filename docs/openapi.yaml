@@ -15,7 +15,7 @@ info:
 
     - Localhost: `http://localhost:5000/api/v1`
         
-    - Live API: `https://travelshare-backend.vercel.com/api/v1`
+    - Live API: `https://travel-share-backend.vercel.app/api/v1`
         
 
     ## Authentication
@@ -35,7 +35,7 @@ servers:
     variables:
       port:
         default: "5000"
-  - url: https://travelshare-backend.vercel.com/api/v1
+  - url: https://travel-share-backend.vercel.app/api/v1
 paths:
   /users:
     get:

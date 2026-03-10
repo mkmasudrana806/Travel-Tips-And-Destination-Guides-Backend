@@ -23,6 +23,17 @@ async function connectDB() {
   }
 }
 
+// for localhost
+if (process.env.NODE_ENV !== "production") {
+  connectDB().then(() => {
+    app.listen(config.app_port, () => {
+      console.log(
+        `🚀 Local server running at http://localhost:${config.app_port}`,
+      );
+    });
+  });
+}
+
 // This wrapper ensures DB is connected before Express handles the request
 const handler = async (req: any, res: any) => {
   await connectDB();
