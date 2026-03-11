@@ -4,7 +4,6 @@ It allows users to share travel experiences, follow other travelers, create trav
 
 The system is designed using a modular and layered architecture to ensure scalability, maintainability, and separation of concerns.
 
-- [Click Live Website](https://travel-share.vercel.app/)
 - [Click API Server](https://travel-share-backend.vercel.app)
 
 ## Core Features
